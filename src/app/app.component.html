@@ -1,0 +1,35 @@
+<mat-form-field>
+     <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter($event.target.value)" placeholder="Filter">     
+</mat-form-field>
+
+<mat-checkbox [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+     <!-- Episode Number Column -->
+     <ng-container matColumnDef="Episode">
+          <th mat-header-cell *matHeaderCellDef> Ep # </th>
+          <td mat-cell *matCellDef="let element"> {{element.EpisodeNumber}} </td>
+     </ng-container>
+    
+     <!-- Name Column -->
+     <ng-container matColumnDef="Name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+     </ng-container>
+    
+     <!-- Release Date Column -->
+     <ng-container matColumnDef="ReleaseDate">
+          <th mat-header-cell *matHeaderCellDef> Release Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.ReleaseDate}} </td>
+     </ng-container>
+  
+     <!-- Favorite Column -->
+     <ng-container matColumnDef="Favorite">
+          <th mat-header-cell *matHeaderCellDef> Favorite </th>
+          <td mat-cell *matCellDef="let element"><img [src]="getFavoriteImage(element.Favorite)" id="{{element.EpisodeNumber}}" alt="Favorite icon" style="width:24px;height:24px" (click)="favoriteClick($event)" /></td>
+     </ng-container>
+
+     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+    

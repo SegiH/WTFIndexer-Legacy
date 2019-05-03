@@ -1,0 +1,39 @@
+﻿https://en.wikipedia.org/wiki/List_of_WTF_with_Marc_Maron_episodes
+
+https://javascript-minifier.com/
+
+
+
+const WTFArray=[];
+
+
+const tableCount=document.getElementsByClassName("wikiepisodetable").length;
+
+
+
+for (let c=0;c<tableCount;c++) {
+
+     const currTable=document.getElementsByClassName("wikiepisodetable")[c];
+     const tableRowCount=currTable.querySelectorAll("tr").length;
+
+     for (let tr=1;tr<tableRowCount;tr++) {
+          const epNumber=currTable.querySelectorAll("tr")[tr].querySelector("th").innerHTML;
+          const currName=currTable.querySelectorAll("tr")[tr].querySelectorAll("td")[0].innerText;
+          var originalReleaseDate=currTable.querySelectorAll("tr")[tr].querySelectorAll("td")[1].innerText;
+          WTFArray.push({ "EpisodeNumber" : epNumber,"Name" : currName, "ReleaseDate": originalReleaseDate });
+    }
+}
+
+
+
+
+
+
+fetch('http://localhost/WTF.php?Payload=' + btoa(WTFArray), {method: 'POST'}).then(response => response.json()).then((response) => {
+        }).catch(error => {//console.log('Call to WTF.php failed', error);
+        });
+
+
+
+
+

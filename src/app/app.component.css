@@ -1,0 +1,10 @@
+th, td {
+    overflow: hidden;
+    width: 200px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #chkFavorites {
+       margin-left: 30px;
+  }

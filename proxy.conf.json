@@ -1,0 +1,7 @@
+{
+    "/ufs/" : {
+      "target": "https://segi.mooo.com/",
+      "secure": false,
+      "logLevel": "debug"
+    }
+  }
