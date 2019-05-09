@@ -12,7 +12,7 @@ export class AppComponent {
      displayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'FaveValue'];
      dataSource: MatTableDataSource<any>;
      filterValue: string;
-     isFavoritesChecked=false;
+     isFavoritesChecked=true;
      WTFPayload = [];
 
      constructor() {
@@ -113,7 +113,8 @@ export class AppComponent {
     
      fetchData() {
           // Reload data filtering out favorites only if the favorites checkbox is selected
-          fetch('WTF.php?FetchData' + (this.isFavoritesChecked == true ? "&FavoritesOnly=1" : ""), {method: 'POST'}).then(response => response.json()).then((response) => {
+          //fetch('WTF.php?FetchData' + (this.isFavoritesChecked == true ? "&FavoritesOnly=1" : ""), {method: 'POST'}).then(response => response.json()).then((response) => {
+          fetch('WTF.php?FetchData', {method: 'POST'}).then(response => response.json()).then((response) => {
                this.WTFPayload = response;
 
                this.dataSource=new MatTableDataSource(this.WTFPayload);
@@ -122,6 +123,9 @@ export class AppComponent {
 
                this.dataSource.filterPredicate = this.createFilter();
                
+               if (this.isFavoritesChecked == true) {
+                    this.chkFavoritesClick();   
+               }
                // Select Favorites checkbox initially so only the favorites are shown (only after loading all of the data initially)
                //this.isFavoritesChecked = true;
 
