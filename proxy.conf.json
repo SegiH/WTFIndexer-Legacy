@@ -1,6 +1,6 @@
 {
     "/" : {
-      "target": "https://segi.mooo.com/WTF/",
+      "target": "",
       "secure": false,
       "logLevel": "debug"
     }
