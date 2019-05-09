@@ -14,7 +14,14 @@
      <!-- Name Column -->
      <ng-container matColumnDef="Name">
           <th mat-header-cell *matHeaderCellDef> Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+          <td mat-cell *matCellDef="let element">
+               <div *ngIf="!element.IMDBLink">    
+                    {{element.Name}}
+               </div>
+               <div *ngIf="element.IMDBLink">
+                    <div [innerHtml]="element.IMDBLink"></div>
+               </div>
+          </td>
      </ng-container>
     
      <!-- Release Date Column -->

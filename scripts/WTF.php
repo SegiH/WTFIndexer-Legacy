@@ -1,13 +1,44 @@
 <?php
      const DATABASE_TABLE = "WTFEpisodes";
      const DATABASE_TABLE_TEST = "WTFEpisodes_Temp";
+     
+     function updateIMDB() {
+          $conn = GetConnection();
+          
+	  $rowExists=false;
+	  
+	  $sql="SELECT COUNT(*) AS RowCount FROM IMDB WHERE IMDBURL='" . $_GET["Link"] . "';";
+	  
+	  $result = $conn->query($sql);
+	  
+	  while ($row=mysqli_fetch_assoc($result)) {
+               $rowExists=($row["RowCount"] == 0 ? false : true);
+	  }
+
+          if ($rowExists == true) {
+	          echo json_encode($_GET["Name"] . " is already in the database");
+		  return;
+	  }
+
+          $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $_GET["Name"] . "','" . $_GET["Link"] . "');";
+	  
+	  try {
+	       if (!mysqli_query($conn,$sql)) {
+	            echo "An error occurred updating the IMDB URL for episode number " . $payload[$c]->EpisodeNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
+	       }
+	  } catch(Exception $e) {
+               echo "A fatal error occurred updating the IMDB URL  with the sql " . $sql . " and the error " . mysqli_error($conn);
+          }
+	 
+	  echo json_encode("OK");
+     }
 
      function FetchData() {
           $conn = GetConnection();
 
           $wtfArray = array();
 
-          $sql="SELECT * FROM " . DATABASE_TABLE . " " . (isset($_GET["FavoritesOnly"]) && $_GET["FavoritesOnly"] == 1 ? "WHERE Favorite=1 " : "") . "ORDER BY EpisodeNumber";
+          $sql="SELECT *,ParseNames(Name) AS IMDBLink FROM " . DATABASE_TABLE . " " . (isset($_GET["FavoritesOnly"]) && $_GET["FavoritesOnly"] == 1 ? "WHERE Favorite=1 " : "") . "ORDER BY EpisodeNumber";
 
           $result = $conn->query($sql);
           
@@ -62,7 +93,7 @@
      
           for ($c=0;$c<count($payload);$c++) {
                // Before inserting the row, verify if it has already been added
-               $sql="SELECT * FROM " . DATABASE_NAME . " WHERE EpisodeNumber=" . $payload[$c]->EpisodeNumber;
+               $sql="SELECT * FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $payload[$c]->EpisodeNumber;
             
                $result = $conn->query($sql);
  
@@ -70,7 +101,7 @@
                     continue;
                }
 
-	       $sql="IF (SELECT COUNT(*) FROM " . DATABASE_NAME . " WHERE EpisodeNumber=" . $payload[$c]->EpisodeNumber . ") = 0 INSERT INTO " . DATABASE_NAME . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $payload[$c]->EpisodeNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$payload[$c]->Name)) . "','" . $payload[$c]->ReleaseDate . "');";
+	       $sql="IF (SELECT COUNT(*) FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $payload[$c]->EpisodeNumber . ") = 0 INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $payload[$c]->EpisodeNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$payload[$c]->Name)) . "','" . $payload[$c]->ReleaseDate . "');";
     
 	       // echo $sql . "<BR><BR>";
 	  
@@ -112,11 +143,11 @@
 	  $tablesToProcess;
 
 	  // If this param to get all rows isn't set, get the 2nd to last table which will be the current year and process this table only. The last table is currently an Other Episodes table that I don't care about
-	  if (!isset($_GET["AllRows"])) {
+	  /*if (!isset($_GET["AllRows"])) {
 	       $c=0;
  
 	       foreach($nodes as $table) {
-	            if ($c==$nodes->length-1) {
+		       if ($c==$nodes->length-1) {
 	                 $tablesToProcess=$table;
 	            }
 
@@ -124,14 +155,17 @@
 	       }
 	  } else {
                $tablesToProcess=$nodes;
-	  }
+	  }*/
+
+	  // Trying to only get the last table doesn't work because the returned element is a DOMElement not a DOMNodeElement. The for loop below doesn't work for DOMElements
+	  $tablesToProcess=$nodes;
 
 	  // Loop through all tables to process
 	  foreach ($tablesToProcess as $currTable) {
 	       $rows=$currTable->getElementsByTagName("tr");
-	  
-	       $conn = GetConnection();
-     
+	       
+               $conn = GetConnection();
+    
 	       foreach($rows as $currRow) {
                     $items=explode('"',$currRow->textContent);
 		   
@@ -146,16 +180,17 @@
 
                          // Before inserting the row, verify if it has already been added
                          $sql="SELECT * FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $epNumber;
-           
+          
                          $result = $conn->query($sql);
  
                          if ($result->num_rows > 0) {
                               continue;
 		         }
 
-	                 $sql="IF (SELECT COUNT(*) FROM " . DATABASE_NAME . " WHERE EpisodeNumber=" . $epNumber . ") = 0 INSERT INTO " . DATABASE_NAME . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
+	                 // $sql="IF (SELECT COUNT(*) FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $epNumber . ") = 0 INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
+	                 $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
     
-	                 // echo $sql . "<BR><BR>";
+	                 echo $sql . "<BR><BR>";
 	  
                          try {
 	                      if (!mysqli_query($conn,$sql)) {
@@ -174,7 +209,7 @@
      function UpdateFavorite() { 
           $conn = GetConnection();
 
-          $sql="UPDATE " . DATABASE_NAME . " SET Favorite=" . ($_GET["FavoriteValue"] == "1" ? "1" : "0") . " WHERE EpisodeNumber=" . $_GET["EpisodeNumber"] . ";";
+          $sql="UPDATE " . DATABASE_TABLE . " SET Favorite=" . ($_GET["FavoriteValue"] == "1" ? "1" : "0") . " WHERE EpisodeNumber=" . $_GET["EpisodeNumber"] . ";";
 	  
 	  try {
 	       if (!mysqli_query($conn,$sql)) {
@@ -197,6 +232,10 @@
 
      if (isset($_GET["ScrapeData"])) {
           ScrapeData();
+     }
+
+     if (isset($_GET["UpdateIMDB"]) && isset($_GET["Name"]) && isset($_GET["Link"])) {
+          UpdateIMDB(); 
      }
 
      if (isset($_GET["UpdateFavorite"]) && isset($_GET["EpisodeNumber"]) && isset($_GET["FavoriteValue"])) {

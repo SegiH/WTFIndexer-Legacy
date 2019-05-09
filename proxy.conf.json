@@ -1,6 +1,6 @@
 {
-    "/ufs/" : {
-      "target": "https://segi.mooo.com/",
+    "/" : {
+      "target": "https://segi.mooo.com/WTF/",
       "secure": false,
       "logLevel": "debug"
     }

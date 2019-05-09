@@ -1,6 +1,7 @@
 # WTFIndexer
 Overview:
-This application scrapes the Wikipedia episodes page for the WTF with Marc Maron Podcast and saves all episode information into a MySQL database and displays the podcast information in a searchable Angular table with the ability to favorite episodes that you want to listen to later
+
+This application scrapes the Wikipedia episodes page for the WTF with Marc Maron Podcast and saves all episode information into a MySQL database and displays the podcast information in a searchable Angular table with the ability to favorite episodes that you want to listen to later. Almost every name in each episode has a hyperlink to IMDB.com where you can see the persons' credits on IMDB.
 
 Requirements:
 
@@ -15,17 +16,12 @@ Server side setup
 1. Make sure that PHP curl extension is enabled. Edit php.ini and look for the line extension=php_curl.dll. If it has a semicolon in front of it, remove the semicolon and restart your webserver.
 2. Create a MySql database named WTF.
 3. Create a user and grant them access to this database.
-4. Create the MySQL table
-   a. Use scripts\WTF-Create-Table-Without-Data.sql to create the table without any rows.
-   b. Use scripts\WTF-Create-Table-With-Data.sql to create the table and insert all of the episode data which is up to date as May 1, 2019
+4. Run the SQL script in scripts\WTF.sql to create the necessary tables.
 5. Edit php.ini and add the following lines at the end of the file
    [mysqli]
    mysqli.default_host = localhost
-   mysqli.default_user = <USERNAME>
-   mysqli.default_pw = <PASSWORD>
-6. Copy scripts\WTF.php to the root of your web server.
-7. If you used the script scripts\WTF-Create-Table-Without-Data.sql visit http://www.yoursite.com/WTF.php?ScrapeData&AllRows to load all episodes into the database.
-   Once it finishes running, the page should remain blank. You will only see something on the page if a PHP error occurs.
+   mysqli.default_user = <YOUR USERNAME>
+   mysqli.default_pw = <YOUR PASSWORD>
    
 Client application
 ------------------
@@ -34,8 +30,10 @@ Client application
 3. Run npm install
 4. Run npm build
 5. Copy the contents of dist\WTFIndexer to the WTF directory on your web server
-6. Visit http://www.yoursite.com/WTF
-   The Favorites checkbox is selected by default. Unselected it to view all episodes
+7. Copy scripts\WTF.php to the folder where you are hosting this app (WTF by default)
+8. Visit http://www.yoursite.com/WTF
+
+   The Favorites checkbox is not checked by default. Check it to view podcasts that you have favorited. If you want favorites to be checked by default, edit src/app/app.component.ts and change the line isFavoritesChecked=false; to isFavoritesChecked=true;
 
 WTF.php
 -------
@@ -45,12 +43,22 @@ FetchData: Invoked by WTF.php?FetchData
            Fetchs all of the data from the database. Adding &FavoritesOnly will only return episodes where Favorites is selected
 
 ScrapeData: Invoked by WTF.php?ScrapeData
-            Scrapes the Wikipedia page and loads the episode information into the database.
-            Add &AllRows (WTF.php?ScrapeData&AllRows) to load all episodes into the database.
-            When this is not provided, the only table that is scraped is the table for the current year.
-            This endpoint has logic that checks if an episode has been added already to prevent an episode from being added more than once.
-
+            Scrapes the Wikipedia page and loads the episode information into the database. This can be used to update the database with the latest information.
+            
+            This endpoint has logic that checks if an episode has been added already to prevent duplicate episodes from being added.
+           
+            Once it finishes running, the page should remain blank. You will only see something on the page if a PHP error occurs.
 UpdateFavorite: Invoked by WTF.php?UpdateFavorite&EpisodeNumber&FavoriteValue=1
                  This will update the favorite status for a specific episode in the database. 
                  You do not need to invoke this yourself. It will be called automatically by the database.
 
+UpdateIMDB: Invoked by WTF.php?UpdateIMDB?Name=SomeName&Link=https://imdb.com/name/nm0767242/
+            If the name has 1 or more single quotes (') in it add an extra single quote in front of each single quote so it looks like ''.
+            his endpoint has logic that checks if a name has already been added to prevent duplicate names from being added.
+
+            To make it easier to add a persons' IMDB link, you can create a bookmarklet that you can click on in your browsers' toolbar to quickly add an IMDB URL.
+
+            Edit the JavaScript code below by changing https://www.yoursite.com to the URL where you are hosting this app and save it to a bookmarklet. Save the bookmark to your browser' toolbar. When you visit a persons' IMDB page, click on this bookmarklet to add the page. There is logic in place so you cannot add the same URL twice. If you try to add a URL after it has already been added, you will see the message "John Doe has already been added to the database".
+
+            
+             javascript: String.prototype.replaceAll=function(find,replace){return this.replace(new RegExp(find,'g'),replace)};var name=document.querySelector(".itemprop").innerText;var URL=document.location.toString();URL=URL.substring(0,URL.lastIndexOf("/")+1);window.open("https://www.yoursite.com/WTF.php?UpdateIMDB&Name="+name.replaceAll("'","''")+"&Link="+URL,"_blank");event.preventDefault();
