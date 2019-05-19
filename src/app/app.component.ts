@@ -118,10 +118,17 @@ export class AppComponent {
           // Reload data filtering out favorites only if the favorites checkbox is selected
           //fetch('WTF.php?FetchData' + (this.isFavoritesChecked == true ? "&FavoritesOnly=1" : ""), {method: 'POST'}).then(response => response.json()).then((response) => {
           fetch('WTF.php?FetchData', {method: 'POST'}).then(response => response.json()).then((response) => {
+               // If the fetch call to the REST endpoint didn't return any data throw a fatal error
+               if (response == null) {
+                    throw new Error('Unable to fetch the data')
+               }
+               
                this.WTFPayload = response;
-
+               
+               // Assign the payload as the  table data source
                this.dataSource=new MatTableDataSource(this.WTFPayload);
                
+               // Assign custom filter function
                this.dataSource.filterPredicate = this.createFilter();
                
                if (this.isFavoritesChecked == true) {
@@ -129,6 +136,8 @@ export class AppComponent {
                }
           }).catch(error => {
                console.log('request failed', error);
+
+               alert("An error occurred fetching the data with the following error: " + error.message);
           });
      }
      
