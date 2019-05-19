@@ -3,12 +3,11 @@ import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
-import { AppComponent } from './app.component';
+import { WTFIndexerComponent } from './wtfindexer/wtfindexer.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    WTFIndexerComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -22,6 +21,6 @@ import { AppComponent } from './app.component';
     MatTableModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [WTFIndexerComponent]
 })
 export class AppModule { }
