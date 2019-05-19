@@ -16,7 +16,7 @@ export class AppComponent {
      WTFPayload = [];
 
      constructor() {
-          // Fetch data
+          // Fetch the data
           this.fetchData();
      }
 
@@ -70,7 +70,7 @@ export class AppComponent {
                     }*/
 
                     // First match the episode number name and/or release date
-                    if (data.EpisodeNumber === filter || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter) === true) || data.ReleaseDate.indexOf(filter) !== -1) {
+                    if (data.EpisodeNumber === filter || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter.toLowerCase()) === true) || data.ReleaseDate.indexOf(filter) !== -1) {
                          // If favorites isn't checked then include this item in the filter
                          if (data.isFavoritesChecked === false) {
                               found=true;
@@ -90,6 +90,9 @@ export class AppComponent {
 
      favoriteClick($event) {
           const epNumber=$event.target.id;
+          
+          if (epNumber == null)
+               return;
           
           // Get object based on matching episode number
           let obj = this.WTFPayload.find(obj => obj.EpisodeNumber === epNumber);
@@ -119,25 +122,11 @@ export class AppComponent {
 
                this.dataSource=new MatTableDataSource(this.WTFPayload);
                
-               // this.WTFPayload[0].IMDBLink="https://www.imdb.com/name/nm0743501/?ref_=nv_sr_1?ref_=nv_sr_1";
-
                this.dataSource.filterPredicate = this.createFilter();
                
                if (this.isFavoritesChecked == true) {
                     this.chkFavoritesClick();   
                }
-               // Select Favorites checkbox initially so only the favorites are shown (only after loading all of the data initially)
-               //this.isFavoritesChecked = true;
-
-               // Checknig the checkbox above doesn't trigger the click event for the checkbox so I have to do it manually
-               //this.chkFavoritesClick();
-
-               // Loop through each item that doesn't have an IMDB link
-               /*for (let i=0;i<this.WTFPayload.length;i++) {
-                    if (this.WTFPayload[i].IMDBLink === null)  {
-                         console.log("The IMDB URL for " + this.WTFPayload[i].Name + " is blank")
-                    }
-                }*/
           }).catch(error => {
                console.log('request failed', error);
           });
