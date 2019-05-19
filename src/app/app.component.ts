@@ -140,13 +140,6 @@ export class AppComponent {
                alert("An error occurred fetching the data with the following error: " + error.message);
           });
      }
-     
-     getDisplayName(name,IMDBLink) {
-          if (IMDBLink == null)
-               return name;
-          else
-               return "<A HREF='" + IMDBLink + "' target='_blank'>" + name + "</A>";
-     }
 
      getFavoriteImage(favorite) {
           return (favorite != 1 ? "assets/heart-outline.png" : "assets/heart.png");
