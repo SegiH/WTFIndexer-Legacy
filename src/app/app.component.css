@@ -19,6 +19,12 @@ th, td {
     white-space: nowrap;
 }
 
+/* 2nd table column */
+table tr td:first-child + td  {
+     min-width: 180px;
+}
+
+/* 3rd table column */
 table tr td:first-child + td + td  {
      min-width: 180px;
 }
