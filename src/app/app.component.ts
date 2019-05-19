@@ -1,4 +1,4 @@
-// when searching while favorites is checked if you clear the search field, all results (favorite or not) are shown
+// php script only processes all tables. logic to use most recent one doesn't work right
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 
@@ -34,15 +34,17 @@ export class AppComponent {
     
      // Custom Material UI table filter function
      createFilter() {
+          const delimiter: string = ":";
+
           let filterFunction = function (data: any, filter: string): boolean {
                let customSearch = () => {
                     let found = false;
                     
-                    // doesnt work right when factoring in favorites checkbox
+                    // Slows the app down significantly
                     // Custom filter identifiers to search specific columns
-                    /*if (filter.indexOf(":") !== -1 && filter.split(":").length == 2) {
-                         console.log("in if");
-                         var filterParams=filter.split(":")
+                    /*if (filter.indexOf(delimiter) !== -1 && filter.split(delimiter).length == 2) {
+                         var filterParams=filter.split(delimiter);
+  
                          switch(filterParams[0].toLowerCase()) {
                               case "epnum":
                                    return data.EpisodeNumber === filterParams[1] && (data.isFavoritesChecked === false || (data.isFavoritesChecked === true && parseInt(data.Favorite) === 1));
@@ -52,16 +54,14 @@ export class AppComponent {
                                    return data.ReleaseDate.includes(", " + filterParams[1]) === true && (data.isFavoritesChecked === false || (data.isFavoritesChecked === true && parseInt(data.Favorite) === 1));
                          }
                     } else if (data.EpisodeNumber === filter || data.Name.includes(filter) === true || data.ReleaseDate.indexOf(filter) !== -1) {
-                         //debugger;
-                         console.log("in else if");
                          if (data.isFavoritesChecked === false) {
+                              console.log("true 1");
                               found=true;
                          } else if (parseInt(data.Favorite) === 1) {
+                              console.log("true 2");
                               found=true;
                          }
                     } else {
-                         console.log("in else");
-
                          if (data.isFavoritesChecked === false) {
                               found=true;
                          } else if (parseInt(data.Favorite) === 1) {
@@ -70,7 +70,7 @@ export class AppComponent {
                     }*/
 
                     // First match the episode number name and/or release date
-                    if (data.EpisodeNumber === filter || (data.Name.trim() !== "" && data.Name.includes(filter) === true) || data.ReleaseDate.indexOf(filter) !== -1) {
+                    if (data.EpisodeNumber === filter || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter) === true) || data.ReleaseDate.indexOf(filter) !== -1) {
                          // If favorites isn't checked then include this item in the filter
                          if (data.isFavoritesChecked === false) {
                               found=true;
