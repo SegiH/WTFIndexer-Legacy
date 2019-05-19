@@ -19,7 +19,7 @@ Server side setup
 1. Make sure that PHP curl extension is enabled. Edit php.ini and look for the line extension=php_curl.dll. If it has a semicolon in front of it, remove the semicolon and restart your webserver.
 2. Create a MySql database named WTF.
 3. Create a user and grant them access to this database.
-4. Run the SQL script in scripts\WTF.sql to create the necessary tables.
+4. Run the SQL script WTF.sql located in the scripts folder to create the necessary tables and import all of the existing data.
 5. Edit php.ini and add the following lines at the end of the file
    [mysqli]
    mysqli.default_host = localhost
@@ -47,10 +47,14 @@ FetchData: Invoked by WTF.php?FetchData
 
 ScrapeData: Invoked by WTF.php?ScrapeData
             Scrapes the Wikipedia page and loads the episode information into the database. This can be used to update the database with the latest information.
+
+            By default, this endpoint will only read the table that is for the current year. All previous years are ignored. If you want to get all 
+            years, Add &AllRows=true at the end of the URL so the URL is in the format http://www.yoursite.com/WTF.php?ScrapeData&AllRows=true
             
-            This endpoint has logic that checks if an episode has been added already to prevent duplicate episodes from being added.
+            This endpoint has logic that checks if an episode has been added already before adding an episode to prevent duplicate episodes from being added so you can safely run this endpoint as much as you want and will never have duplicate entries.
            
             Once it finishes running, the page should remain blank. You will only see something on the page if a PHP error occurs.
+
 UpdateFavorite: Invoked by WTF.php?UpdateFavorite&EpisodeNumber&FavoriteValue=1
                  This will update the favorite status for a specific episode in the database. 
                  You do not need to invoke this yourself. It will be called automatically by the database.

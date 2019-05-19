@@ -1,4 +1,3 @@
-// php script only processes all tables. logic to use most recent one doesn't work right
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 

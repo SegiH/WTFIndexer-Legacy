@@ -1,37 +1,6 @@
 <?php
      const DATABASE_TABLE = "WTFEpisodes";
      const DATABASE_TABLE_TEST = "WTFEpisodes_Temp";
-     
-     function updateIMDB() {
-          $conn = GetConnection();
-          
-	  $rowExists=false;
-	  
-	  $sql="SELECT COUNT(*) AS RowCount FROM IMDB WHERE IMDBURL='" . $_GET["Link"] . "';";
-	  
-	  $result = $conn->query($sql);
-	  
-	  while ($row=mysqli_fetch_assoc($result)) {
-               $rowExists=($row["RowCount"] == 0 ? false : true);
-	  }
-
-          if ($rowExists == true) {
-	          echo json_encode($_GET["Name"] . " is already in the database");
-		  return;
-	  }
-
-          $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $_GET["Name"] . "','" . $_GET["Link"] . "');";
-	  
-	  try {
-	       if (!mysqli_query($conn,$sql)) {
-	            echo "An error occurred updating the IMDB URL for episode number " . $payload[$c]->EpisodeNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
-	       }
-	  } catch(Exception $e) {
-               echo "A fatal error occurred updating the IMDB URL  with the sql " . $sql . " and the error " . mysqli_error($conn);
-          }
-	 
-	  echo json_encode("OK");
-     }
 
      function FetchData() {
           $conn = GetConnection();
@@ -143,22 +112,29 @@
 	  $tablesToProcess;
 
 	  // If this param to get all rows isn't set, get the 2nd to last table which will be the current year and process this table only. The last table is currently an Other Episodes table that I don't care about
-	  /*if (!isset($_GET["AllRows"])) {
+	  if (!isset($_GET["AllRows"])) {
 	       $c=0;
  
 	       foreach($nodes as $table) {
+		       // If this is the 2nd to last table
 		       if ($c==$nodes->length-1) {
-	                 $tablesToProcess=$table;
+			       // Create new DOMNodeList from $table
+			       $yearDoc = new DOMDocument();
+
+			       $yearElem = $yearDoc->importNode($table);
+
+			       $yearDoc->appendChild($yearElem);
+
+			       $tablesToProcess = $yearDoc->childNodes;
+			       
+			       break;
 	            }
 
                     $c++;
 	       }
 	  } else {
                $tablesToProcess=$nodes;
-	  }*/
-
-	  // Trying to only get the last table doesn't work because the returned element is a DOMElement not a DOMNodeElement. The for loop below doesn't work for DOMElements
-	  $tablesToProcess=$nodes;
+	  }
 
 	  // Loop through all tables to process
 	  foreach ($tablesToProcess as $currTable) {
@@ -190,7 +166,7 @@
 	                 // $sql="IF (SELECT COUNT(*) FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $epNumber . ") = 0 INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
 	                 $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
     
-	                 echo $sql . "<BR><BR>";
+	                 // echo $sql . "<BR><BR>";
 	  
                          try {
 	                      if (!mysqli_query($conn,$sql)) {
@@ -217,6 +193,37 @@
 	       }
 	  } catch(Exception $e) {
                echo "A fatal error occurred updating the favorite with the sql " . $sql . " and the error " . mysqli_error($conn);
+          }
+	 
+	  echo json_encode("OK");
+     }
+
+     function UpdateIMDB() {
+          $conn = GetConnection();
+          
+	  $rowExists=false;
+	  
+	  $sql="SELECT COUNT(*) AS RowCount FROM IMDB WHERE IMDBURL='" . $_GET["Link"] . "';";
+	  
+	  $result = $conn->query($sql);
+	  
+	  while ($row=mysqli_fetch_assoc($result)) {
+               $rowExists=($row["RowCount"] == 0 ? false : true);
+	  }
+
+          if ($rowExists == true) {
+	          echo json_encode($_GET["Name"] . " is already in the database");
+		  return;
+	  }
+
+          $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $_GET["Name"] . "','" . $_GET["Link"] . "');";
+	  
+	  try {
+	       if (!mysqli_query($conn,$sql)) {
+	            echo "An error occurred updating the IMDB URL for episode number " . $payload[$c]->EpisodeNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
+	       }
+	  } catch(Exception $e) {
+               echo "A fatal error occurred updating the IMDB URL  with the sql " . $sql . " and the error " . mysqli_error($conn);
           }
 	 
 	  echo json_encode("OK");
