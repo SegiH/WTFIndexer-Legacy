@@ -1167,7 +1167,9 @@ INSERT INTO `IMDB` (`ID`, `Name`, `IMDBURL`) VALUES
 (1075, 'Steve Agee', 'https://www.imdb.com/name/nm0012948/'),
 (1076, 'Troy Conrad', 'https://www.imdb.com/name/nm4588092/'),
 (1077, 'David Feldman', 'https://www.imdb.com/name/nm0271017/'),
-(1078, 'Kent Jones', 'https://www.imdb.com/name/nm2719270/');
+(1078, 'Kent Jones', 'https://www.imdb.com/name/nm2719270/'),
+(1079, 'Angelica Houston', 'https://www.imdb.com/name/nm0001378/'),
+(1080, 'Kyle Mooney', 'https://www.imdb.com/name/nm3324982/');
 
 -- --------------------------------------------------------
 
@@ -2205,7 +2207,9 @@ INSERT INTO `WTFEpisodes` (`EpisodeID`, `EpisodeNumber`, `Name`, `ReleaseDate`, 
 (1014, 1014, 'Jane Fonda', 'April 29, 2019', b'0'),
 (1015, 1015, 'Irwin Winkler', 'May 2, 2019', b'0'),
 (1016, 1016, 'Dennis Quaid', 'MayÂ 6,Â 2019', b'0'),
-(1017, 1017, 'Maya Erskine and Anna Konkle', 'MayÂ 9,Â 2019', b'0');
+(1017, 1017, 'Maya Erskine and Anna Konkle', 'MayÂ 9,Â 2019', b'0'),
+(1018, 1018, 'Angelica Houston', 'MayÂ 13,Â 2019', b'0'),
+(1019, 1019, 'Kyle Mooney', 'MayÂ 16,Â 2019', b'0');
 
 --
 -- Indexes for dumped tables
