@@ -180,6 +180,8 @@
 	  }
 
 	  $conn->close();
+
+	  echo json_encode("OK");
      }
 
      function UpdateFavorite() { 

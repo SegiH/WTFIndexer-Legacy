@@ -38,6 +38,8 @@ Client application
 
    The Favorites checkbox is not checked by default. Check it to view podcasts that you have favorited. If you want favorites to be checked by default, edit src/app/app.component.ts and change the line isFavoritesChecked=false; to isFavoritesChecked=true;
 
+   Click on the update button to call the ScrapeData endpoint which updates the local database with the latest podcast information.
+
 WTF.php
 -------
 This script runs on the server and acts like a REST resource. It has 3 endpoints which can be called when accessing WTF.php in the browser:
@@ -53,7 +55,7 @@ ScrapeData: Invoked by WTF.php?ScrapeData
             
             This endpoint has logic that checks if an episode has been added already before adding an episode to prevent duplicate episodes from being added so you can safely run this endpoint as much as you want and will never have duplicate entries.
            
-            Once it finishes running, the page should remain blank. You will only see something on the page if a PHP error occurs.
+            Once it finishes running, you should see the message OK when it finishes.
 
 UpdateFavorite: Invoked by WTF.php?UpdateFavorite&EpisodeNumber&FavoriteValue=1
                  This will update the favorite status for a specific episode in the database. 

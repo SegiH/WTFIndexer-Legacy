@@ -59,7 +59,7 @@ export class WTFIndexerComponent {
                            console.log("true 2");
                            found=true;
                       }
-                 } else {
+                 }/* /*else {
                       if (data.isFavoritesChecked === false) {
                            found=true;
                       } else if (parseInt(data.Favorite) === 1) {
@@ -141,6 +141,19 @@ export class WTFIndexerComponent {
 
   getFavoriteImage(favorite) {
        return (favorite != 1 ? "assets/heart-outline.png" : "assets/heart.png");
+  }
+
+  updateClick() {
+     fetch('WTF.php?ScrapeData', {method: 'GET'}).then(response => response.json()).then((response) => {
+          // If the fetch call to the REST endpoint didn't return OK throw a fatal error
+          if (response != "OK" ) {
+               throw new Error('Unable to update the data')
+          }
+     }).catch(error => {
+          console.log('Update failed', error);
+
+          alert("An error occurred Updating the data with the following error: " + error.message);
+     });
   }
 
   // Push the status of the Favorites checkbox to the payload so it can be used in the filter

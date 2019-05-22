@@ -4,6 +4,8 @@
 
 <mat-checkbox [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
 
+<button class="update" mat-raised-button color="primary" (click)="updateClick()">Update</button>
+
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   <!-- Episode Number Column -->
   <ng-container matColumnDef="Episode">
