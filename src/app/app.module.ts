@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WTFIndexerComponent } from './wtfindexer/wtfindexer.component';
+import { CoreModule } from './core/core.modules';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { WTFIndexerComponent } from './wtfindexer/wtfindexer.component';
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
+    CoreModule,
     FormsModule,
     MatButtonModule,
     MatCheckboxModule,

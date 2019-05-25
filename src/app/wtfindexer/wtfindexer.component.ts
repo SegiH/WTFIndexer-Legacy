@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { DataService } from '../core/data.service';
+import { IWTFEpisode } from '../core/interfaces';
 
 @Component({
   selector: 'app-wtfindexer',
@@ -11,11 +13,31 @@ export class WTFIndexerComponent {
   dataSource: MatTableDataSource<any>;
   filterValue: string;
   isFavoritesChecked=true;
-  WTFPayload = [];
+  WTFPayload : IWTFEpisode[];
 
-  constructor() {
-       // Fetch the data
-       this.fetchData();
+  constructor(private dataService: DataService) { }
+
+  ngOnInit() {
+       // subscribe to data service & get episodes
+       this.dataService.getEpisodes()
+       .subscribe((episodes: any[]) => {
+            this.WTFPayload = episodes;
+
+            // Assign the payload as the  table data source
+            this.dataSource=new MatTableDataSource(this.WTFPayload);
+
+            // Assign custom filter function
+            this.dataSource.filterPredicate = this.createFilter();
+            
+            if (this.isFavoritesChecked == true) {
+                 this.chkFavoritesClick();   
+            }
+       },
+       error => {
+          alert("An error occurred getting the episodes");
+
+          console.log(`An error occurred getting the episodes from the data service with error ${error}`)
+       });
   }
 
   applyFilter(filterValue: string) {
@@ -68,7 +90,7 @@ export class WTFIndexerComponent {
                  }*/
 
                  // First match the episode number name and/or release date
-                 if (data.EpisodeNumber === filter || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter.toLowerCase()) === true) || data.ReleaseDate.indexOf(filter) !== -1) {
+                 if (data.episodeNumber === filter || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter.toLowerCase()) === true) || data.ReleaseDate.indexOf(filter) !== -1) {
                       // If favorites isn't checked then include this item in the filter
                       if (data.isFavoritesChecked === false) {
                            found=true;
@@ -91,51 +113,28 @@ export class WTFIndexerComponent {
        
        if (epNumber == null)
             return;
-       
+
        // Get object based on matching episode number
-       let obj = this.WTFPayload.find(obj => obj.EpisodeNumber === epNumber);
+       let obj = this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber);
 
        if (obj.Favorite == null || obj.Favorite == 0)
             obj.Favorite=1;
        else if (obj.Favorite == 1)
             obj.Favorite=0;
-
-       // Save the value to the database
-       fetch('WTF.php?UpdateFavorite&EpisodeNumber=' + epNumber + "&FavoriteValue=" + obj.Favorite, {method: 'POST'}).then(response => response.json()).then((response) => {
+       
+       // Subscribe to data service to update the favorite
+       this.dataService.updateEpisodeFavorite(epNumber,obj.Favorite)
+       .subscribe(() => {
             // After updating the favorite, filter the data if favorites is checked because if Favorites is checked and the user unselects a favorite, it will be removed from the filter
             if (this.isFavoritesChecked == true) {
-                 this.updateFavoriteCheckboxStatus();
-                 this.applyFilter(" ");
+               this.updateFavoriteCheckboxStatus();
+               this.applyFilter(" ");
             }
-       }).catch(error => {
-            console.log('request failed', error);
-       });
-  }
- 
-  fetchData() {
-       // Reload data filtering out favorites only if the favorites checkbox is selected
-       //fetch('WTF.php?FetchData' + (this.isFavoritesChecked == true ? "&FavoritesOnly=1" : ""), {method: 'POST'}).then(response => response.json()).then((response) => {
-       fetch('WTF.php?FetchData', {method: 'POST'}).then(response => response.json()).then((response) => {
-            // If the fetch call to the REST endpoint didn't return any data throw a fatal error
-            if (response == null) {
-                 throw new Error('Unable to fetch the data')
-            }
-            
-            this.WTFPayload = response;
-            
-            // Assign the payload as the  table data source
-            this.dataSource=new MatTableDataSource(this.WTFPayload);
-            
-            // Assign custom filter function
-            this.dataSource.filterPredicate = this.createFilter();
-            
-            if (this.isFavoritesChecked == true) {
-                 this.chkFavoritesClick();   
-            }
-       }).catch(error => {
-            console.log('request failed', error);
+       },
+       error => {
+          alert("An error occurred updating the favorite");
 
-            alert("An error occurred fetching the data with the following error: " + error.message);
+          console.log(`An error occurred updating the favorite from the data service with error ${error}`)
        });
   }
 
@@ -144,15 +143,13 @@ export class WTFIndexerComponent {
   }
 
   updateClick() {
-     fetch('WTF.php?ScrapeData', {method: 'GET'}).then(response => response.json()).then((response) => {
-          // If the fetch call to the REST endpoint didn't return OK throw a fatal error
-          if (response != "OK" ) {
-               throw new Error('Unable to update the data')
-          }
-     }).catch(error => {
-          console.log('Update failed', error);
+     this.dataService.scrapeData()
+     .subscribe(() => {
+     },
+     error => {
+        alert("An error occurred scraping the data");
 
-          alert("An error occurred Updating the data with the following error: " + error.message);
+        console.log(`An error occurred scraping the data from the data service with error ${error}`)
      });
   }
 
