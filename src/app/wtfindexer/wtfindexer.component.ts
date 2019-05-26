@@ -13,12 +13,13 @@ export class WTFIndexerComponent {
   dataSource: MatTableDataSource<any>;
   filterValue: string;
   isFavoritesChecked=true;
+  readonly title: string = "WTF Indexer"
   WTFPayload : IWTFEpisode[];
 
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
-       // subscribe to data service & get episodes
+       // get episodes from the data service
        this.dataService.getEpisodes()
        .subscribe((episodes: any[]) => {
             this.WTFPayload = episodes;
