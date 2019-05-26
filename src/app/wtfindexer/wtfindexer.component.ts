@@ -12,7 +12,7 @@ export class WTFIndexerComponent {
   displayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'FaveValue'];
   dataSource: MatTableDataSource<any>;
   filterValue: string;
-  isFavoritesChecked=true;
+  isFavoritesChecked = false;
   readonly title: string = "WTF Indexer"
   WTFPayload : IWTFEpisode[];
 
