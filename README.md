@@ -1,10 +1,7 @@
 # WTFIndexer
 Overview:
 
-This Angular application displays a 
-
-
-scrapes the Wikipedia episodes page for the WTF with Marc Maron Podcast and saves all episode information into a MySQL database and displays the podcast information in a searchable Angular table with the ability to favorite episodes that you want to listen to later. Almost every name in each episode has a hyperlink to IMDB.com where you can see the persons' credits on IMDB.
+This Angular application displays scrapes the Wikipedia episodes page for the WTF with Marc Maron Podcast and saves all episode information into a MySQL database and displays the podcast information in a searchable Angular table with the ability to favorite episodes that you want to listen to later. Almost every name in each episode has a hyperlink to IMDB.com where you can see the persons' credits on IMDB.
 
 Requirements:
 
