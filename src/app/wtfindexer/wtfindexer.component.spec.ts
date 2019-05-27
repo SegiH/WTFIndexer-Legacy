@@ -1,10 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WTFIndexerComponent } from './wtfindexer.component';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule, MatCheckboxModule, MatFormFieldModule, MatIconModule, MatInputModule, MatTableModule } from '@angular/material';
+import { CoreModule } from '../core/core.modules';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('WTFIndexerComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        BrowserAnimationsModule,
+        CoreModule, 
+        FormsModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatTableModule 
+      ],
       declarations: [
         WTFIndexerComponent 
       ],
@@ -17,16 +32,16 @@ describe('WTFIndexerComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'WTFIndexer'`, () => {
+  it(`should have as title 'WTF Indexer'`, () => {
     const fixture = TestBed.createComponent(WTFIndexerComponent );
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('WTFIndexer');
+    expect(app.title).toEqual('WTF Indexer');
   });
 
   it('should render title in a h1 tag', () => {
     const fixture = TestBed.createComponent(WTFIndexerComponent );
     fixture.detectChanges();
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to WTFIndexer!');
+    expect(compiled.querySelector('h1').textContent).toContain('WTF Indexer');
   });
 });

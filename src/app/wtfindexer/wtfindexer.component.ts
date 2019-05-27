@@ -9,7 +9,7 @@ import { IWTFEpisode } from '../core/interfaces';
   styleUrls: ['./wtfindexer.component.css']
 })
 export class WTFIndexerComponent {
-  displayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'FaveValue'];
+  displayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite'];
   dataSource: MatTableDataSource<any>;
   filterValue: string;
   isFavoritesChecked = false;
@@ -109,7 +109,7 @@ export class WTFIndexerComponent {
        return filterFunction;
   }
 
-  favoriteClick($event) {
+  episodeFavoriteClick($event) {
        const epNumber=$event.target.id;
        
        if (epNumber == null)
