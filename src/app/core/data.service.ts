@@ -18,7 +18,7 @@ export class DataService {
     }
 
     scrapeData() : any {
-        return this.http.get<any>('WTF.php?ScrapeData')
+        return this.http.get<any>('WTF.php?ScrapeData&AllRows=true')
         .pipe(
           catchError(this.handleError)
         );
