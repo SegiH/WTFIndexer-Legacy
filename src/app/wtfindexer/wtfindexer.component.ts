@@ -19,26 +19,7 @@ export class WTFIndexerComponent {
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
-       // get episodes from the data service
-       this.dataService.getEpisodes()
-       .subscribe((episodes: any[]) => {
-            this.WTFPayload = episodes;
-
-            // Assign the payload as the  table data source
-            this.dataSource=new MatTableDataSource(this.WTFPayload);
-
-            // Assign custom filter function
-            this.dataSource.filterPredicate = this.createFilter();
-            
-            if (this.isFavoritesChecked == true) {
-                 this.chkFavoritesClick();   
-            }
-       },
-       error => {
-          alert("An error occurred getting the episodes");
-
-          console.log(`An error occurred getting the episodes from the data service with error ${error}`)
-       });
+       this.getEpisodes();
   }
 
   applyFilter(filterValue: string) {
@@ -139,6 +120,29 @@ export class WTFIndexerComponent {
        });
   }
 
+  getEpisodes() {
+       // get episodes from the data service
+       this.dataService.getEpisodes()
+            .subscribe((episodes: any[]) => {
+                 this.WTFPayload = episodes;
+
+                 // Assign the payload as the  table data source
+                 this.dataSource=new MatTableDataSource(this.WTFPayload);
+
+                 // Assign custom filter function
+                 this.dataSource.filterPredicate = this.createFilter();
+     
+                 if (this.isFavoritesChecked == true) {
+                      this.chkFavoritesClick();   
+                 }
+       },
+       error => {
+            alert("An error occurred getting the episodes");
+
+            console.log(`An error occurred getting the episodes from the data service with error ${error}`)
+       });
+  }
+
   getFavoriteImage(favorite) {
        return (favorite != 1 ? "assets/heart-outline.png" : "assets/heart.png");
   }
@@ -146,6 +150,9 @@ export class WTFIndexerComponent {
   updateClick() {
      this.dataService.scrapeData()
      .subscribe(() => {
+          this.getEpisodes();
+          
+          alert ("Update is complete");
      },
      error => {
         alert("An error occurred scraping the data");
