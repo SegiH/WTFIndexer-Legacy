@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 09, 2019 at 11:39 AM
+-- Generation Time: Oct 10, 2019 at 09:46 PM
 -- Server version: 10.1.38-MariaDB-0+deb9u1
--- PHP Version: 7.3.5-1+0~20190503093827.38+stretch~1.gbp60a41b
+-- PHP Version: 7.3.8-1+0~20190807.43+debian9~1.gbp7731bf
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -24,6 +24,11 @@ SET time_zone = "+00:00";
 
 DELIMITER $$
 --
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `EmptyProcedure` ()  BEGIN    
+    
+END$$
 
 --
 -- Functions
@@ -1168,8 +1173,49 @@ INSERT INTO `IMDB` (`ID`, `Name`, `IMDBURL`) VALUES
 (1076, 'Troy Conrad', 'https://www.imdb.com/name/nm4588092/'),
 (1077, 'David Feldman', 'https://www.imdb.com/name/nm0271017/'),
 (1078, 'Kent Jones', 'https://www.imdb.com/name/nm2719270/'),
-(1079, 'Angelica Houston', 'https://www.imdb.com/name/nm0001378/'),
-(1080, 'Kyle Mooney', 'https://www.imdb.com/name/nm3324982/');
+(1079, 'Anjelica Huston', 'https://www.imdb.com/name/nm0001378/'),
+(1080, 'Kyle Mooney', 'https://www.imdb.com/name/nm3324982/'),
+(1081, 'Lisa Kudrow', 'https://www.imdb.com/name/nm0001435/'),
+(1082, 'Duff McKagan', 'https://www.imdb.com/name/nm0570884/'),
+(1083, 'Timothy Olyphant', 'https://www.imdb.com/name/nm0648249/'),
+(1084, 'David Letterman', 'https://www.imdb.com/name/nm0001468/'),
+(1085, 'John Turturro', 'https://www.imdb.com/name/nm0001806/'),
+(1086, 'Perry Farrell', 'https://www.imdb.com/name/nm0268309/'),
+(1087, 'Mavis Staples', 'https://www.imdb.com/name/nm0822918/'),
+(1088, 'Jamie Denbo', 'https://www.imdb.com/name/nm0218914/'),
+(1089, 'Eve Ensler', 'https://www.imdb.com/name/nm0258127/'),
+(1090, 'Steve Sweeney', 'https://www.imdb.com/name/nm0842200/'),
+(1091, 'Stephen Colbert', 'https://www.imdb.com/name/nm0170306/'),
+(1092, 'Brent Butt', 'https://www.imdb.com/name/nm0125217/'),
+(1093, 'Stephen Dorff', 'https://www.imdb.com/name/nm0001151/'),
+(1094, 'Jamie Lee', 'https://www.imdb.com/name/nm3960459/'),
+(1095, 'David Lee Roth', 'https://www.imdb.com/name/nm0744822/'),
+(1096, 'Nahnatchka Khan', 'https://www.imdb.com/name/nm0451274/'),
+(1097, 'Sean Lennon', 'https://www.imdb.com/name/nm0005141/'),
+(1098, 'Alex Ross Perry', 'https://www.imdb.com/name/nm3504405/'),
+(1099, 'Geena Davis', 'https://www.imdb.com/name/nm0000133/'),
+(1100, 'Tom Dreesen', 'https://www.imdb.com/name/nm0237378/'),
+(1101, 'Kurt Andersen', 'https://www.imdb.com/name/nm1640853/'),
+(1102, 'Juston McKinney', 'https://www.imdb.com/name/nm1031252/'),
+(1103, 'Walton Goggins', 'https://www.imdb.com/name/nm0324658/'),
+(1104, 'Greg Kinnear', 'https://www.imdb.com/name/nm0001427/'),
+(1105, 'Bashir Salahuddin', 'https://www.imdb.com/name/nm1506981/'),
+(1106, 'Stephen Root', 'https://www.imdb.com/name/nm0740535/'),
+(1107, 'Patricia Clarkson', 'https://www.imdb.com/name/nm0165101/'),
+(1108, 'David Shields', 'https://www.imdb.com/name/nm7104160/'),
+(1109, 'Buddy Guy', 'https://www.imdb.com/name/nm0349796/'),
+(1110, 'Dale Beran', 'https://www.imdb.com/name/nm6553630/'),
+(1111, 'Edi Patterson', 'https://www.imdb.com/name/nm0666198/'),
+(1112, 'Bruce Dern', 'https://www.imdb.com/name/nm0001136/'),
+(1113, 'Danny Huston', 'https://www.imdb.com/name/nm0396812/'),
+(1114, 'June Diane Raphael', 'https://www.imdb.com/name/nm2053085/'),
+(1115, 'Chaunte Wayans', 'https://www.imdb.com/name/nm2114614/'),
+(1116, 'Byron Allen', 'https://www.imdb.com/name/nm0020334/'),
+(1117, 'Jeannie Gaffigan', 'https://www.imdb.com/name/nm1566608/'),
+(1118, 'Marilu Henner', 'https://www.imdb.com/name/nm0000447/'),
+(1119, 'Danny DeVito', 'https://www.imdb.com/name/nm0000362/'),
+(1120, 'Argus Hamilton', 'https://www.imdb.com/name/nm1009100/'),
+(1121, 'Jackie Tohn', 'https://www.imdb.com/name/nm0865626/');
 
 -- --------------------------------------------------------
 
@@ -2126,7 +2172,7 @@ INSERT INTO `WTFEpisodes` (`EpisodeID`, `EpisodeNumber`, `Name`, `ReleaseDate`, 
 (933, 933, 'Gus Van Sant', 'July 16, 2018', b'0'),
 (934, 934, 'Daveed Diggs / Bob Newhart', 'July 19, 2018', b'0'),
 (935, 935, 'Bo Burnham / David Sedaris', 'July 23, 2018', b'0'),
-(936, 936, 'Sue Costello / Jim Gaffigan', 'July 26, 2018', b'1'),
+(936, 936, 'Sue Costello / Jim Gaffigan', 'July 26, 2018', b'0'),
 (937, 937, 'Mila Kunis / Iliza Shlesinger', 'July 30, 2018', b'0'),
 (938, 938, 'Luzer Twersky', 'August 2, 2018', b'0'),
 (939, 939, 'Jay Leno', 'August 6, 2018', b'0'),
@@ -2206,10 +2252,52 @@ INSERT INTO `WTFEpisodes` (`EpisodeID`, `EpisodeNumber`, `Name`, `ReleaseDate`, 
 (1013, 1013, 'Bryan Callen', 'April 25, 2019', b'0'),
 (1014, 1014, 'Jane Fonda', 'April 29, 2019', b'0'),
 (1015, 1015, 'Irwin Winkler', 'May 2, 2019', b'0'),
-(1016, 1016, 'Dennis Quaid', 'MayÂ 6,Â 2019', b'0'),
-(1017, 1017, 'Maya Erskine and Anna Konkle', 'MayÂ 9,Â 2019', b'0'),
-(1018, 1018, 'Angelica Houston', 'MayÂ 13,Â 2019', b'0'),
-(1019, 1019, 'Kyle Mooney', 'MayÂ 16,Â 2019', b'0');
+(1016, 1016, 'Dennis Quaid', 'May 6, 2019', b'0'),
+(1017, 1017, 'Maya Erskine and Anna Konkle', 'May 9, 2019', b'0'),
+(1018, 1018, 'Anjelica Huston', 'May 13, 2019', b'0'),
+(1019, 1019, 'Kyle Mooney', 'May 16, 2019', b'0'),
+(1020, 1020, 'Lisa Kudrow', 'May 20, 2019', b'0'),
+(1021, 1021, 'Duff McKagan', 'May 23, 2019', b'0'),
+(1022, 1022, 'Timothy Olyphant', 'May 27, 2019', b'1'),
+(1023, 1023, 'David Letterman', 'May 30, 2019', b'0'),
+(1024, 1024, 'John Turturro', 'June 3, 2019', b'0'),
+(1025, 1025, 'Perry Farrell', 'June 6, 2019', b'0'),
+(1026, 1026, 'Mavis Staples', 'June 10, 2019', b'0'),
+(1027, 1027, 'Jamie Denbo', 'June 13, 2019', b'0'),
+(1028, 1028, 'Eve Ensler', 'June 17, 2019', b'0'),
+(1029, 1029, 'Steve Sweeney', 'June 20, 2019', b'0'),
+(1030, 1030, 'Stephen Colbert', 'June 24, 2019', b'0'),
+(1031, 1031, 'Brent Butt', 'June 27, 2019', b'0'),
+(1032, 1032, 'Stephen Dorff', 'July 1, 2019', b'0'),
+(1033, 1033, 'Jamie Lee', 'July 4, 2019', b'0'),
+(1034, 1034, 'David Lee Roth', 'July 8, 2019', b'0'),
+(1035, 1035, 'Nahnatchka Kahn', 'July 11, 2019', b'0'),
+(1036, 1036, 'Sean Lennon', 'July 15, 2019', b'0'),
+(1037, 1037, 'Alex Ross Perry', 'July 18, 2019', b'0'),
+(1038, 1038, 'Geena Davis', 'July 22, 2019', b'0'),
+(1039, 1039, 'Tom Dreesen', 'July 25, 2019', b'0'),
+(1040, 1040, 'Kurt Andersen', 'July 29, 2019', b'0'),
+(1041, 1041, 'Juston McKinney', 'August 1, 2019', b'0'),
+(1042, 1042, 'Walton Goggins', 'August 5, 2019', b'1'),
+(1043, 1043, 'Greg Kinnear', 'August 8, 2019', b'0'),
+(1044, 1044, 'Bashir Salahuddin', 'August 12, 2019', b'0'),
+(1045, 1045, 'Stephen Root', 'August 15, 2019', b'1'),
+(1046, 1046, 'Patricia Clarkson', 'August 19, 2019', b'0'),
+(1047, 1047, 'David Shields', 'August 22, 2019', b'0'),
+(1048, 1048, 'Betty Gilpin', 'August 26, 2019', b'0'),
+(1049, 1049, 'Buddy Guy', 'August 29, 2019', b'0'),
+(1050, 1050, 'Dale Beran', 'September 2, 2019', b'0'),
+(1051, 1051, 'Edi Patterson', 'September 5, 2019', b'1'),
+(1052, 1052, 'Bruce Dern', 'September 9, 2019', b'0'),
+(1053, 1053, 'Danny Huston', 'September 12, 2019', b'0'),
+(1054, 1054, 'June Diane Raphael', 'September 16, 2019', b'0'),
+(1055, 1055, 'Chaunte Wayans', 'September 19, 2019', b'0'),
+(1056, 1056, 'Byron Allen', 'September 23, 2019', b'0'),
+(1057, 1057, 'Jeannie Gaffigan', 'September 26, 2019', b'0'),
+(1058, 1058, 'Marilu Henner', 'September 30, 2019', b'0'),
+(1059, 1059, 'Danny DeVito', 'October 3, 2019', b'0'),
+(1060, 1060, 'Argus Hamilton', 'October 7, 2019', b'1'),
+(1061, 1061, 'Jackie Tohn', 'October 10, 2019', b'0');
 
 --
 -- Indexes for dumped tables
@@ -2235,13 +2323,13 @@ ALTER TABLE `WTFEpisodes`
 -- AUTO_INCREMENT for table `IMDB`
 --
 ALTER TABLE `IMDB`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1079;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1122;
 
 --
 -- AUTO_INCREMENT for table `WTFEpisodes`
 --
 ALTER TABLE `WTFEpisodes`
-  MODIFY `EpisodeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1018;
+  MODIFY `EpisodeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1062;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

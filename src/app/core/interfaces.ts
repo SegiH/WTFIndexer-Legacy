@@ -3,4 +3,5 @@ export interface IWTFEpisode {
     Name: string;
     ReleaseDate: string;
     Favorite: number;
+    IsBeingEdited: boolean;
 }

@@ -18,12 +18,15 @@
   <ng-container matColumnDef="Name">
        <th mat-header-cell *matHeaderCellDef> Name </th>
        <td mat-cell *matCellDef="let element">
-            <div *ngIf="!element.IMDBLink">    
+            <div *ngIf="!element.IMDBLink && !element.IsBeingEdited">    
                  {{element.Name}}
             </div>
-            <div *ngIf="element.IMDBLink">
+            <div *ngIf="element.IMDBLink && !element.IsBeingEdited">
                  <div [innerHtml]="element.IMDBLink"></div>
             </div>
+            <mat-form-field *ngIf="element.IsBeingEdited">
+               <input matInput name="edit" (placeholder)="Edit" type="text" value="{{element.Name}}" [(ngModel)]="element.Name" >
+            </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
        </td>
   </ng-container>
  
@@ -37,6 +40,12 @@
   <ng-container matColumnDef="Favorite">
        <th mat-header-cell *matHeaderCellDef> Favorite </th>
        <td mat-cell *matCellDef="let element"><img [src]="getFavoriteImage(element.Favorite)" id="{{element.EpisodeNumber}}" alt="Favorite icon" style="width:24px;height:24px" (click)="episodeFavoriteClick($event)" /></td>
+  </ng-container>
+
+  <!-- Edit/Save Column -->
+  <ng-container matColumnDef="Edit">
+     <th mat-header-cell *matHeaderCellDef> Edit </th>
+     <td mat-cell *matCellDef="let element"><img [src]="getEditImage(element.EpisodeNumber)" id="{{element.EpisodeNumber}}" alt="Edit icon" style="width:24px;height:24px" (click)="episodeEditClick($event)" /></td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

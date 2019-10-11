@@ -11,6 +11,7 @@ import { IWTFEpisode } from '../core/interfaces';
 export class WTFIndexerComponent {
   displayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite'];
   dataSource: MatTableDataSource<any>;
+  editingAllowed = false;
   filterValue: string;
   isFavoritesChecked = false;
   readonly title: string = "WTF Indexer"
@@ -19,6 +20,9 @@ export class WTFIndexerComponent {
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
+       if (this.editingAllowed)
+            this.displayedColumns.push('Edit');
+
        this.getEpisodes();
   }
 
@@ -90,6 +94,18 @@ export class WTFIndexerComponent {
        return filterFunction;
   }
 
+  episodeEditClick($event) {
+     const epNumber=$event.target.id;
+
+     if (epNumber == null)
+            return;
+
+     // Get object based on matching episode number
+     let obj = this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber);
+
+     obj.IsBeingEdited=!obj.IsBeingEdited;
+  }
+
   episodeFavoriteClick($event) {
        const epNumber=$event.target.id;
        
@@ -142,6 +158,19 @@ export class WTFIndexerComponent {
             console.log(`An error occurred getting the episodes from the data service with error ${error}`)
        });
   }
+ 
+  getEditImage(epNumber : number) {
+       //const epNumber=$event.target.id;
+
+       if (epNumber == null)
+            return;
+
+       // Get object based on matching episode number
+       let obj = this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber);
+
+       // Return the right image if we are in edit or save mode
+       return (obj.IsBeingEdited == true ? "assets/save.png" : "assets/edit.png");
+  }
 
   getFavoriteImage(favorite) {
        return (favorite != 1 ? "assets/heart-outline.png" : "assets/heart.png");
@@ -151,7 +180,7 @@ export class WTFIndexerComponent {
      this.dataService.scrapeData()
      .subscribe(() => {
           this.getEpisodes();
-          
+
           alert ("Update is complete");
      },
      error => {
