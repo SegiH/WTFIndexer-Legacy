@@ -1,54 +1,104 @@
 <h1>{{ title }}</h1>
-<mat-form-field>
+<div *ngIf="isLoading" class="app-loading">
+     <span class="loading">Loading...</span>
+     <div class="logo"></div>
+     
+     <svg class="spinner" viewBox="25 25 50 50">
+          <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+     </svg>
+</div>
+
+<mat-form-field *ngIf="!isLoading">
   <input matInput [(ngModel)]="filterValue" (keydown)="applyFilter($event.target.value)" placeholder="Filter">     
 </mat-form-field>
 
-<mat-checkbox [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
+<mat-checkbox *ngIf="!isLoading" [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
 
-<button class="update nofavorites" mat-raised-button color="primary" (click)="updateClick()">Update</button>
+<button *ngIf="!isLoading" id="updateButton" mat-raised-button color="primary" (click)="updateClick()">Update</button>
 
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-  <!-- Episode Number Column -->
-  <ng-container matColumnDef="Episode">
-       <th mat-header-cell *matHeaderCellDef> Ep # </th>
-       <td mat-cell *matCellDef="let element"> {{element.EpisodeNumber}} </td>
-  </ng-container>
- 
-  <!-- Name Column -->
-  <ng-container matColumnDef="Name">
-       <th mat-header-cell *matHeaderCellDef> Name </th>
-       <td mat-cell *matCellDef="let element">
-            <div *ngIf="!element.IMDBLink && !element.IsBeingEdited">    
-                 {{element.Name}}
-            </div>
-            <div *ngIf="element.IMDBLink && !element.IsBeingEdited">
-                 <div [innerHtml]="element.IMDBLink"></div>
-            </div>
-            <mat-form-field *ngIf="element.IsBeingEdited">
-               <input matInput name="edit" (placeholder)="Edit" type="text" value="{{element.Name}}" [(ngModel)]="element.Name" >
-            </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
-       </td>
-  </ng-container>
- 
-  <!-- Release Date Column -->
-  <ng-container matColumnDef="ReleaseDate">
-       <th mat-header-cell *matHeaderCellDef> Release Date </th>
-       <td mat-cell *matCellDef="let element"> {{element.ReleaseDate}} </td>
-  </ng-container>
+<button *ngIf="!isLoading" id="editButton" mat-raised-button color="accent" (click)="editIMDBNamesClick()">{{ (!isBeingEdited ? "Edit" : "Save") }}</button>
 
-  <!-- Favorite Column -->
-  <ng-container matColumnDef="Favorite">
-       <th mat-header-cell *matHeaderCellDef> Favorite </th>
-       <td mat-cell *matCellDef="let element"><img [src]="getFavoriteImage(element.Favorite)" id="{{element.EpisodeNumber}}" alt="Favorite icon" style="width:24px;height:24px" (click)="episodeFavoriteClick($event)" /></td>
-  </ng-container>
+<button *ngIf="isBeingEdited" mat-raised-button style="margin-left: 25px;" color="warn" (click)="editIMDBNamesClick(true)">Cancel</button>
 
-  <!-- Edit/Save Column -->
-  <ng-container matColumnDef="Edit">
-     <th mat-header-cell *matHeaderCellDef> Edit </th>
-     <td mat-cell *matCellDef="let element"><img [src]="getEditImage(element.EpisodeNumber)" id="{{element.EpisodeNumber}}" alt="Edit icon" style="width:24px;height:24px" (click)="episodeEditClick($event)" /></td>
-  </ng-container>
+<mat-paginator [pageSizeOptions]="[2,25,50,100,1000]" showFirstLastButtons></mat-paginator>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+<table *ngIf="!isLoading" mat-table matSort [dataSource]="episodesDataSource" class="episodeTable mat-elevation-z8">
+     <!-- Episode Number Column -->
+     <ng-container matColumnDef="Episode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Ep # </th>
+          <td mat-cell *matCellDef="let element"> {{element.EpisodeNumber}} </td>
+     </ng-container>
+    
+     <!-- Name Column -->
+     <ng-container matColumnDef="Name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          <td mat-cell *matCellDef="let element">
+               <div *ngIf="!element.IMDBLink && !isBeingEdited">    
+                    {{element.Name}}
+               </div>
+               <div *ngIf="element.IMDBLink && !isBeingEdited">
+                    <div [innerHtml]="element.IMDBLink"></div>
+               </div>
+               <mat-form-field *ngIf="isBeingEdited">
+                  <textarea cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize"
+                  cdkAutosizeMinRows="1"
+                  cdkAutosizeMaxRows="5"matInput name="edit" (placeholder)="Edit" type="text" value="{{element.Name}}" [(ngModel)]="element.Name" ></textarea>
+               </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
+          </td>
+     </ng-container>
+    
+     <!-- Release Date Column -->
+     <ng-container matColumnDef="ReleaseDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Release Date </th>
+          <td mat-cell *matCellDef="let element"> {{element.ReleaseDate}} </td>
+     </ng-container>
+   
+     <!-- Favorite Column -->
+     <ng-container matColumnDef="Favorite">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Favorite </th>
+          <td mat-cell *matCellDef="let element"><img [src]="getFavoriteImage(element.Favorite)" id="{{element.EpisodeNumber}}" alt="Favorite icon" style="width:24px;height:24px" (click)="episodeFavoriteClick($event)" /></td>
+     </ng-container>
+   
+     <!-- Edit/Save Column -->
+     <ng-container matColumnDef="Edit">
+        <th mat-header-cell *matHeaderCellDef> Edit </th>
+        <td mat-cell *matCellDef="let element"><img [src]="getEditImage(element.EpisodeNumber)" id="{{element.EpisodeNumber}}" alt="Edit icon" style="width:24px;height:24px" (click)="episodeEditClick($event)" /></td>
+     </ng-container>
+   
+     <tr mat-header-row *matHeaderRowDef="episodeDisplayedColumns"></tr>
+     <tr mat-row *matRowDef="let row; columns: episodeDisplayedColumns;"></tr>
 </table>
- 
+
+<table *ngIf="isBeingEdited" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
+     <!-- ID Column -->
+     <ng-container matColumnDef="ID">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let element"> 
+               {{element.ID}}
+          </td>
+     </ng-container>
+    
+     <!-- Name Column -->
+     <ng-container class="imdbInputField" matColumnDef="Name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element">
+               <mat-form-field *ngIf="element.Name">
+                  <input matInput name="name" (placeholder)="Name" type="text" value="{{element.Name}}" [(ngModel)]="element.Name" >
+               </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
+          </td>
+     </ng-container>
+   
+     <ng-container  class="imdbInputField" matColumnDef="IMDBURL">
+          <th mat-header-cell *matHeaderCellDef> IMDB URL </th>
+          <td mat-cell *matCellDef="let element">
+               <mat-form-field>
+                  <input matInput name="name" (placeholder)="Name" type="text" value="{{element.IMDBURL}}" >
+               </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
+          </td>
+     </ng-container>
+
+     <tr mat-header-row *matHeaderRowDef="imdbDisplayedColumns"></tr>
+     <tr mat-row *matRowDef="let row; columns: imdbDisplayedColumns;"></tr>
+   </table>
+    

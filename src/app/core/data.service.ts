@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { IWTFEpisode } from './interfaces';
+import { IMDBNames,IWTFEpisode } from './interfaces';
 
 @Injectable()
 export class DataService {
@@ -15,6 +15,13 @@ export class DataService {
         .pipe(
           catchError(this.handleError)
         );
+    }
+
+    getIMDBNames() : any {
+      return this.http.get<IMDBNames[]>('WTF.php?FetchIMDBNames')
+      .pipe(
+        catchError(this.handleError)
+      );
     }
 
     scrapeData() : any {

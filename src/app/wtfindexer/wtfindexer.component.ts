@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { Component, ViewChild } from '@angular/core';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { DataService } from '../core/data.service';
-import { IWTFEpisode } from '../core/interfaces';
+import { IMDBNames, IWTFEpisode } from '../core/interfaces';
 
 @Component({
   selector: 'app-wtfindexer',
@@ -9,25 +9,34 @@ import { IWTFEpisode } from '../core/interfaces';
   styleUrls: ['./wtfindexer.component.css']
 })
 export class WTFIndexerComponent {
-  displayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite'];
-  dataSource: MatTableDataSource<any>;
-  editingAllowed = false;
+  editingAllowed = true;
+  episodesDataSource: MatTableDataSource<any>;
+  episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite'];
   filterValue: string;
+  imdbDataSource: MatTableDataSource<any>;
+  imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL'];
+  IMDBPayload: IMDBNames[];
+  isBeingEdited = false;
+  isLoading=true;
   isFavoritesChecked = false;
   readonly title: string = "WTF Indexer"
   WTFPayload : IWTFEpisode[];
 
+  @ViewChild(MatPaginator,{}) paginator: MatPaginator;
+  @ViewChild(MatSort, {}) sort: MatSort;
+
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
-       if (this.editingAllowed)
-            this.displayedColumns.push('Edit');
-
        this.getEpisodes();
+
+       // If editing isn't allowed, there's no point in loading this data since the table won't ever be shown
+       if (this.editingAllowed)
+            this.getIMDBNames();
   }
 
   applyFilter(filterValue: string) {
-       this.dataSource.filter = filterValue;
+       this.episodesDataSource.filter = filterValue;
   }
   
   chkFavoritesClick() {
@@ -94,6 +103,19 @@ export class WTFIndexerComponent {
        return filterFunction;
   }
 
+  editIMDBNamesClick(canceled = true) {
+       if (this.editingAllowed)
+            this.episodeDisplayedColumns.push('Edit');
+
+       if (!canceled) { // Saving
+            
+       } else {
+
+       }
+
+       this.isBeingEdited = !this.isBeingEdited;
+  }
+
   episodeEditClick($event) {
      const epNumber=$event.target.id;
 
@@ -140,22 +162,58 @@ export class WTFIndexerComponent {
        // get episodes from the data service
        this.dataService.getEpisodes()
             .subscribe((episodes: any[]) => {
+                 this.isLoading = false;
+
                  this.WTFPayload = episodes;
 
                  // Assign the payload as the  table data source
-                 this.dataSource=new MatTableDataSource(this.WTFPayload);
+                 this.episodesDataSource=new MatTableDataSource(this.WTFPayload);
 
                  // Assign custom filter function
-                 this.dataSource.filterPredicate = this.createFilter();
+                 this.episodesDataSource.filterPredicate = this.createFilter();
      
+                 // Assign paginator
+                 this.episodesDataSource.paginator = this.paginator;
+
+                 // Assign sort
+                 this.episodesDataSource.sort = this.sort;
+
                  if (this.isFavoritesChecked == true) {
                       this.chkFavoritesClick();   
                  }
+
+                 
        },
        error => {
             alert("An error occurred getting the episodes");
 
             console.log(`An error occurred getting the episodes from the data service with error ${error}`)
+       });
+  }
+
+  getIMDBNames() {
+       // Get IMDB names
+       this.dataService.getIMDBNames()
+            .subscribe((IMDBNames: any[]) => {
+                 this.IMDBPayload=IMDBNames;
+
+                 // Assign the payload as the table data source
+                 this.imdbDataSource=new MatTableDataSource(this.IMDBPayload);
+
+                 // Assign the payload as the  table data source
+                 //this.dataSource=new MatTableDataSource(this.WTFPayload);
+
+                 // Assign custom filter function
+                 //this.dataSource.filterPredicate = this.createFilter();
+     
+                 /*if (this.isFavoritesChecked == true) {
+                      this.chkFavoritesClick();   
+                 }*/
+       },
+       error => {
+            alert("An error occurred getting the IMDB names")
+
+            console.log(`An error occurred getting the IMDB names from the data service with error ${error}`)
        });
   }
  

@@ -5,3 +5,9 @@ export interface IWTFEpisode {
     Favorite: number;
     IsBeingEdited: boolean;
 }
+
+export interface IMDBNames {
+     ID: number;
+     Name: string;
+     IMDBURL: string;
+}
