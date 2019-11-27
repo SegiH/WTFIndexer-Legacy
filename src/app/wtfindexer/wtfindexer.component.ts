@@ -22,8 +22,8 @@ export class WTFIndexerComponent {
   readonly title: string = "WTF Indexer"
   WTFPayload : IWTFEpisode[];
 
-  @ViewChild(MatPaginator,{}) paginator: MatPaginator;
-  @ViewChild(MatSort, {}) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(private dataService: DataService) { }
 
@@ -103,9 +103,16 @@ export class WTFIndexerComponent {
        return filterFunction;
   }
 
-  editIMDBNamesClick(canceled = true) {
-       if (this.editingAllowed)
-            this.episodeDisplayedColumns.push('Edit');
+  editEpisodesIMDBNamesClick(canceled = true) {
+       if (!this.editingAllowed)
+            return;
+       
+       if (this.paginator.pageSize > 100) {
+            alert("Editing can only be done on 100 or less episodes at a time");
+            return;
+       }
+       
+       this.episodeDisplayedColumns.push('Edit');
 
        if (!canceled) { // Saving
             
@@ -218,8 +225,6 @@ export class WTFIndexerComponent {
   }
  
   getEditImage(epNumber : number) {
-       //const epNumber=$event.target.id;
-
        if (epNumber == null)
             return;
 
