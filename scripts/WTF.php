@@ -20,6 +20,24 @@
           $conn->close();
      }
      
+     function FetchIMDBNames() {
+          $conn = GetConnection();
+
+          $imdbArray = array();
+
+          $sql="SELECT * FROM IMDB ORDER BY Name";
+
+          $result = $conn->query($sql);
+	 
+          while ($row=mysqli_fetch_assoc($result)) {
+               $imdbArray[] = $row;
+          }
+
+          echo json_encode($imdbArray);
+          
+          $conn->close();
+     }
+     
      function GetConnection() {
 	     $conn = new mysqli(ini_get("mysqli.default_host"),ini_get("mysqli.default_user"),ini_get("mysqli.default_pw"),"WTF");
 	  
@@ -51,6 +69,43 @@
           }
 
           return $conn;
+     }
+
+     function getIMDBURLByName() {
+          $conn = GetConnection();
+   
+          $url="https://www.imdb.com/find?q=" . str_replace(" ","%20",$_GET["SearchIMDBByName"]);
+             
+          $curl = curl_init($url);
+   
+          $options = array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL => $url);
+            
+          curl_setopt_array($curl,$options); 
+   
+          $htmlContent = curl_exec($curl);
+    
+          curl_close($curl);
+          
+          $dom = new DOMDocument();
+             
+          $dom->loadHTML($htmlContent);
+   
+          $finder = new DomXPath($dom);
+   
+          // get TD with the class result_text
+          $nodes = $finder ->query("//td[contains(@class,'result_text')]");
+           
+          // First result 
+          $nodes=$nodes[0]; 
+             
+          // Get first hyperlink 
+          $link = $nodes->getElementsByTagName("a")[0]->getAttribute("href");
+             
+          // The link always starts with /name/ so start at index 6 which is 1 char past the 2nd slash 
+          $pos = strpos($link,"/",6);
+   
+          // Return full URL
+          return "https://www.imdb.com" . substr($link,0,$pos+1);
      }
 
      // Loads data provided as JSON. Not really needed anymore since ScrapeData does this automatically
@@ -161,6 +216,28 @@
                          try {
 	                         if (!mysqli_query($conn,$sql)) {
 	                              echo "An error occurred adding episode number " . $epNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
+                              }
+                         } catch(Exception $e) {
+                              echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
+                         }
+
+                         // Get the IMDB URL based on the name
+                         $imdbURL=getIMDBURLByName($name);
+
+                         // Before inserting into the IMDB table, make sure that the name isn't in the table alreadt
+                         $sql="SELECT * FROM IMDB WHERE Name='" . $name . "'";
+          
+                         $result = $conn->query($sql);
+ 
+                         if ($result->num_rows > 0) {
+                              continue;
+                         }
+
+                         $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $name . "','" . $imdbURL . "');";
+    
+                         try {
+                              if (!mysqli_query($conn,$sql)) {
+                                   echo "An error occurred adding the name " . $name . " into the IMDB table with the sql " . $sql . " and the error " . mysqli_error($conn);		  
                               }
                          } catch(Exception $e) {
                               echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
