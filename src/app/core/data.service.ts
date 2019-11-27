@@ -25,7 +25,7 @@ export class DataService {
     }
 
     scrapeData() : any {
-        return this.http.get<any>('WTF.php?ScrapeData&AllRows=true')
+        return this.http.get<any>('WTF.php?ScrapeData')
         .pipe(
           catchError(this.handleError)
         );
@@ -48,5 +48,4 @@ export class DataService {
       }
       return Observable.throw(error || 'Node.js server error');
     }
-
 }
