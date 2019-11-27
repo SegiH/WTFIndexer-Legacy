@@ -117,7 +117,7 @@ export class WTFIndexerComponent {
 
        if (!canceled) { // Saving
             
-       } else {
+       } else { // Canceling
 
        }
 
