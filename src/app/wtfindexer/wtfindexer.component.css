@@ -21,6 +21,7 @@ mat-paginator {
 /* Widen select dropdown in paginator because its too narrow with 4 digit values */
 ::ng-deep mat-paginator .mat-select-value {
     min-width: 30px !important;
+    max-width: 100px !important;
 }
 #chkFavorites {
     margin-left: 30px;
