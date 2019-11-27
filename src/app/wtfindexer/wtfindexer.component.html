@@ -14,13 +14,13 @@
 
 <mat-checkbox *ngIf="!isLoading" [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
 
-<button *ngIf="!isLoading" id="updateButton" mat-raised-button color="primary" (click)="updateClick()">Update</button>
+<button *ngIf="!isLoading" id="updateButton" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
 
 <button *ngIf="!isLoading" id="editButton" mat-raised-button color="accent" (click)="editEpisodesIMDBNamesClick()">{{ (!isBeingEdited ? "Edit" : "Save") }}</button>
 
 <button *ngIf="isBeingEdited" mat-raised-button style="margin-left: 25px;" color="warn" (click)="editEpisodesIMDBNamesClick(true)">Cancel</button>
 
-<mat-paginator [pageSizeOptions]="[10000,2,25,50,100]" showFirstLastButtons></mat-paginator>
+<mat-paginator #episodePaginator class="episodePaginator" [pageSizeOptions]="[10000,2,25,50,100]" showFirstLastButtons></mat-paginator>
 
 <table *ngIf="!isLoading" mat-table matSort [dataSource]="episodesDataSource" class="episodeTable mat-elevation-z8">
      <!-- Episode Number Column -->
@@ -69,6 +69,8 @@
      <tr mat-header-row *matHeaderRowDef="episodeDisplayedColumns"></tr>
      <tr mat-row *matRowDef="let row; columns: episodeDisplayedColumns;"></tr>
 </table>
+
+<mat-paginator #imdbPaginator *ngIf="isBeingEdited" class="imdbPaginator" [pageSizeOptions]="[10000,2,25,50,100]" showFirstLastButtons></mat-paginator>
 
 <table *ngIf="isBeingEdited" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
      <!-- ID Column -->
