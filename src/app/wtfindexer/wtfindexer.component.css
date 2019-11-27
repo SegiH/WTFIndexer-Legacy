@@ -12,10 +12,16 @@
     }
 }
 
-mat-paginator {
+mat-paginator.episodePaginator {
      float: left;
      position: fixed;
      top: 130px; 
+}
+
+mat-paginator.imdbPaginator {
+  left: 970px;
+  top: 130px;
+  position: absolute; 
 }
 
 /* Widen select dropdown in paginator because its too narrow with 4 digit values */
@@ -23,6 +29,7 @@ mat-paginator {
     min-width: 30px !important;
     max-width: 100px !important;
 }
+
 #chkFavorites {
     margin-left: 30px;
 }
@@ -41,9 +48,9 @@ mat-paginator {
 }
 
 .imdbTable {
-    position: absolute;
-    margin-left: 900px;
-    top: 147px;
+    position: relative;
+    margin-left: 975px;
+    top: 53px;
 }
 
 /* 1st Column of both tables which can be the same width since they both have an ID in column 1 */
@@ -64,7 +71,7 @@ table tr td:first-child  {
     min-width:500px;
 }
 
-/* 3rd Column of episode table */
+/* 3rd ColupdateButtonClickedumn of episode table */
 .episodeTable tr td:first-child + td + td {
     min-width:170px;
     white-space: wrap !important;
