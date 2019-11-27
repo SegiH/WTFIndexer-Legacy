@@ -1226,7 +1226,7 @@ INSERT INTO `IMDB` (`ID`, `Name`, `IMDBURL`) VALUES
 (1129, 'Kate Nash', 'https://www.imdb.com/name/nm2658542/'),
 (1130, 'Tony Hale', 'https://www.imdb.com/name/nm0355024/'),
 (1131, 'Lili Taylor', 'https://www.imdb.com/name/nm0000666/'),
-(1132, 'Louis Katz', 'https://www.imdb.com/name/nm0001447/');
+(1132, 'Louis Katz', 'https://www.imdb.com/name/nm0001447/'); 
 
 
 -- --------------------------------------------------------
