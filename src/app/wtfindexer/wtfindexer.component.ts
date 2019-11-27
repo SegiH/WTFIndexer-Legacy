@@ -22,7 +22,8 @@ export class WTFIndexerComponent {
   readonly title: string = "WTF Indexer"
   WTFPayload : IWTFEpisode[];
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild('episodePaginator', { static: true }) episodePaginator: MatPaginator;
+  @ViewChild('imdbPaginator', { static: false }) imdbPaginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(private dataService: DataService) { }
@@ -107,7 +108,7 @@ export class WTFIndexerComponent {
        if (!this.editingAllowed)
             return;
        
-       if (this.paginator.pageSize > 100) {
+       if (this.episodePaginator.pageSize > 100) {
             alert("Editing can only be done on 100 or less episodes at a time");
             return;
        }
@@ -180,7 +181,7 @@ export class WTFIndexerComponent {
                  this.episodesDataSource.filterPredicate = this.createFilter();
      
                  // Assign paginator
-                 this.episodesDataSource.paginator = this.paginator;
+                 this.episodesDataSource.paginator = this.episodePaginator;
 
                  // Assign sort
                  this.episodesDataSource.sort = this.sort;
@@ -207,12 +208,9 @@ export class WTFIndexerComponent {
                  // Assign the payload as the table data source
                  this.imdbDataSource=new MatTableDataSource(this.IMDBPayload);
 
-                 // Assign the payload as the  table data source
-                 //this.dataSource=new MatTableDataSource(this.WTFPayload);
+                 // Assign paginator
+                 this.imdbDataSource.paginator = this.imdbPaginator;
 
-                 // Assign custom filter function
-                 //this.dataSource.filterPredicate = this.createFilter();
-     
                  /*if (this.isFavoritesChecked == true) {
                       this.chkFavoritesClick();   
                  }*/
@@ -239,7 +237,7 @@ export class WTFIndexerComponent {
        return (favorite != 1 ? "assets/heart-outline.png" : "assets/heart.png");
   }
 
-  updateClick() {
+  updateButtonClicked() {
      this.dataService.scrapeData()
      .subscribe(() => {
           this.getEpisodes();
