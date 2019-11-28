@@ -53,6 +53,8 @@ export class WTFIndexerComponent {
   createEpisodeFilter() {
        const delimiter: string = ":";
 
+       this.updateFavoriteCheckboxStatus();
+
        let filterFunction = function (data: any, filter: string): boolean {
             let customSearch = () => {
                  let found = false;
@@ -87,13 +89,13 @@ export class WTFIndexerComponent {
                  }*/
 
                  // First match the episode number name and/or release date
-                 if (data.episodeNumber === filter || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter.toLowerCase()) === true) || data.ReleaseDate.indexOf(filter) !== -1) {
+                 if (data.EpisodeNumber === filter || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter.toLowerCase()) === true) || data.ReleaseDate.includes(filter) === true) {
                       // If favorites isn't checked then include this item in the filter
-                      if (data.isFavoritesChecked === false) {
+                      if (data.isFavoritesChecked == false) {
                            found=true;
                       } else if (parseInt(data.Favorite) === 1) { // If favorites is checked, only include this item if this is a favorite item
                            found=true;
-                      } 
+                      }
                  }
                  
                  return found;
@@ -105,12 +107,12 @@ export class WTFIndexerComponent {
        return filterFunction;
   }
 
-    // Custom Material UI table filter function
-    createIMDBFilter() {
-     const delimiter: string = ":";
+  // Custom Material UI table filter function
+  createIMDBFilter() {
+       const delimiter: string = ":";
 
-     let filterFunction = function (data: any, filter: string): boolean {
-          let customSearch = () => {
+       let filterFunction = function (data: any, filter: string): boolean {
+            let customSearch = () => {
                let found = false;
 
                // First match the episode number name and/or release date
