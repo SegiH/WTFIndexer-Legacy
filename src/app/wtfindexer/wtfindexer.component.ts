@@ -9,7 +9,7 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
   styleUrls: ['./wtfindexer.component.css']
 })
 export class WTFIndexerComponent {
-  editingAllowed = true;
+  editingAllowed = false;
   episodesDataSource: MatTableDataSource<any>;
   episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'isModified'
   filterValue: string;
@@ -32,12 +32,13 @@ export class WTFIndexerComponent {
        this.getEpisodes();
 
        // If editing isn't allowed, there's no point in loading this data since the table won't ever be shown
-       if (this.editingAllowed)
-            this.getIMDBNames();
+       //if (this.editingAllowed)
+       this.getIMDBNames();
   }
 
   applyFilter(filterValue: string) {
        this.episodesDataSource.filter = filterValue;
+       this.imdbDataSource.filter = filterValue;
   }
   
   chkFavoritesClick() {
@@ -49,7 +50,7 @@ export class WTFIndexerComponent {
   }
  
   // Custom Material UI table filter function
-  createFilter() {
+  createEpisodeFilter() {
        const delimiter: string = ":";
 
        let filterFunction = function (data: any, filter: string): boolean {
@@ -104,7 +105,29 @@ export class WTFIndexerComponent {
        return filterFunction;
   }
 
-  editEpisodesIMDBNamesClick(canceled = true) {
+    // Custom Material UI table filter function
+    createIMDBFilter() {
+     const delimiter: string = ":";
+
+     let filterFunction = function (data: any, filter: string): boolean {
+          let customSearch = () => {
+               let found = false;
+
+               // First match the episode number name and/or release date
+               if (data.Name.toLowerCase().includes(filter.toLowerCase()) === true || data.IMDBURL.toLowerCase().includes(filter.toLowerCase()) === true) {
+                    found=true;
+               }
+               
+               return found;
+          }
+
+          return customSearch();
+     }
+
+     return filterFunction;
+}
+
+  editEpisodesIMDBNamesClick(canceled) {
        if (!this.editingAllowed)
             return;
        
@@ -116,7 +139,8 @@ export class WTFIndexerComponent {
        this.episodeDisplayedColumns.push('Edit');
 
        if (!canceled) { // Saving
-            
+           const modifiedIMDB=this.IMDBPayload.filter(IMDB => IMDB.IsModified === true)
+           const modifiedWTF=this.WTFPayload.filter(episode => episode.IsModified === true)
        } else { // Canceling
 
        }
@@ -178,7 +202,7 @@ export class WTFIndexerComponent {
                  this.episodesDataSource=new MatTableDataSource(this.WTFPayload);
 
                  // Assign custom filter function
-                 this.episodesDataSource.filterPredicate = this.createFilter();
+                 this.episodesDataSource.filterPredicate = this.createEpisodeFilter();
      
                  // Assign paginator
                  this.episodesDataSource.paginator = this.episodePaginator;
@@ -207,6 +231,9 @@ export class WTFIndexerComponent {
 
                  // Assign the payload as the table data source
                  this.imdbDataSource=new MatTableDataSource(this.IMDBPayload);
+
+                 // Assign custom filter function
+                 this.imdbDataSource.filterPredicate = this.createIMDBFilter();
 
                  // Assign paginator
                  this.imdbDataSource.paginator = this.imdbPaginator;
@@ -241,8 +268,6 @@ export class WTFIndexerComponent {
      if (IMDBId === null)
           return;
 
-          debugger;
-
      // Get object based on matching episode number
      this.IMDBPayload.find(IMDB => IMDB.ID === IMDBId).IsModified=true;
   }
@@ -271,8 +296,6 @@ export class WTFIndexerComponent {
   WTFItemUpdated(epNumber) {
      if (epNumber === null)
           return;
-
-          debugger;
 
      // Get object based on matching episode number
      this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsModified=true;
