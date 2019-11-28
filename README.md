@@ -1,7 +1,7 @@
 # WTFIndexer
 Overview:
 
-This Angular application displays scrapes the Wikipedia episodes page for the WTF with Marc Maron Podcast and saves all episode information into a MySQL database and displays the podcast information in a searchable Angular table with the ability to favorite episodes that you want to listen to later. Almost every name in each episode has a hyperlink to IMDB.com where you can see the persons' credits on IMDB.
+This Angular application displays scrapes the Wikipedia episodes page for the WTF with Marc Maron Podcast and saves all episode information into a MySQL database and displays the podcast information in a searchable Angular table with the ability to favorite episodes that you want to listen to later. Almost every name in each episode has a hyperlink to IMDB.com where you can see the persons' credits on IMDB. It also automatically gets the IMDB for each person in each episode title and creates a hyperlink out of it.
 
 Requirements:
 
@@ -47,12 +47,9 @@ FetchData: Invoked by WTF.php?FetchData
 ScrapeData: Invoked by WTF.php?ScrapeData
             Scrapes the Wikipedia page and loads the episode information into the database. This can be used to update the database with the latest information.
 
-            By default, this endpoint will only read the table that is for the current year. All previous years are ignored. If you want to get all 
-            years, Add &AllRows=true at the end of the URL so the URL is in the format http://www.yoursite.com/WTF.php?ScrapeData&AllRows=true
+            By default, this endpoint will only read the table that is for the current year. All previous years are ignored. If you want to get the date for all years, Add &AllRows=true at the end of the URL so the URL is in the format http://www.yoursite.com/WTF.php?ScrapeData&AllRows=true
             
-            This endpoint has logic that checks if an episode has been added already before adding an episode to prevent duplicate episodes from being added so you can safely run this endpoint as much as you want and will never have duplicate entries.
-           
-            Once it finishes running, you should see the message OK when it finishes.
+            This endpoint has logic that checks if an episode has been added already before adding an episode to prevent duplicate episodes from being added so you can safely run this endpoint as often as you want and will never have duplicate entries.
 
 UpdateFavorite: Invoked by WTF.php?UpdateFavorite&EpisodeNumber&FavoriteValue=1
                  This will update the favorite status for a specific episode in the database. 
@@ -60,11 +57,10 @@ UpdateFavorite: Invoked by WTF.php?UpdateFavorite&EpisodeNumber&FavoriteValue=1
 
 UpdateIMDB: Invoked by WTF.php?UpdateIMDB?Name=SomeName&Link=https://imdb.com/name/nm0767242/
             If the name has 1 or more single quotes (') in it add an extra single quote in front of each single quote so it looks like ''.
-            his endpoint has logic that checks if a name has already been added to prevent duplicate names from being added.
+            This endpoint has logic that checks if a name has already been added to prevent duplicate names from being added. If the name is already in the IMDB table, the IMDB URL will be updated.
 
             To make it easier to add a persons' IMDB link, you can create a bookmarklet that you can click on in your browsers' toolbar to quickly add an IMDB URL.
 
-            Edit the JavaScript code below by changing https://www.yoursite.com to the URL where you are hosting this app and save it to a bookmarklet. Save the bookmark to your browser' toolbar. When you visit a persons' IMDB page, click on this bookmarklet to add the page. There is logic in place so you cannot add the same URL twice. If you try to add a URL after it has already been added, you will see the message "John Doe has already been added to the database".
+            Edit the JavaScript code below by changing https://www.yoursite.com to the URL where you are hosting this app and save it to a bookmarklet. Save the bookmark to your browser' toolbar. When you visit a persons' IMDB page, click on this bookmarklet to add the page. There is logic in place so you cannot add the same URL twice. If you try to add a URL after it has already been added, the name will be updated with the new URL.
 
-            
-             javascript: String.prototype.replaceAll=function(find,replace){return this.replace(new RegExp(find,'g'),replace)};var name=document.querySelector(".itemprop").innerText;var URL=document.location.toString();URL=URL.substring(0,URL.lastIndexOf("/")+1);window.open("https://www.yoursite.com/WTF.php?UpdateIMDB&Name="+name.replaceAll("'","''")+"&Link="+URL,"_blank");event.preventDefault();
+            javascript: String.prototype.replaceAll=function(find,replace){return this.replace(new RegExp(find,'g'),replace)};var name=document.querySelector(".itemprop").innerText;var URL=document.location.toString();URL=URL.substring(0,URL.lastIndexOf("/")+1);window.open("https://www.yoursite.com/WTF.php?UpdateIMDB&Name="+name.replaceAll("'","''")+"&Link="+URL,"_blank");event.preventDefault();

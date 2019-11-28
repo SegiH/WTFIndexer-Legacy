@@ -280,19 +280,23 @@
                $rowExists=($row["RowCount"] == 0 ? false : true);
           }
 
-          if ($rowExists == true) {
+          /*if ($rowExists == true) {
                echo json_encode($_GET["Name"] . " is already in the database");
                return;
+          }*/
+          
+          if ($rowExists == true) {
+               $sql="UPDATE IMDB SET IMDBURL='" . $_GET["Link"] . "' WHERE Name='" . $_GET["Name"] . "';";
+          } else {
+               $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $_GET["Name"] . "','" . $_GET["Link"] . "');";
           }
-
-          $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $_GET["Name"] . "','" . $_GET["Link"] . "');";
 
           try {
                if (!mysqli_query($conn,$sql)) {
-                    echo "An error occurred updating the IMDB URL for episode number " . $payload[$c]->EpisodeNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
+                    echo "An error occurred " . ($rowExists == true ? "updating the IMDB URL for " : "adding ") . $_GET["Name"] . " with the sql " . $sql . " and the error " . mysqli_error($conn);
                }
           } catch(Exception $e) {
-               echo "A fatal error occurred updating the IMDB URL  with the sql " . $sql . " and the error " . mysqli_error($conn);
+               echo "A Fatal error occurred " . ($rowExists == true ? "updating the IMDB URL for " : "adding ") . $_GET["Name"] . " with the sql " . $sql . " and the error " . mysqli_error($conn);
           }
 	 
           echo json_encode("OK");
