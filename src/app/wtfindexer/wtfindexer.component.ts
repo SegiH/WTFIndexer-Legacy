@@ -11,10 +11,10 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
 export class WTFIndexerComponent {
   editingAllowed = true;
   episodesDataSource: MatTableDataSource<any>;
-  episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite'];
+  episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite','isModified'];
   filterValue: string;
   imdbDataSource: MatTableDataSource<any>;
-  imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL'];
+  imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL','isModified'];
   IMDBPayload: IMDBNames[];
   isBeingEdited = false;
   isLoading=true;
@@ -109,7 +109,7 @@ export class WTFIndexerComponent {
             return;
        
        if (this.episodePaginator.pageSize > 100) {
-            alert("Editing can only be done on 100 or less episodes at a time");
+            alert("Editing can only be done on 100 or less episodes at a time. Change the items per page to 100 or less");
             return;
        }
        
@@ -237,6 +237,16 @@ export class WTFIndexerComponent {
        return (favorite != 1 ? "assets/heart-outline.png" : "assets/heart.png");
   }
 
+  IMDBItemUpdated(IMDBId) {
+     if (IMDBId === null)
+          return;
+
+          debugger;
+
+     // Get object based on matching episode number
+     this.IMDBPayload.find(IMDB => IMDB.ID === IMDBId).IsModified=true;
+  }
+
   updateButtonClicked() {
      this.dataService.scrapeData()
      .subscribe(() => {
@@ -256,5 +266,15 @@ export class WTFIndexerComponent {
        for (let i=0;i<this.WTFPayload.length;i++) {
             this.WTFPayload[i]["isFavoritesChecked"]=this.isFavoritesChecked;
        }
+  }
+
+  WTFItemUpdated(epNumber) {
+     if (epNumber === null)
+          return;
+
+          debugger;
+
+     // Get object based on matching episode number
+     this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsModified=true;
   }
 }
