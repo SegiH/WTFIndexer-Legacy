@@ -11,10 +11,10 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
 export class WTFIndexerComponent {
   editingAllowed = true;
   episodesDataSource: MatTableDataSource<any>;
-  episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite','isModified'];
+  episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'isModified'
   filterValue: string;
   imdbDataSource: MatTableDataSource<any>;
-  imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL','isModified'];
+  imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL']; //,'isModified'
   IMDBPayload: IMDBNames[];
   isBeingEdited = false;
   isLoading=true;
