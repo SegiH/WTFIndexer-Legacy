@@ -8,7 +8,7 @@
      </svg>
 </div>
 
-<mat-form-field *ngIf="!isLoading">
+<mat-form-field *ngIf="!isLoading && !isBeingEdited">
   <input matInput [(ngModel)]="filterValue" (keydown)="applyFilter($event.target.value)" placeholder="Filter">     
 </mat-form-field>
 
@@ -78,7 +78,7 @@
 
 <mat-paginator #imdbPaginator *ngIf="isBeingEdited" class="imdbPaginator" [pageSizeOptions]="[10000,2,25,50,100]" showFirstLastButtons></mat-paginator>
 
-<table *ngIf="isBeingEdited" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
+<table mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
      <!-- ID Column -->
      <ng-container matColumnDef="ID">
           <th mat-header-cell *matHeaderCellDef> ID </th>
@@ -91,17 +91,24 @@
      <ng-container class="imdbInputField" matColumnDef="Name">
           <th mat-header-cell *matHeaderCellDef> Name </th>
           <td mat-cell *matCellDef="let element">
-               <mat-form-field *ngIf="element.Name">
-                  <input matInput name="name" (placeholder)="Name" type="text" value="{{element.Name}}" [(ngModel)]="element.Name" (change)="IMDBItemUpdated(element.ID)">
+               <div *ngIf="!isBeingEdited">    
+                    {{element.Name}}
+               </div>
+               <mat-form-field *ngIf="isBeingEdited">
+                    <input matInput name="name" (placeholder)="Name" type="text" value="{{element.Name}}" [(ngModel)]="element.Name" (change)="IMDBItemUpdated(element.ID)">
                </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
           </td>
      </ng-container>
-   
-     <ng-container  class="imdbInputField" matColumnDef="IMDBURL">
+
+     <!-- IMDB URL-->
+     <ng-container class="imdbInputField" matColumnDef="IMDBURL">
           <th mat-header-cell *matHeaderCellDef> IMDB URL </th>
           <td mat-cell *matCellDef="let element">
-               <mat-form-field>
-                  <input matInput name="name" (placeholder)="Name" type="text" value="{{element.IMDBURL}}" (change)="IMDBItemUpdated(element.ID)">
+               <div *ngIf="!isBeingEdited">    
+                    {{element.IMDBURL}}
+               </div>
+               <mat-form-field *ngIf="isBeingEdited">
+                    <input matInput name="IMDBURL" (placeholder)="IMDB_URL" type="text" value="{{element.IMDBURL}}" [(ngModel)]="element.IMDBURL" (change)="IMDBItemUpdated(element.ID)">
                </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
           </td>
      </ng-container>
