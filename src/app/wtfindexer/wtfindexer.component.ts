@@ -141,8 +141,6 @@ export class WTFIndexerComponent {
             alert("Editing can only be done on 100 or less episodes at a time. Change the items per page to 100 or less");
             return;
        }
-       
-       this.episodeDisplayedColumns.push('Edit');
 
        if (!canceled) { // Saving
           const modifiedWTF=this.WTFPayload.filter(episode => episode.IsModified === true) 
