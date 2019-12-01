@@ -55,12 +55,12 @@ UpdateFavorite: Invoked by WTF.php?UpdateFavorite&EpisodeNumber&FavoriteValue=1
                  This will update the favorite status for a specific episode in the database. 
                  You do not need to invoke this yourself. It will be called automatically by the database.
 
-UpdateIMDB: Invoked by WTF.php?UpdateIMDB?Name=SomeName&Link=https://imdb.com/name/nm0767242/
+UpdateIMDBURL: Invoked by WTF.php?UpdateIMDBURL?Name=SomeName&Link=https://imdb.com/name/nm0767242/
             If the name has 1 or more single quotes (') in it add an extra single quote in front of each single quote so it looks like ''.
-            This endpoint has logic that checks if a name has already been added to prevent duplicate names from being added. If the name is already in the IMDB table, the IMDB URL will be updated.
+            This endpoint has logic that checks if a name has already been added to prevent duplicate names from being added. If the name is already in the IMDB table, the IMDB URL will be 
 
             To make it easier to add a persons' IMDB link, you can create a bookmarklet that you can click on in your browsers' toolbar to quickly add an IMDB URL.
 
             Edit the JavaScript code below by changing https://www.yoursite.com to the URL where you are hosting this app and save it to a bookmarklet. Save the bookmark to your browser' toolbar. When you visit a persons' IMDB page, click on this bookmarklet to add the page. There is logic in place so you cannot add the same URL twice. If you try to add a URL after it has already been added, the name will be updated with the new URL.
 
-            javascript: String.prototype.replaceAll=function(find,replace){return this.replace(new RegExp(find,'g'),replace)};var name=document.querySelector(".itemprop").innerText;var URL=document.location.toString();URL=URL.substring(0,URL.lastIndexOf("/")+1);window.open("https://www.yoursite.com/WTF.php?UpdateIMDB&Name="+name.replaceAll("'","''")+"&Link="+URL,"_blank");event.preventDefault();
+            javascript: String.prototype.replaceAll=function(find,replace){return this.replace(new RegExp(find,'g'),replace)};var name=document.querySelector(".itemprop").innerText;var URL=document.location.toString();URL=URL.substring(0,URL.lastIndexOf("/")+1);window.open("https://www.yoursite.com/WTF.php?UpdateIMDBURL&Name="+name.replaceAll("'","''")+"&Link="+URL,"_blank");event.preventDefault();

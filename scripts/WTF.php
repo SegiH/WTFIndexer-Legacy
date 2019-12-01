@@ -1,7 +1,7 @@
 <?php
      const DATABASE_TABLE = "WTFEpisodes";
      const DATABASE_TABLE_TEST = "WTFEpisodes_Temp";
-
+    
      function FetchData() {
           $conn = GetConnection();
 
@@ -37,35 +37,35 @@
           
           $conn->close();
      }
-     
+  
      function GetConnection() {
-	     $conn = new mysqli(ini_get("mysqli.default_host"),ini_get("mysqli.default_user"),ini_get("mysqli.default_pw"),"WTF");
+          $conn = new mysqli(ini_get("mysqli.default_host"),ini_get("mysqli.default_user"),ini_get("mysqli.default_pw"),"WTF");
 	  
-	     if ($conn->connect_error) {
-               die("Connection failed: " . $conn->connect_error);
+          if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
           }
           
-	     // Check if the table exists already 
-	     $sql="SELECT COUNT(*) AS TableCount FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" . DATABASE_TABLE . "'";
+	  // Check if the table exists already 
+          $sql="SELECT COUNT(*) AS TableCount FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" . DATABASE_TABLE . "'";
 
           $result = $conn->query($sql);
           
-	     $tableExists = false;
+          $tableExists = false;
 
           while ($row=mysqli_fetch_assoc($result)) {
                $tableExists=($row["TableCount"] == 0 ? false : true);
-	     }
+          }
      
-	     if ($tableExists == false) {
-	          $sql="CREATE TABLE " . DATABASE_TABLE . " (EpisodeID INT NOT NULL AUTO_INCREMENT, EpisodeNumber INT NOT NULL, Name VARCHAR(500) NOT NULL, ReleaseDate VARCHAR(100) NOT NULL,IMDBLink VARCHAR(1000), Favorite BIT DEFAULT 0 NOT NULL, PRIMARY KEY(EpisodeID));";
+          if ($tableExists == false) {
+               $sql="CREATE TABLE " . DATABASE_TABLE . " (EpisodeID INT NOT NULL AUTO_INCREMENT, EpisodeNumber INT NOT NULL, Name VARCHAR(500) NOT NULL, ReleaseDate VARCHAR(100) NOT NULL,IMDBLink VARCHAR(1000), Favorite BIT DEFAULT 0 NOT NULL, PRIMARY KEY(EpisodeID));";
       
-	          try {
-	               if (!mysqli_query($conn,$sql)) {
-	                    echo "An error occurred creating the table with the sql " . $sql . " and the error " . mysqli_error($conn);		  
-		          }
-	            } catch(Exception $e) {
+               try {
+                    if (!mysqli_query($conn,$sql)) {
+                         echo "An error occurred creating the table with the sql " . $sql . " and the error " . mysqli_error($conn);		  
+		    }
+	       } catch(Exception $e) {
                     echo "A fatal error occurred creating the table with the sql " . $sql . " and the error " . mysqli_error($conn);
-	            }
+	       }
           }
 
           return $conn;
@@ -74,7 +74,7 @@
      function getIMDBURLByName() {
           $conn = GetConnection();
    
-          $url="https://www.imdb.com/find?q=" . str_replace(" ","%20",$_GET["SearchIMDBByName"]);
+          $url="https://www.imdb.com/find?q=" . str_replace(" ","%20",htmlspeciachars($_GET["SearchIMDBByName"]));
              
           $curl = curl_init($url);
    
@@ -125,82 +125,82 @@
                     continue;
                }
 
-	          $sql="IF (SELECT COUNT(*) FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $payload[$c]->EpisodeNumber . ") = 0 INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $payload[$c]->EpisodeNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$payload[$c]->Name)) . "','" . $payload[$c]->ReleaseDate . "');";
+	      $sql="IF (SELECT COUNT(*) FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $payload[$c]->EpisodeNumber . ") = 0 INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $payload[$c]->EpisodeNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$payload[$c]->Name)) . "','" . $payload[$c]->ReleaseDate . "');";
     
-	          // echo $sql . "<BR><BR>";
+	      // echo $sql . "<BR><BR>";
 	  
-               try {
-	               if (!mysqli_query($conn,$sql)) {
-	                    echo "An error occurred adding episode number " . $payload[$c]->EpisodeNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
-	               }
-	          } catch(Exception $e) {
-                    echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
-               }
+              try {
+	           if (!mysqli_query($conn,$sql)) {
+	                echo "An error occurred adding episode number " . $payload[$c]->EpisodeNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
+	           }
+	      } catch(Exception $e) {
+                  echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
+              }
           }
 
           $conn->close();
      }
 
      function ScrapeData() {
-	     $conn = GetConnection();
+	  $conn = GetConnection();
 
-          $url="https://en.wikipedia.org/wiki/List_of_WTF_with_Marc_Maron_episodes";
+       $url="https://en.wikipedia.org/wiki/List_of_WTF_with_Marc_Maron_episodes";
           
-          $curl = curl_init($url);
+       $curl = curl_init($url);
 
-          $options = array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL => $url);
+       $options = array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL => $url);
          
-          curl_setopt_array($curl,$options); 
+       curl_setopt_array($curl,$options); 
 
-          $htmlContent = curl_exec($curl);
+       $htmlContent = curl_exec($curl);
  
-	     curl_close($curl);
+	  curl_close($curl);
          
-	     $dom = new DOMDocument();
-          
-	     $dom->loadHTML($htmlContent);
+	  $dom = new DOMDocument();
+         
+	  $dom->loadHTML($htmlContent);
 
-          $finder = new DomXPath($dom);
+       $finder = new DomXPath($dom);
 
-	     $nodes = $finder ->query("//table[contains(@class,'wikiepisodetable')]");
+	  $nodes = $finder ->query("//table[contains(@class,'wikiepisodetable')]");
           
-	     $tablesToProcess;
+	  $tablesToProcess;
 
 	     // If this param to get all rows isn't set, get the 2nd to last table which will be the current year and process this table only. The last table is currently an Other Episodes table that I don't care about
           if (!isset($_GET["AllRows"])) {
                $c=0;
  
-	          foreach($nodes as $table) {
-		          if ($c==$nodes->length-2) {			     
+	       foreach($nodes as $table) {
+                    if ($c==$nodes->length-2) {			     
                          $tablesToProcess = $tables->childNodes;
 			       
-			          break;
-	               }
+			 break;
+	            }
 
                     $c++;
-	          }
+	      }
           } else {
                $tablesToProcess=$nodes;
           }
 
           // Loop through all tables to process
-	     foreach ($tablesToProcess as $currTable) {
-	          $rows=$currTable->getElementsByTagName("tr");
+          foreach ($tablesToProcess as $currTable) {
+               $rows=$currTable->getElementsByTagName("tr");
 	       
                $conn = GetConnection();
     
                foreach($rows as $currRow) {
                     $items=explode('"',$currRow->textContent);
 		   
-		          if (sizeof($items) == 3) {
-		               $epNumber = $items[0];
+                    if (sizeof($items) == 3) {
+                         $epNumber = $items[0];
                          $name = $items[1];
-		               $releaseDate = $items[2];
+                         $releaseDate = $items[2];
                          $releaseDate = str_replace("Â"," ",$releaseDate); // When scraping the data, this character shows up in the release date. This removes it 
                        
-		               if (strpos($releaseDate,"(") !== false) {
-		                    $releaseDate=substr($releaseDate,0,strpos($releaseDate,"(")-2);
-		               }
+		         if (strpos($releaseDate,"(") !== false) {
+                              $releaseDate=substr($releaseDate,0,strpos($releaseDate,"(")-2);
+		         }
 
                          // Before inserting the row, verify if it has already been added
                          $sql="SELECT * FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $epNumber;
@@ -209,16 +209,16 @@
  
                          if ($result->num_rows > 0) {
                               continue;
-		               }
+                         }
 
-	                    $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
+                         $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
 
                          try {
-	                         if (!mysqli_query($conn,$sql)) {
-	                              echo "An error occurred adding episode number " . $epNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
+	                      if (!mysqli_query($conn,$sql)) {
+	                            // echo "An error occurred adding episode number " . $epNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
                               }
                          } catch(Exception $e) {
-                              echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
+                              // echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
                          }
 
                          // Get the IMDB URL based on the name
@@ -244,10 +244,31 @@
                          }
                     }
                }
-	     }
+          }
 
-	     $conn->close();
+          $conn->close();
 	  
+          echo json_encode("OK");
+     }
+
+     function UpdateEpisodes() {
+          $conn = GetConnection();
+
+          $episodeUpdatePayload=json_decode($_GET["EpisodePayload"]);
+          
+          foreach ($episodeUpdatePayload as $currEpisodeUpdate) {
+                $sql="UPDATE " . DATABASE_TABLE . " SET Name='" . str_replace("'","''",$currEpisodeUpdate->Name) . "' WHERE EpisodeNumber=" . $currEpisodeUpdate->EpisodeNumber;
+                
+                try {
+                     if (!mysqli_query($conn,$sql)) {
+                          echo "An error occurred updating the episode data in UpdateEpisodes() URL with the sql " . $sql . " and the error " . mysqli_error($conn);
+                     }
+                } catch(Exception $e) {
+                     echo "An error occurred updating the episode data in UpdateEpisodes() URL with the sql " . $sql . " and the error " . mysqli_error($conn);
+                }         
+ 	 
+          }
+          
           echo json_encode("OK");
      }
 
@@ -269,10 +290,31 @@
 
      function UpdateIMDB() {
           $conn = GetConnection();
+
+          $imdbUpdatePayload=json_decode($_GET["IMDBPayload"]);
+     
+          foreach ($imdbUpdatePayload as $currIMDBUpdate) {
+                $sql="UPDATE IMDB SET Name='" . str_replace("'","''",$currIMDBUpdate->Name) . "' WHERE ID=" . $currIMDBUpdate->ID;
+             
+                try {
+                     if (!mysqli_query($conn,$sql)) {
+                          echo "An error occurred updating the IMDB data with the sql " . $sql . " and the error " . mysqli_error($conn);
+                     }
+                } catch(Exception $e) {
+                     echo "An error occurred updating the IMDB with the sql " . $sql . " and the error " . mysqli_error($conn);
+                }         
+ 	 
+          }
+          
+          echo json_encode("OK");
+     }
+
+     function UpdateIMDBURL() {
+          $conn = GetConnection();
           
           $rowExists=false;
 	  
-          $sql="SELECT COUNT(*) AS RowCount FROM IMDB WHERE IMDBURL='" . $_GET["Link"] . "';";
+          $sql="SELECT COUNT(*) AS RowCount FROM IMDB WHERE IMDBURL='" . htmlspecialchars($_GET["Link"]) . "';";
 	  
           $result = $conn->query($sql);
 	  
@@ -280,30 +322,34 @@
                $rowExists=($row["RowCount"] == 0 ? false : true);
           }
 
-          /*if ($rowExists == true) {
-               echo json_encode($_GET["Name"] . " is already in the database");
-               return;
-          }*/
+          //if ($rowExists == true) {
+          //     echo json_encode($_GET["Name"] . " is already in the database");
+          //     return;
+          //}
           
           if ($rowExists == true) {
-               $sql="UPDATE IMDB SET IMDBURL='" . $_GET["Link"] . "' WHERE Name='" . $_GET["Name"] . "';";
+               $sql="UPDATE IMDB SET IMDBURL='" . htmlspecialchars($_GET["Link"]) . "' WHERE Name='" . htmlspecialchars($_GET["Name"]) . "';";
           } else {
-               $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $_GET["Name"] . "','" . $_GET["Link"] . "');";
+               $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . htmlspecialchars($_GET["Name"]) . "','" . htmlspecialchars($_GET["Link"]) . "');";
           }
 
           try {
                if (!mysqli_query($conn,$sql)) {
-                    echo "An error occurred " . ($rowExists == true ? "updating the IMDB URL for " : "adding ") . $_GET["Name"] . " with the sql " . $sql . " and the error " . mysqli_error($conn);
+                    echo "An error occurred " . ($rowExists == true ? "updating the IMDB URL for " : "adding ") . htmlspecialchars($_GET["Name"]) . " with the sql " . $sql . " and the error " . mysqli_error($conn);
                }
           } catch(Exception $e) {
-               echo "A Fatal error occurred " . ($rowExists == true ? "updating the IMDB URL for " : "adding ") . $_GET["Name"] . " with the sql " . $sql . " and the error " . mysqli_error($conn);
-          }
-	 
-          echo json_encode("OK");
+               echo "A Fatal error occurred " . ($rowExists == true ? "updating the IMDB URL for " : "adding ") . htmlspecialchars($_GET["Name"]) . " with the sql " . $sql . " and the error " . mysqli_error($conn);
+          }         
+ 	 
+          echo json_encode("OK"); 
      }
 
      if (isset($_GET["FetchData"])) {
           FetchData();
+     }
+
+     if (isset($_GET["FetchIMDBNames"])) {
+          FetchIMDBNames();
      }
 
      if (isset($_GET["LoadPayload"])) {
@@ -314,11 +360,19 @@
           ScrapeData();
      }
 
-     if (isset($_GET["UpdateIMDB"]) && isset($_GET["Name"]) && isset($_GET["Link"])) {
-          UpdateIMDB(); 
+     if (isset($_GET["UpdateIMDBURL"]) && isset($_GET["Name"]) && isset($_GET["Link"])) {
+          UpdateIMDBURL(); 
      }
 
      if (isset($_GET["UpdateFavorite"]) && isset($_GET["EpisodeNumber"]) && isset($_GET["FavoriteValue"])) {
           UpdateFavorite(); 
+     }
+
+     if (isset($_GET["UpdateEpisodes"])) {
+           UpdateEpisodes();
+     }
+     
+     if (isset($_GET["UpdateIMDB"])) {
+           UpdateIMDB();
      }
 ?>

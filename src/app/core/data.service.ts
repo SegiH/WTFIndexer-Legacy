@@ -39,6 +39,20 @@ export class DataService {
         );
     }
 
+    updateEpisodes(episodePayload) {
+      return this.http.get<any>('WTF.php?UpdateEpisodes&EpisodePayload=' + JSON.stringify(episodePayload))
+      .pipe(
+        catchError(this.handleError)
+      );
+    }
+
+    updateIMDB(imdbPayload) {
+      return this.http.get<any>('WTF.php?UpdateIMDB&IMDBPayload=' + JSON.stringify(imdbPayload))
+      .pipe(
+        catchError(this.handleError)
+      );
+    }
+
     private handleError(error: any) {
       if (error.error instanceof Error) {
           const errMessage = error.error.message;

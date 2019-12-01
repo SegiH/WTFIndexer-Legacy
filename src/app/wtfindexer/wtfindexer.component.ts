@@ -1,3 +1,9 @@
+// to do
+// When scrolling up and down the page items per page is fixed. WTF?!
+// fix imdb items per page
+// fix location of loading 
+// fix left of imdb table too far to the lwdft
+
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { DataService } from '../core/data.service';
@@ -9,7 +15,7 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
   styleUrls: ['./wtfindexer.component.css']
 })
 export class WTFIndexerComponent {
-  editingAllowed = false;
+  editingAllowed = true;
   episodesDataSource: MatTableDataSource<any>;
   episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'isModified'
   filterValue: string;
@@ -31,8 +37,6 @@ export class WTFIndexerComponent {
   ngOnInit() {
        this.getEpisodes();
 
-       // If editing isn't allowed, there's no point in loading this data since the table won't ever be shown
-       //if (this.editingAllowed)
        this.getIMDBNames();
   }
 
@@ -127,7 +131,7 @@ export class WTFIndexerComponent {
      }
 
      return filterFunction;
-}
+  }
 
   editEpisodesIMDBNamesClick(canceled) {
        if (!this.editingAllowed)
@@ -141,11 +145,36 @@ export class WTFIndexerComponent {
        this.episodeDisplayedColumns.push('Edit');
 
        if (!canceled) { // Saving
-           const modifiedIMDB=this.IMDBPayload.filter(IMDB => IMDB.IsModified === true)
-           const modifiedWTF=this.WTFPayload.filter(episode => episode.IsModified === true)
-       } else { // Canceling
+          const modifiedWTF=this.WTFPayload.filter(episode => episode.IsModified === true) 
+          const modifiedIMDB=this.IMDBPayload.filter(IMDB => IMDB.IsModified === true)
+          
+          if (modifiedWTF.length > 0) {
+               this.dataService.updateEpisodes(modifiedWTF)
+               .subscribe(() => {
+               },
+               error => {
+                  alert("An error occurred saving the WTF data");
+          
+                  console.log(`An error occurred saving the WTF data from the data service with error ${error}`)
+               });
+          }
 
+          if (modifiedIMDB.length > 0) {
+               this.dataService.updateIMDB(modifiedIMDB)
+               .subscribe(() => {
+               },
+               error => {
+                  alert("An error occurred saving the IMDB data");
+          
+                  console.log(`An error occurred saving the IMDB data from the data service with error ${error}`)
+               });
+          }
+       } else { // Canceling
        }
+
+       this.getEpisodes();
+
+       this.getIMDBNames();
 
        this.isBeingEdited = !this.isBeingEdited;
   }
