@@ -1,8 +1,7 @@
 // to do
-// When scrolling up and down the page items per page is fixed. WTF?!
 // fix imdb items per page
 // fix location of loading 
-// fix left of imdb table too far to the lwdft
+// fix left of imdb table too far to the left
 
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
@@ -15,7 +14,7 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
   styleUrls: ['./wtfindexer.component.css']
 })
 export class WTFIndexerComponent {
-  editingAllowed = true;
+  editingAllowed = false;
   episodesDataSource: MatTableDataSource<any>;
   episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'isModified'
   filterValue: string;
@@ -28,7 +27,7 @@ export class WTFIndexerComponent {
   readonly title: string = "WTF Indexer"
   WTFPayload : IWTFEpisode[];
 
-  @ViewChild('episodePaginator', { static: true }) episodePaginator: MatPaginator;
+  @ViewChild('episodePaginator', { static: false }) episodePaginator: MatPaginator;
   @ViewChild('imdbPaginator', { static: false }) imdbPaginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
@@ -227,7 +226,7 @@ export class WTFIndexerComponent {
 
                  this.WTFPayload = episodes;
 
-                 // Assign the payload as the  table data source
+                 // Assign the payload as the table data source
                  this.episodesDataSource=new MatTableDataSource(this.WTFPayload);
 
                  // Assign custom filter function

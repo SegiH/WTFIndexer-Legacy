@@ -1,26 +1,43 @@
-<h1>{{ title }} {{ pageSize }}</h1>
-<div *ngIf="isLoading" class="app-loading">
-     <span class="loading">Loading...</span>
-     <div class="logo"></div>
-     
-     <svg class="spinner" viewBox="25 25 50 50">
-          <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
-     </svg>
-</div>
+<mat-grid-list cols="4" rowHeight="80px">
+     <mat-grid-tile [colspan]=4 [rowspan]=1>
+          <h1>{{ title }}</h1>
+     </mat-grid-tile>
+</mat-grid-list>
 
-<mat-form-field *ngIf="!isLoading && !isBeingEdited">
-  <input matInput [(ngModel)]="filterValue" (keydown)="applyFilter($event.target.value)" placeholder="Filter">     
-</mat-form-field>
+<mat-grid-list *ngIf="isLoading" cols="4" rowHeight="150px">
+     <mat-grid-tile  [colspan]=4 [rowspan]=2>
+          <div class="app-loading">
+               <span class="loading">Loading...</span>
+               <div class="logo"></div>
+                                             
+               <svg class="spinner" viewBox="25 25 50 50">
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+               </svg>
+          </div>
+     </mat-grid-tile>
+</mat-grid-list>
 
-<mat-checkbox *ngIf="!isLoading" [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
+<mat-grid-list *ngIf="!isLoading" cols="4" rowHeight="80px">
+     <mat-grid-tile [colspan]=1 [rowspan]=1>
+          <mat-form-field *ngIf="!isBeingEdited">
+               <input matInput [(ngModel)]="filterValue" (keydown)="applyFilter($event.target.value)" placeholder="Filter">     
+          </mat-form-field>
+     </mat-grid-tile>
 
-<button *ngIf="!isLoading" id="updateButton" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
+     <mat-grid-tile [colspan]=1 [rowspan]=1>
+          <mat-checkbox [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
+     </mat-grid-tile>
 
-<button *ngIf="!isLoading && editingAllowed" id="editButton" mat-raised-button color="accent" (click)="editEpisodesIMDBNamesClick()">{{ (!isBeingEdited ? "Edit" : "Save") }}</button>
+     <mat-grid-tile [colspan]=1 [rowspan]=1>
+          <button id="updateButton" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
 
-<button *ngIf="isBeingEdited" mat-raised-button style="margin-left: 25px;" color="warn" (click)="editEpisodesIMDBNamesClick(true)">Cancel</button>
+          <button *ngIf="editingAllowed" id="editButton" mat-raised-button color="accent" (click)="editEpisodesIMDBNamesClick()">{{ (!isBeingEdited ? "Edit" : "Save") }}</button>
+               
+          <button *ngIf="isBeingEdited" mat-raised-button style="margin-left: 25px;" color="warn" (click)="editEpisodesIMDBNamesClick(true)">Cancel</button>               
+     </mat-grid-tile>
+</mat-grid-list>
 
-<mat-paginator #episodePaginator class="episodePaginator" [pageSizeOptions]="[5,10000,2,25,50,100]" showFirstLastButtons></mat-paginator>
+<mat-paginator *ngIf="!isLoading" #episodePaginator class="episodePaginator" [pageSizeOptions]="[10000,2,25,50,100]" showFirstLastButtons></mat-paginator>
 
 <table *ngIf="!isLoading" mat-table matSort [dataSource]="episodesDataSource" class="episodeTable mat-elevation-z8">
      <!-- Episode Number Column -->
@@ -28,51 +45,55 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Ep # </th>
           <td mat-cell *matCellDef="let element"> {{element.EpisodeNumber}} </td>
      </ng-container>
-    
+              
      <!-- Name Column -->
      <ng-container matColumnDef="Name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          
           <td mat-cell *matCellDef="let element">
                <div *ngIf="!element.IMDBLink && !isBeingEdited">    
                     {{element.Name}}
                </div>
+                    
                <div *ngIf="element.IMDBLink && !isBeingEdited">
                     <div [innerHtml]="element.IMDBLink"></div>
                </div>
+                    
                <mat-form-field *ngIf="isBeingEdited">
-                  <textarea cdkTextareaAutosize
-                  #autosize="cdkTextareaAutosize"
-                  cdkAutosizeMinRows="1"
-                  cdkAutosizeMaxRows="5"matInput name="edit" (placeholder)="Edit" type="text" value="{{element.Name}}" [(ngModel)]="element.Name"  (change)="WTFItemUpdated(element.EpisodeNumber)" ></textarea>
+                    <textarea cdkTextareaAutosize
+                         #autosize="cdkTextareaAutosize"
+                         cdkAutosizeMinRows="1"
+                         cdkAutosizeMaxRows="5"matInput name="edit" (placeholder)="Edit" type="text" value="{{element.Name}}" [(ngModel)]="element.Name"  (change)="WTFItemUpdated(element.EpisodeNumber)" >
+                    </textarea>
                </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
           </td>
      </ng-container>
-    
+              
      <!-- Release Date Column -->
      <ng-container matColumnDef="ReleaseDate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Release Date </th>
           <td mat-cell *matCellDef="let element"> {{element.ReleaseDate}} </td>
      </ng-container>
-   
+             
      <!-- Favorite Column -->
      <ng-container matColumnDef="Favorite">  
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Favorite </th>
           <td mat-cell *matCellDef="let element"><img [src]="getFavoriteImage(element.Favorite)" id="{{element.EpisodeNumber}}" alt="Favorite icon" style="width:24px;height:24px" (click)="episodeFavoriteClick($event)" /></td>
      </ng-container>
-
+          
      <!-- IsModified Column -->
      <ng-container matColumnDef="isModified">
-        <th mat-header-cell *matHeaderCellDef> IsModified </th>
-        <td mat-cell *matCellDef="let element"><mat-checkbox disabled checked="{{element.IsModified}}"></mat-checkbox></td>
+          <th mat-header-cell *matHeaderCellDef> IsModified </th>
+          <td mat-cell *matCellDef="let element"><mat-checkbox disabled checked="{{element.IsModified}}"></mat-checkbox></td>
      </ng-container>
-   
+             
      <tr mat-header-row *matHeaderRowDef="episodeDisplayedColumns"></tr>
      <tr mat-row *matRowDef="let row; columns: episodeDisplayedColumns;"></tr>
 </table>
 
-<mat-paginator #imdbPaginator *ngIf="isBeingEdited" class="imdbPaginator" [pageSizeOptions]="[10000,2,25,50,100]" showFirstLastButtons></mat-paginator>
+<mat-paginator *ngIf="!isLoading && editingAllowed" #imdbPaginator class="imdbPaginator" [pageSizeOptions]="[10000,2,25,50,100]" showFirstLastButtons></mat-paginator>
 
-<table mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
+<table *ngIf="!isLoading && editingAllowed" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
      <!-- ID Column -->
      <ng-container matColumnDef="ID">
           <th mat-header-cell *matHeaderCellDef> ID </th>
@@ -80,7 +101,7 @@
                {{element.ID}}
           </td>
      </ng-container>
-    
+                                  
      <!-- Name Column -->
      <ng-container class="imdbInputField" matColumnDef="Name">
           <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -88,12 +109,13 @@
                <div *ngIf="!isBeingEdited">    
                     {{element.Name}}
                </div>
+                                   
                <mat-form-field *ngIf="isBeingEdited">
                     <input matInput name="name" (placeholder)="Name" type="text" value="{{element.Name}}" [(ngModel)]="element.Name" (change)="IMDBItemUpdated(element.ID)">
                </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
           </td>
      </ng-container>
-
+                              
      <!-- IMDB URL-->
      <ng-container class="imdbInputField" matColumnDef="IMDBURL">
           <th mat-header-cell *matHeaderCellDef> IMDB URL </th>
@@ -101,19 +123,19 @@
                <div *ngIf="!isBeingEdited">    
                     {{element.IMDBURL}}
                </div>
+                                   
                <mat-form-field *ngIf="isBeingEdited">
                     <input matInput name="IMDBURL" (placeholder)="IMDB_URL" type="text" value="{{element.IMDBURL}}" [(ngModel)]="element.IMDBURL" (change)="IMDBItemUpdated(element.ID)">
                </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
           </td>
      </ng-container>
-
+                              
      <!-- IsModified Column -->
      <ng-container matColumnDef="isModified">
-        <th mat-header-cell *matHeaderCellDef> IsModified </th>
-        <td mat-cell *matCellDef="let element"><mat-checkbox disabled checked="{{element.IsModified}}"></mat-checkbox></td>
+          <th mat-header-cell *matHeaderCellDef> IsModified </th>
+          <td mat-cell *matCellDef="let element"><mat-checkbox disabled checked="{{element.IsModified}}"></mat-checkbox></td>
      </ng-container>
-
+                              
      <tr mat-header-row *matHeaderRowDef="imdbDisplayedColumns"></tr>
      <tr mat-row *matRowDef="let row; columns: imdbDisplayedColumns;"></tr>
-   </table>
-    
+</table>

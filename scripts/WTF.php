@@ -1,7 +1,14 @@
 <?php
      const DATABASE_TABLE = "WTFEpisodes";
      const DATABASE_TABLE_TEST = "WTFEpisodes_Temp";
+     const DEBUG = false;
     
+     if (DEBUG == true) {
+          ini_set('display_errors',1);
+	  ini_set('display_startup_errors',1);
+	  error_reporting(E_ALL);
+     }
+
      function FetchData() {
           $conn = GetConnection();
 
@@ -71,19 +78,25 @@
           return $conn;
      }
 
-     function getIMDBURLByName() {
+     function getIMDBURLByName($name) {
           $conn = GetConnection();
-   
-          $url="https://www.imdb.com/find?q=" . str_replace(" ","%20",htmlspeciachars($_GET["SearchIMDBByName"]));
-             
+          
+	  // Increase max execution time 
+	  ini_set('max_execution_time','300');
+
+          $url="https://www.imdb.com/find?q=" . str_replace(" ","%20",htmlspecialchars($name));
+
           $curl = curl_init($url);
-   
+  
           $options = array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL => $url);
             
           curl_setopt_array($curl,$options); 
    
-          $htmlContent = curl_exec($curl);
-    
+	  $htmlContent = curl_exec($curl);
+	  
+	  if ($htmlContent == "")
+		  return "";
+
           curl_close($curl);
           
           $dom = new DOMDocument();
@@ -91,21 +104,24 @@
           $dom->loadHTML($htmlContent);
    
           $finder = new DomXPath($dom);
-   
+  
           // get TD with the class result_text
           $nodes = $finder ->query("//td[contains(@class,'result_text')]");
            
           // First result 
           $nodes=$nodes[0]; 
-             
+ 
+	  if ($nodes == null)
+		  return "";
+
           // Get first hyperlink 
           $link = $nodes->getElementsByTagName("a")[0]->getAttribute("href");
-             
+            
           // The link always starts with /name/ so start at index 6 which is 1 char past the 2nd slash 
           $pos = strpos($link,"/",6);
-   
+
           // Return full URL
-          return "https://www.imdb.com" . substr($link,0,$pos+1);
+	  return "https://www.imdb.com" . substr($link,0,$pos+1);
      }
 
      // Loads data provided as JSON. Not really needed anymore since ScrapeData does this automatically
@@ -144,15 +160,15 @@
      function ScrapeData() {
 	  $conn = GetConnection();
 
-       $url="https://en.wikipedia.org/wiki/List_of_WTF_with_Marc_Maron_episodes";
+          $url="https://en.wikipedia.org/wiki/List_of_WTF_with_Marc_Maron_episodes";
           
-       $curl = curl_init($url);
+          $curl = curl_init($url);
 
-       $options = array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL => $url);
+          $options = array(CURLOPT_RETURNTRANSFER => 1, CURLOPT_URL => $url);
          
-       curl_setopt_array($curl,$options); 
+          curl_setopt_array($curl,$options); 
 
-       $htmlContent = curl_exec($curl);
+          $htmlContent = curl_exec($curl);
  
 	  curl_close($curl);
          
@@ -160,7 +176,7 @@
          
 	  $dom->loadHTML($htmlContent);
 
-       $finder = new DomXPath($dom);
+          $finder = new DomXPath($dom);
 
 	  $nodes = $finder ->query("//table[contains(@class,'wikiepisodetable')]");
           
@@ -172,7 +188,8 @@
  
 	       foreach($nodes as $table) {
                     if ($c==$nodes->length-2) {			     
-                         $tablesToProcess = $tables->childNodes;
+                         $tablesToProcess = $table->childNodes;
+                         //$tablesToProcess = $table;
 			       
 			 break;
 	            }
@@ -191,7 +208,7 @@
     
                foreach($rows as $currRow) {
                     $items=explode('"',$currRow->textContent);
-		   
+                    
                     if (sizeof($items) == 3) {
                          $epNumber = $items[0];
                          $name = $items[1];
@@ -207,20 +224,18 @@
           
                          $result = $conn->query($sql);
  
-                         if ($result->num_rows > 0) {
-                              continue;
+                         if ($result->num_rows == 0) {
+                              $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
+
+                              try {
+	                           if (!mysqli_query($conn,$sql)) {
+	                                echo "An error occurred adding episode number " . $epNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
+                                   }
+                              } catch(Exception $e) {
+                                   echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
+			      }
                          }
-
-                         $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
-
-                         try {
-	                      if (!mysqli_query($conn,$sql)) {
-	                            // echo "An error occurred adding episode number " . $epNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
-                              }
-                         } catch(Exception $e) {
-                              // echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
-                         }
-
+                         
                          // Get the IMDB URL based on the name
                          $imdbURL=getIMDBURLByName($name);
 
@@ -231,17 +246,18 @@
  
                          if ($result->num_rows > 0) {
                               continue;
-                         }
+			 }
 
-                         $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $name . "','" . $imdbURL . "');";
-    
+                         $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . str_replace("'","''",$name) . "','" . $imdbURL . "');";
+                         // $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $name . "','" . $imdbURL . "');";
+
                          try {
                               if (!mysqli_query($conn,$sql)) {
                                    echo "An error occurred adding the name " . $name . " into the IMDB table with the sql " . $sql . " and the error " . mysqli_error($conn);		  
                               }
                          } catch(Exception $e) {
                               echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
-                         }
+			 }
                     }
                }
           }
@@ -285,7 +301,7 @@
                echo "A fatal error occurred updating the favorite with the sql " . $sql . " and the error " . mysqli_error($conn);
           }
 	 
-          echo json_encode("OK");
+          // echo json_encode("OK");
      }
 
      function UpdateIMDB() {
@@ -295,14 +311,14 @@
      
           foreach ($imdbUpdatePayload as $currIMDBUpdate) {
                 $sql="UPDATE IMDB SET Name='" . str_replace("'","''",$currIMDBUpdate->Name) . "' WHERE ID=" . $currIMDBUpdate->ID;
-             
+
                 try {
                      if (!mysqli_query($conn,$sql)) {
                           echo "An error occurred updating the IMDB data with the sql " . $sql . " and the error " . mysqli_error($conn);
                      }
                 } catch(Exception $e) {
                      echo "An error occurred updating the IMDB with the sql " . $sql . " and the error " . mysqli_error($conn);
-                }         
+		}       
  	 
           }
           

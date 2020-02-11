@@ -1,0 +1,156 @@
+
+/* smartphones, iPhone, portrait 480x320 phones */
+@media (min-width:320px)  {  
+    th, td {
+         min-width: 35px;
+    }
+}
+
+/* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
+@media (min-width:481px)  { 
+    th, td {
+         min-width: 35px;
+    }
+}
+
+mat-paginator.episodePaginator {
+     float: left;
+     position: absolute;
+     top: 130px; 
+}
+
+mat-paginator.imdbPaginator {
+  left: 970px;
+  top: 130px;
+  position: absolute; 
+}
+
+/* Widen select dropdown in paginator because its too narrow with 4 digit values */
+::ng-deep mat-paginator .mat-select-value {
+    min-width: 30px !important;
+    max-width: 100px !important;
+}
+
+#chkFavorites {
+    margin-left: 30px;
+}
+
+#editButton {
+    margin-left: 150px;
+}
+
+#updateButton {
+    margin-left: 50px;
+}
+
+.episodeTable {
+    position: absolute;
+    top: 200px;
+    overflow: auto;
+    max-width: 200px;
+}
+
+.imdbTable {
+    position: relative;
+    margin-left: 875px;
+    top: 53px;
+}
+
+/* 1st Column of both tables which can be the same width since they both have an ID in column 1 */
+table tr td:first-child  {
+    min-width: 80px;
+    white-space: wrap;
+}
+
+/* 2nd Column of episode table */
+.episodeTable tr td:first-child + td {
+    min-width:500px;
+    white-space: wrap !important;
+}
+
+/* mat-form field in 2nd Column of episode table */
+.episodeTable tr td:first-child + td mat-form-field {
+    word-wrap:break-word !important;
+    /*min-width:500px;*/
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 3rd ColupdateButtonClickedumn of episode table */
+.episodeTable tr td:first-child + td + td {
+    min-width:170px;
+    white-space: wrap !important;
+}
+
+/* 2nd Column of IMDB table */
+.imdbTable tr td:first-child + td {
+    white-space: wrap;
+}
+
+/* input field 2nd Column of IMDB table */
+.imdbTable tr td:first-child + td mat-form-field {
+    white-space: wrap !important;
+}
+
+/* input field in 3rd Column of IMDB table */
+.imdbTable tr td:first-child + td + td mat-form-field {
+    min-width: 300px;
+    white-space: wrap;
+}
+
+.app-loading span {
+    position:relative;
+    top:-140px;
+    left: 70px;
+}
+.app-loading {
+    position: absolute;
+    left: 125px;
+    top:-120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    height: 100%;
+  }
+  .app-loading .spinner {
+    height: 200px;
+    width: 200px;
+    animation: rotate 2s linear infinite;
+    transform-origin: center center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+  }
+  .app-loading .spinner .path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    animation: dash 1.5s ease-in-out infinite;
+    stroke-linecap: round;
+    stroke: #ddd;
+  }
+  
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes dash {
+    0% {
+      stroke-dasharray: 1, 200;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -35px;
+    }
+    100% {
+      stroke-dasharray: 89, 200;
+      stroke-dashoffset: -124px;
+    }
+  }
