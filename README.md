@@ -49,7 +49,7 @@ This script runs on the server and acts like a REST resource that handles passin
    ##### Called by WTF.php?ScrapeData
    Scrapes the Wikipedia page and loads the episode information into the database. This can be used to update the database with the latest information.
    
-   By default, this endpoint will only read the table that is for the current year. All previous years are ignored. If you want to get the date for all years, Add &AllRows=true at the end of the URL so the URL is in the format http://www.yoursite.com/WTF.php?ScrapeData&AllRows=true
+   By default, this will only read the table on the Wiki page for the current year and all previous years are ignored. If you want to get the date for all years, Add &AllRows=true at the end of the URL so the URL is in the format http://www.yoursite.com/WTF.php?ScrapeData&AllRows=true
             
    This endpoint has logic that checks if the episode has been added already before it to prevent duplicate episodes so you can safely run this endpoint as often as you want and will never have duplicate entries.
    
