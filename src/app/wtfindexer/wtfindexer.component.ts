@@ -4,7 +4,10 @@
 // fix left of imdb table too far to the left
 
 import { Component, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+//import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from '../core/data.service';
 import { IMDBNames, IWTFEpisode } from '../core/interfaces';
 
@@ -27,8 +30,8 @@ export class WTFIndexerComponent {
   readonly title: string = "WTF Indexer"
   WTFPayload : IWTFEpisode[];
 
-  @ViewChild('episodePaginator', { static: false }) episodePaginator: MatPaginator;
-  @ViewChild('imdbPaginator', { static: false }) imdbPaginator: MatPaginator;
+  @ViewChild('episodePaginator') episodePaginator: MatPaginator;
+  @ViewChild('imdbPaginator') imdbPaginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(private dataService: DataService) { }
