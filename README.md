@@ -5,6 +5,15 @@ WTFIndexer is an Angular application that scrapes the Wikipedia episodes page fo
 
 Almost every name in each episode should have a hyperlink to that persons' page on IMDB.com where you can see all of their credits. This app will try to automatically get the IMDB link for each name in an episode title when adding a new episode to the database. If it isn't able to identify the name, you can manually specify the IMDB link by visiting the persons' IMDB page and using the Javascript bookmarklet below.
 
+# Check In/Out Episodes
+This app also has the ability to check episodes in and out on your media server. I added this feature because media players like Emby and Jellyfin cannot play a WTF podcast if you have 500 or more files in a directory. When you try to play a podcast episode, it does not play so I added a way to check in episodes like a library.
+
+For this to work, you need to have all of the episodes in a location access by this app. To enable this feature,
+1. Edit src/app/wtfindexer/wtfindexer.component.ts and change checkoutAllowed = false; to checkoutAllowed = true;
+2. Edit scripts/WTF.php and set the paths to WTFPATH and WTFARCHIVEPATH
+3. WTFPATH is the directory where the checked in files will reside. This directory should be empty. 
+4. WTFARCHIVEPATH is the location where all of the other episodes that are checked in (not checked out) are located. Create an empty file in WTFARCHIVEPATH called .ignore so your media server does not show the archive folder. 
+
 ## Requirements:
 
 1. Web server (Apache or Nginx)

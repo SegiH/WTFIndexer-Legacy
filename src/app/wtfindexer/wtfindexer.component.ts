@@ -17,6 +17,7 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
   styleUrls: ['./wtfindexer.component.css']
 })
 export class WTFIndexerComponent {
+  checkoutAllowed = false;
   editingAllowed = false;
   episodesDataSource: MatTableDataSource<any>;
   episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'isModified'
@@ -40,11 +41,37 @@ export class WTFIndexerComponent {
        this.getEpisodes();
 
        this.getIMDBNames();
+
+       if (this.checkoutAllowed)
+            this.episodeDisplayedColumns.push("Check In/Out");
+
   }
 
   applyFilter(filterValue: string) {
        this.episodesDataSource.filter = filterValue;
        this.imdbDataSource.filter = filterValue;
+  }
+
+  checkInOutFileClick(epNumber: number,isCheckedOut: boolean) {
+     if (epNumber == null)
+        return;
+
+     // get episodes from the data service
+     this.dataService.checkEpisodeInOut(epNumber,isCheckedOut)
+     .subscribe((response) => {
+          this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsCheckedOut=!isCheckedOut;
+          /*if (response === false) {
+               alert(`Unable to check ${(isCheckedOut == true ? "in" : "out")} the requested episode`)
+               return;
+          } else {
+               this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsCheckedOut=!isCheckedOut;
+          }*/
+     },
+     error => {
+          alert(`An error occurred checking " + ${(isCheckedOut === false ? "in" : "out")} + "the episode`);
+
+          console.log(`An error occurred ${(isCheckedOut === false ? "in" : "out")} episode from the data service with error ${error}`)
+     });
   }
   
   chkFavoritesClick() {

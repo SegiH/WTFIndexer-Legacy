@@ -5,6 +5,7 @@ export interface IWTFEpisode {
     Favorite: number;
     IsBeingEdited: boolean;
     IsModified: boolean;
+    IsCheckedOut: boolean;
 }
 
 export interface IMDBNames {

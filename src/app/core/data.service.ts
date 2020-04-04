@@ -10,6 +10,13 @@ import { IMDBNames,IWTFEpisode } from './interfaces';
 export class DataService {
     constructor(private http: HttpClient) { }
 
+    checkEpisodeInOut(epNumber,isCheckedOut) {
+      return this.http.get<any>('WTF.php?CheckInOut&EpisodeNumber=' + epNumber + '&IsCheckedOut=' + isCheckedOut)
+      .pipe(
+        catchError(this.handleError)
+      );
+    }
+
     getEpisodes() : any {
         return this.http.get<IWTFEpisode[]>('WTF.php?FetchData')
         .pipe(

@@ -2,11 +2,47 @@
      const DATABASE_TABLE = "WTFEpisodes";
      const DATABASE_TABLE_TEST = "WTFEpisodes_Temp";
      const DEBUG = false;
+     const WTFPATH = "/mnt/external/Music/Marc\ Maron/WTF\ with\ Marc\ Maron\ Podcast/";
+     const WTFARCHIVEPATH = "/mnt/external/Music/Marc\ Maron/WTF\ with\ Marc\ Maron\ Podcast/Other/";
     
      if (DEBUG == true) {
           ini_set('display_errors',1);
 	  ini_set('display_startup_errors',1);
 	  error_reporting(E_ALL);
+     }
+
+     function CheckInOut() {
+          $isCheckedOut = ($_GET["IsCheckedOut"] == "true" ? true : false);
+	  
+	  $cmd="mv " . ($isCheckedOut == true ? WTFPATH : WTFARCHIVEPATH) . $_GET["EpisodeNumber"] . "*.* " . ($isCheckedOut == true ? WTFARCHIVEPATH : WTFPATH);
+
+	  set_time_limit(0);
+
+	  $handle = popen($cmd,"r");
+         
+	  if (ob_get_level() == 0)
+	       ob_start();
+
+	  while (!feof($handle)) {
+	       $buffer=fgets($handle);
+
+	       ob_flush();
+
+	       flush();
+	  }
+
+	  pclose($handle);
+
+	  ob_end_flush();
+
+	  $fileCount = glob(($isCheckedOut == true ? WTFPATHARCHIVEPATH : WTFPATH) . $row["EpisodeID"] . '*.mp3'); 
+	  
+	  $success = false;
+
+	  if (sizeof($fileCount) == 0)
+		  $success = true;
+
+	  echo json_encode($success);
      }
 
      function FetchData() {
@@ -18,7 +54,11 @@
 
           $result = $conn->query($sql);
 	 
-          while ($row=mysqli_fetch_assoc($result)) {
+	  while ($row=mysqli_fetch_assoc($result)) {
+	       $fileCount = glob(WTFPATH . $row["EpisodeID"] . '*.mp3'); 
+		  
+	       $row["IsCheckedOut"] = (sizeof($fileCount) == 0 ? false : true);
+
                $wtfArray[] = $row;
           }
 
@@ -358,6 +398,10 @@
           }         
  	 
           echo json_encode("OK"); 
+     }
+
+     if (isset($_GET["CheckInOut"]) && isset($_GET["EpisodeNumber"]) && isset($_GET["IsCheckedOut"])) {
+          CheckInOut(); 
      }
 
      if (isset($_GET["FetchData"])) {
