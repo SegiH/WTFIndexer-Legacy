@@ -200,7 +200,7 @@
      function ScrapeData() {
 	  $conn = GetConnection();
 
-          $url="https://en.wikipedia.org/wiki/List_of_WTF_with_Marc_Maron_episodes";
+          $url="https://en.wikipedia.org/wiki/List_of_WTF_with_Marc_Maron_episodes" . "?ts=" . time();
           
           $curl = curl_init($url);
 
@@ -209,7 +209,7 @@
           curl_setopt_array($curl,$options); 
 
           $htmlContent = curl_exec($curl);
- 
+
 	  curl_close($curl);
          
 	  $dom = new DOMDocument();
@@ -225,21 +225,19 @@
 	     // If this param to get all rows isn't set, get the 2nd to last table which will be the current year and process this table only. The last table is currently an Other Episodes table that I don't care about
           if (!isset($_GET["AllRows"])) {
                $c=0;
- 
 	       foreach($nodes as $table) {
-                    if ($c==$nodes->length-2) {			     
+                    // echo "node size is " . $nodes->length . "<BR><BR>";
+                    if ($c==$nodes->length-1) { 
                          $tablesToProcess = $table->childNodes;
                          //$tablesToProcess = $table;
-			       
 			 break;
 	            }
 
                     $c++;
 	      }
-          } else {
-               $tablesToProcess=$nodes;
+	  } else {
+		  $tablesToProcess=$nodes;
           }
-
           // Loop through all tables to process
           foreach ($tablesToProcess as $currTable) {
                $rows=$currTable->getElementsByTagName("tr");
@@ -248,13 +246,18 @@
     
                foreach($rows as $currRow) {
                     $items=explode('"',$currRow->textContent);
+		    
+		    // echo "inside of inner foreach loop " . $currRow->textContent . " when the size is " . sizeof($items) . "<BR><BR>";
                     
                     if (sizeof($items) == 3) {
                          $epNumber = $items[0];
                          $name = $items[1];
                          $releaseDate = $items[2];
                          $releaseDate = str_replace("Â"," ",$releaseDate); // When scraping the data, this character shows up in the release date. This removes it 
-                       
+			 if (DEBUG == true) {
+			      // echo "Processing " . $epNumber . " with the name " . $name . "<BR><BR>";
+			 }
+
 		         if (strpos($releaseDate,"(") !== false) {
                               $releaseDate=substr($releaseDate,0,strpos($releaseDate,"(")-2);
 		         }

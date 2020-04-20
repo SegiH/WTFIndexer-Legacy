@@ -1,10 +1,8 @@
 // to do
-// fix imdb items per page
-// fix location of loading 
-// fix left of imdb table too far to the left
+// fix imdb items per page not changing the # of viewed items
+// finish editing
 
 import { Component, ViewChild } from '@angular/core';
-//import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,7 +16,7 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
 })
 export class WTFIndexerComponent {
   checkoutAllowed = false;
-  editingAllowed = false;
+  editingAllowed = true;
   episodesDataSource: MatTableDataSource<any>;
   episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'isModified'
   filterValue: string;
