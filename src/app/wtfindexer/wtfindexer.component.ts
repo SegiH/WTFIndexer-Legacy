@@ -16,7 +16,7 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
 })
 export class WTFIndexerComponent {
   checkoutAllowed = false;
-  editingAllowed = true;
+  editingAllowed = false;
   episodesDataSource: MatTableDataSource<any>;
   episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'isModified'
   filterValue: string;
