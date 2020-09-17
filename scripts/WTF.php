@@ -1,10 +1,24 @@
 <?php
+     # Database host name
+     const DATABASE_HOST= "WTF-DB";
+
+     # Database name
+     const DATABASE_NAME= "WTF";
+
+     # Database table
      const DATABASE_TABLE = "WTFEpisodes";
-     const DATABASE_TABLE_TEST = "WTFEpisodes_Temp";
+
+     # Database username
+     const DATABASE_USERNAME= "WTFUser";
+
+     # Database Password
+     const DATABASE_PASSWORD= "&TwXPDa+;1%39M+";
+
+     # Enable for extra debugging output 
      const DEBUG = false;
-     const WTFPATH = "/mnt/external/Music/Marc\ Maron/WTF\ with\ Marc\ Maron\ Podcast/";
-     const WTFARCHIVEPATH = "/mnt/external/Music/Marc\ Maron/WTF\ with\ Marc\ Maron\ Podcast/Other/";
-    
+     const WTFPATH = "/WTF/"; # If you want to use check in/out set this to the location where files will be stored when checked out
+     const WTFARCHIVEPATH = "/WTF/Other/";  # If you want to use check in/out set this to the location where files will be stored when not checked back in
+
      if (DEBUG == true) {
           ini_set('display_errors',1);
 	  ini_set('display_startup_errors',1);
@@ -14,7 +28,7 @@
      function CheckInOut() {
           $isCheckedOut = ($_GET["IsCheckedOut"] == "true" ? true : false);
 	  
-	  $cmd="mv " . ($isCheckedOut == true ? WTFPATH : WTFARCHIVEPATH) . $_GET["EpisodeNumber"] . "*.* " . ($isCheckedOut == true ? WTFARCHIVEPATH : WTFPATH);
+	  $cmd="mv \"" . ($isCheckedOut == true ? WTFPATH : WTFARCHIVEPATH) . "\"" . $_GET["EpisodeNumber"] . "*.* " . ($isCheckedOut == true ? WTFARCHIVEPATH : WTFPATH);
 
 	  set_time_limit(0);
 
@@ -35,7 +49,7 @@
 
 	  ob_end_flush();
 
-	  $fileCount = glob(($isCheckedOut == true ? WTFPATHARCHIVEPATH : WTFPATH) . $row["EpisodeID"] . '*.mp3'); 
+	  $fileCount = glob(($isCheckedOut == true ? WTFARCHIVEPATH : WTFPATH) . $_GET["EpisodeNumber"] . '*.mp3'); 
 	  
 	  $success = false;
 
@@ -50,13 +64,15 @@
 
           $wtfArray = array();
 
-          $sql="SELECT *,ParseNames(Name) AS IMDBLink FROM " . DATABASE_TABLE . " " . (isset($_GET["FavoritesOnly"]) && $_GET["FavoritesOnly"] == 1 ? "WHERE Favorite=1 " : "") . "ORDER BY EpisodeNumber DESC";
-
-          $result = $conn->query($sql);
+          $sql="SELECT *,ParseNames(Name) AS IMDBLink FROM " . DATABASE_TABLE . " " . (isset($_GET["FavoritesOnly"]) && $_GET["FavoritesOnly"] == 1 ? "WHERE Favorite=1 " : "") . " ORDER BY EpisodeNumber DESC";
+ 
+	  $result = $conn->query($sql);
 	 
 	  while ($row=mysqli_fetch_assoc($result)) {
-	       $fileCount = glob(WTFPATH . $row["EpisodeID"] . '*.mp3'); 
-		  
+	       $filePath=WTFPATH . $row["EpisodeID"] . ' *.mp3';
+
+	       $fileCount = glob($filePath); 
+
 	       $row["IsCheckedOut"] = (sizeof($fileCount) == 0 ? false : true);
 
                $wtfArray[] = $row;
@@ -66,7 +82,7 @@
           
           $conn->close();
      }
-     
+ 
      function FetchIMDBNames() {
           $conn = GetConnection();
 
@@ -86,12 +102,12 @@
      }
   
      function GetConnection() {
-          $conn = new mysqli(ini_get("mysqli.default_host"),ini_get("mysqli.default_user"),ini_get("mysqli.default_pw"),"WTF");
+          $conn = new mysqli(DATABASE_HOST,DATABASE_USERNAME,DATABASE_PASSWORD,DATABASE_NAME);
 	  
           if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
-          }
-          
+	  }
+	 
 	  // Check if the table exists already 
           $sql="SELECT COUNT(*) AS TableCount FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='" . DATABASE_TABLE . "'";
 
@@ -227,7 +243,7 @@
                $c=0;
 	       foreach($nodes as $table) {
                     // echo "node size is " . $nodes->length . "<BR><BR>";
-                    if ($c==$nodes->length-1) { 
+                    if ($c==$nodes->length-2) { 
                          $tablesToProcess = $table->childNodes;
                          //$tablesToProcess = $table;
 			 break;
@@ -237,7 +253,8 @@
 	      }
 	  } else {
 		  $tablesToProcess=$nodes;
-          }
+	  }
+	  
           // Loop through all tables to process
           foreach ($tablesToProcess as $currTable) {
                $rows=$currTable->getElementsByTagName("tr");
@@ -247,7 +264,7 @@
                foreach($rows as $currRow) {
                     $items=explode('"',$currRow->textContent);
 		    
-		    // echo "inside of inner foreach loop " . $currRow->textContent . " when the size is " . sizeof($items) . "<BR><BR>";
+		    //echo "inside of inner foreach loop " . $currRow->textContent . " when the size is " . sizeof($items) . "<BR><BR>";
                     
                     if (sizeof($items) == 3) {
                          $epNumber = $items[0];
@@ -265,10 +282,11 @@
                          // Before inserting the row, verify if it has already been added
                          $sql="SELECT * FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $epNumber;
           
-                         $result = $conn->query($sql);
+                          $result = $conn->query($sql);
  
                          if ($result->num_rows == 0) {
-                              $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "','" . $releaseDate . "');";
+                              //$sql="UPDATE " . DATABASE_TABLE . " SET ReleaseDate2='" . $releaseDate . "' WHERE EpisodeNumber=" . $epNumber . ";";
+                              $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "',REPLACE('" . $releaseDate . "',CHAR(160), ' '));";
 
                               try {
 	                           if (!mysqli_query($conn,$sql)) {
@@ -278,7 +296,7 @@
                                    echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
 			      }
                          }
-                         
+                        
                          // Get the IMDB URL based on the name
                          $imdbURL=getIMDBURLByName($name);
 
@@ -401,6 +419,10 @@
           }         
  	 
           echo json_encode("OK"); 
+     }
+
+     if (isset($_GET["Test"])) {
+          GetConnection(); 
      }
 
      if (isset($_GET["CheckInOut"]) && isset($_GET["EpisodeNumber"]) && isset($_GET["IsCheckedOut"])) {
