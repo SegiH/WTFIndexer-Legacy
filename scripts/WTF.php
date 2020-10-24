@@ -1,6 +1,6 @@
 <?php
      # Database host name
-     const DATABASE_HOST= "WTF-DB";
+     const DATABASE_HOST= "YOURDBHOST";
 
      # Database name
      const DATABASE_NAME= "WTF";
@@ -12,17 +12,17 @@
      const DATABASE_USERNAME= "WTFUser";
 
      # Database Password
-     const DATABASE_PASSWORD= "&TwXPDa+;1%39M+";
+     const DATABASE_PASSWORD= "YOURPASSWORDGOESHERE";
 
      # Enable for extra debugging output 
-     const DEBUG = false;
+     const DEBUG = true;
      const WTFPATH = "/WTF/"; # If you want to use check in/out set this to the location where files will be stored when checked out
      const WTFARCHIVEPATH = "/WTF/Other/";  # If you want to use check in/out set this to the location where files will be stored when not checked back in
 
      if (DEBUG == true) {
-          ini_set('display_errors',1);
-	  ini_set('display_startup_errors',1);
-	  error_reporting(E_ALL);
+          //ini_set('display_errors',1);
+	  //ini_set('display_startup_errors',1);
+	  // error_reporting(E_ALL);
      }
 
      function CheckInOut() {
@@ -271,8 +271,11 @@
                          $name = $items[1];
                          $releaseDate = $items[2];
                          $releaseDate = str_replace("Â"," ",$releaseDate); // When scraping the data, this character shows up in the release date. This removes it 
+			 
+			 // echo "Release date: = " . $releaseDate . "<BR><BR>";  
+			 
 			 if (DEBUG == true) {
-			      // echo "Processing " . $epNumber . " with the name " . $name . "<BR><BR>";
+			      echo "Processing " . $epNumber . " with the name " . $name . "<BR><BR>";
 			 }
 
 		         if (strpos($releaseDate,"(") !== false) {
@@ -282,12 +285,22 @@
                          // Before inserting the row, verify if it has already been added
                          $sql="SELECT * FROM " . DATABASE_TABLE . " WHERE EpisodeNumber=" . $epNumber;
           
-                          $result = $conn->query($sql);
- 
-                         if ($result->num_rows == 0) {
+			 if (DEBUG == true) {
+			      echo "Before inserting the row, verify if it has already been added, sql=" . $sql . "<BR><BR>";
+			 }
+			
+                         $result = $conn->query($sql);
+			 
+			 if ($result->num_rows == 0) {
                               //$sql="UPDATE " . DATABASE_TABLE . " SET ReleaseDate2='" . $releaseDate . "' WHERE EpisodeNumber=" . $epNumber . ";";
-                              $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "',REPLACE('" . $releaseDate . "',CHAR(160), ' '));";
+                              $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "',REPLACE('" . $releaseDate . "',CHAR(194), ' '));";
+                              
+			      $sql=str_replace(chr(160),"",$sql);
 
+			      if (DEBUG == true) {
+			           echo "EPISODE INSERT sql=" . $sql . "<BR><BR>";
+			      }
+			
                               try {
 	                           if (!mysqli_query($conn,$sql)) {
 	                                echo "An error occurred adding episode number " . $epNumber . " with the sql " . $sql . " and the error " . mysqli_error($conn);		  
@@ -295,12 +308,12 @@
                               } catch(Exception $e) {
                                    echo "A fatal error occurred inserting the row with the sql " . $sql . " and the error " . mysqli_error($conn);
 			      }
-                         }
+			 }
                         
                          // Get the IMDB URL based on the name
                          $imdbURL=getIMDBURLByName($name);
 
-                         // Before inserting into the IMDB table, make sure that the name isn't in the table alreadt
+                         // Before inserting into the IMDB table, make sure that the name isn't in the table already
                          $sql="SELECT * FROM IMDB WHERE Name='" . $name . "'";
           
                          $result = $conn->query($sql);
@@ -310,8 +323,11 @@
 			 }
 
                          $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . str_replace("'","''",$name) . "','" . $imdbURL . "');";
-                         // $sql="INSERT INTO IMDB (Name,IMDBURL) VALUES('" . $name . "','" . $imdbURL . "');";
-
+			 
+			 if (DEBUG == true) {
+			       echo "IMDB INSERT, sql=" . $sql . "<BR><BR>";
+			 }
+			
                          try {
                               if (!mysqli_query($conn,$sql)) {
                                    echo "An error occurred adding the name " . $name . " into the IMDB table with the sql " . $sql . " and the error " . mysqli_error($conn);		  
