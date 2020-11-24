@@ -293,7 +293,7 @@
 			 
 			 if ($result->num_rows == 0) {
                               //$sql="UPDATE " . DATABASE_TABLE . " SET ReleaseDate2='" . $releaseDate . "' WHERE EpisodeNumber=" . $epNumber . ";";
-                              $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "',REPLACE('" . $releaseDate . "',CHAR(194), ' '));";
+                              $sql="INSERT INTO " . DATABASE_TABLE . "(EpisodeNumber,Name,ReleaseDate) VALUES(" . $epNumber . ",'" . str_replace('\"',"",str_replace("'","\'",$name)) . "',REPLACE(REPLACE('" . $releaseDate . "',CHAR(63), ' '),CHAR(194),' '));";
                               
 			      $sql=str_replace(chr(160),"",$sql);
 
