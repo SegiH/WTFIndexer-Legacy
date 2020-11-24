@@ -1,4 +1,5 @@
 // to do
+// when updating using web app, eps dont reload
 // fix imdb items per page not changing the # of viewed items
 // finish editing
 
