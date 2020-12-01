@@ -29,6 +29,10 @@
      </mat-grid-tile>
 
      <mat-grid-tile [colspan]=1 [rowspan]=1>
+          <mat-checkbox [(ngModel)]="descriptionVisible" id="chkShowDescription" (change)="chkShowhideDescription()">Show Description</mat-checkbox>
+     </mat-grid-tile>
+
+     <mat-grid-tile [colspan]=1 [rowspan]=1>
           <button id="updateButton" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
 
           <button *ngIf="editingAllowed" id="editButton" mat-raised-button color="accent" (click)="editEpisodesIMDBNamesClick()">{{ (!isBeingEdited ? "Edit" : "Save") }}</button>
@@ -47,7 +51,7 @@
      </ng-container>
               
      <!-- Name Column -->
-     <ng-container matColumnDef="Name">
+     <ng-container ng-class="nameColumn"  matColumnDef="Name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
           
           <td mat-cell *matCellDef="let element">
@@ -67,6 +71,12 @@
                     </textarea>
                </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
           </td>
+     </ng-container>
+ 
+     <!-- Description Column -->
+     <ng-container class="descriptionColumn" *ngIf="descriptionVisible" matColumnDef="Description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+          <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
      </ng-container>
               
      <!-- Release Date Column -->

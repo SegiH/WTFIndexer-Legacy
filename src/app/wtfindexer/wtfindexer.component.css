@@ -60,24 +60,30 @@ table tr td:first-child  {
     white-space: wrap;
 }
 
-/* 2nd Column of episode table */
-.episodeTable tr td:first-child + td {
-    min-width:500px;
-    white-space: wrap !important;
+/* Name Column of episode table */
+.cdk-column-Name {
+    min-width:250px;
+    word-wrap:break-word !important;
 }
 
-/* mat-form field in 2nd Column of episode table */
-.episodeTable tr td:first-child + td mat-form-field {
-    word-wrap:break-word !important;
-    /*min-width:500px;*/
-    white-space: nowrap;
+/* mat-form field in Name Column of episode table */
+.cdk-column-Name mat-form-field {
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* 3rd ColupdateButtonClickedumn of episode table */
-.episodeTable tr td:first-child + td + td {
-    min-width:170px;
+/* Description of episode table */
+.cdk-column-Description {
+  word-wrap:break-word !important;
+  max-width:500px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Release Date of episode table */
+.cdk-column-ReleaseDate {
+    padding-left: 50px;
+    min-width:370px;
     white-space: wrap !important;
 }
 

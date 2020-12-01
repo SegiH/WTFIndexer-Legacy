@@ -17,9 +17,10 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
 })
 export class WTFIndexerComponent {
   checkoutAllowed = false;
+  descriptionVisible = false;
   editingAllowed = false;
   episodesDataSource: MatTableDataSource<any>;
-  episodeDisplayedColumns: string[] = ['Episode', 'Name', 'ReleaseDate','Favorite']; //,'isModified'
+  episodeDisplayedColumns: string[] = ['Episode', 'Name','ReleaseDate','Favorite'];
   filterValue: string;
   imdbDataSource: MatTableDataSource<any>;
   imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL']; //,'isModified'
@@ -43,6 +44,9 @@ export class WTFIndexerComponent {
 
        if (this.checkoutAllowed)
             this.episodeDisplayedColumns.push("Check In/Out");
+
+       if (this.descriptionVisible)
+            this.episodeDisplayedColumns.splice(2,0,'Description');
 
   }
 
@@ -79,6 +83,14 @@ export class WTFIndexerComponent {
 
        // Trigger filter
        this.applyFilter((this.filterValue != null ? this.filterValue : " "));
+  }
+
+  chkShowhideDescription() {
+       if (this.descriptionVisible) {
+            this.episodeDisplayedColumns.splice(2,0,'Description');
+       } else {
+          this.episodeDisplayedColumns.splice(2,1);
+       }
   }
  
   // Custom Material UI table filter function

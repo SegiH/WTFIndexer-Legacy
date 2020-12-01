@@ -18,7 +18,7 @@ export class DataService {
     }
 
     getEpisodes() : any {
-        return this.http.get<IWTFEpisode[]>('https://wtf.hovav.org/WTF.php?FetchData')
+        return this.http.get<IWTFEpisode[]>('WTF.php?FetchData')
         .pipe(
           catchError(this.handleError)
         );
