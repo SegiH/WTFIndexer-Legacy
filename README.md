@@ -1,33 +1,33 @@
 # WTFIndexer
 Overview:
 
-WTFIndexer is an Angular application that scrapes the Wikipedia episodes page for the podcast WTF with Marc Maron and saves all of the episode information into a MySQL database and displays the podcast information in a searchable table with the ability to mark episodes that you want to listen to later. 
+WTFIndexer is an application that scrapes the Wikipedia episodes page for the podcast WTF with Marc Maron and saves all of the episode information into a database and displays the podcast information in a searchable table with the ability to mark episodes that you want to listen to later and check episodes in and out. 
 
-Almost every name in each episode should have a hyperlink to that persons' page on IMDB.com where you can see all of their credits. This app will try to automatically get the IMDB link for each name in an episode title when adding a new episode to the database. If it isn't able to identify the name, you can manually specify the IMDB link by visiting the persons' IMDB page and using the Javascript bookmarklet below.
+Almost every name in each episode should have a hyperlink to that persons' page on IMDB.com where you can see all of their credits. This app will try to automatically get the IMDB link for each name in an episode title when adding a new episode to the database. If it isn't able to identify the name, you can manually update the IMDB link by visiting the persons' IMDB page and using the Javascript bookmarklet below.
 
 # Check In/Out Episodes
 This app also has the ability to check episodes in and out on your media server. I added this feature because media players like Emby and Jellyfin cannot play a WTF podcast if you have 500 or more files in a directory. When you try to play a podcast episode, it does not play so I added a way to check in episodes like a library.
 
 For this to work, you need to have all of the episodes in a location access by this app. To enable this feature,
 1. Edit src/app/wtfindexer/wtfindexer.component.ts and change checkoutAllowed = false; to checkoutAllowed = true;
-2. Edit scripts/WTF.php and set the paths to WTFPATH and WTFARCHIVEPATH
-3. WTFPATH is the directory where the checked in files will reside. This directory should be empty. 
-4. WTFARCHIVEPATH is the location where all of the other episodes that are checked in (not checked out) are located. Create an empty file in WTFARCHIVEPATH called .ignore so your media server does not show the archive folder. 
+1. Edit scripts/WTF.php and set the paths to WTFPATH and WTFARCHIVEPATH
+1. WTFPATH is the directory where the checked in files will reside. This directory should be empty. 
+1. WTFARCHIVEPATH is the location where all of the other episodes that are checked in (not checked out) are located. Create an empty file in WTFARCHIVEPATH called .ignore so your media server does not show the archive folder. 
 
 ## Requirements:
 
 1. Web server (Apache or Nginx)
-2. PHP with curl extension enabled
-3. MySQL database
+1. PHP with curl extension enabled
+1. MySQL or SQL Server database
 
 ## Instructions
 
 ### Server side setup
 1. Make sure that the PHP curl extension is enabled. Edit php.ini and look for the line extension=php_curl.dll. If it has a semicolon in front of it, remove the semicolon and restart your webserver.
-2. Create a MySql database named WTF.
-3. Create a user and grant them access to this database.
-4. Run the SQL in the script WTF.sql located in the scripts folder to create the necessary tables.
-5. Edit php.ini and add the following lines at the end of the file (don't incude the bracket symbols < and >)
+1. Create a database named WTF.
+1. Create a user and grant them access to this database.
+1. Run the SQL in the script SQLData.sql to create the necessary tables.
+1. Edit php.ini and add the following lines at the end of the file (don't incude the bracket symbols < and >)
    [mysqli]
    mysqli.default_host = localhost
    mysqli.default_user = <YOUR USERNAME>
@@ -35,12 +35,12 @@ For this to work, you need to have all of the episodes in a location access by t
    
 ### Client side setup
 1. This guide assumes that it will be hosted under the directory WTF on your web server. If you want to change this, edit package.json and change the line --base-href /WTF/ to the directory on your web server where you will host this application and use this path wherever WTF is mentioned. You also need to have [Node](https://nodejs.org/) set up to build the app.
-2. Open a command prompt and navigate to the WTFIndexer directory
-3. Run ```npm install``` to install  
-4. Run ```npm build```
-5. When it finishes, copy the contents of dist\WTFIndexer to the WTF directory on your web server
-7. Copy scripts\WTF.php to the folder where you are hosting this app (WTF by default)
-8. Visit http://www.yoursite.com/WTF
+1. Open a command prompt and navigate to the WTFIndexer directory
+1. Run ```npm install``` to install  
+1. Run ```npm build```
+1. When it finishes, copy the contents of dist\WTFIndexer to the WTF directory on your web server
+1. Copy scripts\WTF.php to this same folder where you are hosting this app (WTF by default)
+1. Visit http://www.yoursite.com/WTF
 
 The Favorites checkbox is not checked by default. Check it to view podcasts that you have favorited. If you want favorites to be checked by default, edit src/app/app.component.ts and change the line isFavoritesChecked=false; to isFavoritesChecked=true; and go back to step 4 above to rebuild the app. 
 
