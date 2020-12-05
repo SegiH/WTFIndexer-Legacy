@@ -1,58 +1,64 @@
 /* smartphones, iPhone, portrait 480x320 phones */
 @media (min-width:320px)  {  
     th, td {
-         min-width: 35px;
+         min-width: 135px;
     }
 }
 
 /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
 @media (min-width:481px)  { 
     th, td {
-         min-width: 35px;
+         min-width: 135px;
     }
 }
 
 mat-paginator.episodePaginator {
-     float: left;
-     top: 120px;
+  left: 0px;
+  top: 170px;
+  position: absolute; 
 }
 
 mat-paginator.imdbPaginator {
-     left: 900px;
-     top: 170px;
-     position: absolute; 
+  left: 900px;
+  top: 170px;
+  position: absolute; 
 }
 
 /* Widen select dropdown in paginator because its too narrow with 4 digit values */
 ::ng-deep mat-paginator .mat-select-value {
-    min-width: 30px !important;
-    max-width: 100px !important;
+  min-width: 30px !important;
+  max-width: 100px !important;
 }
 
-#chkFavorites {
-    margin-left: 30px;
+.episodeTable {
+  position: absolute;
+  top: 230px;
+  overflow: auto;
+  max-width: 200px;
 }
+
+
+/*
+
 
 #editButton {
     margin-left: 150px;
+}
+
+#option {
+  position: absolute;
 }
 
 #updateButton {
     margin-left: 50px;
 }
 
-.episodeTable {
-    position: absolute;
-    top: 230px;
-    overflow: auto;
-    max-width: 200px;
-}
 
 .imdbTable {
     position: absolute;
     top: 230px;
     margin-left: 875px;
-}
+}*/
 
 /* 1st Column of both tables which can be the same width since they both have an ID in column 1 */
 table tr td:first-child  {

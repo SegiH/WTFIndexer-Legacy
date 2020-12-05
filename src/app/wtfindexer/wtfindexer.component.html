@@ -17,7 +17,7 @@
      </mat-grid-tile>
 </mat-grid-list>
 
-<mat-grid-list *ngIf="!isLoading" cols="4" rowHeight="80px">
+<mat-grid-list *ngIf="!isLoading" id="options" cols="4" rowHeight="50px">
      <mat-grid-tile [colspan]=1 [rowspan]=1>
           <mat-form-field *ngIf="!isBeingEdited">
                <input matInput [(ngModel)]="filterValue" (keydown)="applyFilter($event.target.value)" placeholder="Filter">     
