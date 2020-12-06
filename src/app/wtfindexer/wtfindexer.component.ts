@@ -48,6 +48,9 @@ export class WTFIndexerComponent {
        if (this.descriptionVisible)
             this.episodeDisplayedColumns.splice(2,0,'Description');
 
+       if (window.outerWidth <= window.outerHeight) {
+            alert("Please rotate your phone to landscape mode");
+       }
   }
 
   applyFilter(filterValue: string) {

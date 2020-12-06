@@ -17,13 +17,15 @@
      </mat-grid-tile>
 </mat-grid-list>
 
-<mat-grid-list *ngIf="!isLoading" id="options" cols="4" rowHeight="50px">
+<mat-grid-list *ngIf="!isLoading" class="filter" cols="1 " rowHeight="50px">
      <mat-grid-tile [colspan]=1 [rowspan]=1>
           <mat-form-field *ngIf="!isBeingEdited">
                <input matInput [(ngModel)]="filterValue" (keydown)="applyFilter($event.target.value)" placeholder="Filter">     
           </mat-form-field>
      </mat-grid-tile>
+</mat-grid-list>
 
+<mat-grid-list *ngIf="!isLoading" class="options2" cols="4 " rowHeight="50px">
      <mat-grid-tile [colspan]=1 [rowspan]=1>
           <mat-checkbox [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
      </mat-grid-tile>
@@ -37,8 +39,9 @@
 
           <button *ngIf="editingAllowed" id="editButton" mat-raised-button color="accent" (click)="editEpisodesIMDBNamesClick()">{{ (!isBeingEdited ? "Edit" : "Save") }}</button>
                
-          <button *ngIf="isBeingEdited" mat-raised-button style="margin-left: 25px;" color="warn" (click)="editEpisodesIMDBNamesClick(true)">Cancel</button>               
      </mat-grid-tile>
+
+     <button *ngIf="isBeingEdited" mat-raised-button style="margin-left: 25px;" color="warn" (click)="editEpisodesIMDBNamesClick(true)">Cancel</button>               
 </mat-grid-list>
 
 <mat-paginator *ngIf="!isLoading" #episodePaginator class="episodePaginator" [pageSizeOptions]="[10000,2,25,50,100]" showFirstLastButtons></mat-paginator>

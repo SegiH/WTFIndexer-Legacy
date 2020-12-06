@@ -14,7 +14,7 @@
 
 mat-paginator.episodePaginator {
   left: 0px;
-  top: 170px;
+  top: 175px;
   position: absolute; 
 }
 
@@ -37,28 +37,13 @@ mat-paginator.imdbPaginator {
   max-width: 200px;
 }
 
-
-/*
-
-
-#editButton {
-    margin-left: 150px;
+mat-grid-list.filter {
+  max-width: 250px;
 }
 
-#option {
-  position: absolute;
+mat-grid-list.options2 {
+  max-width: 1250px;
 }
-
-#updateButton {
-    margin-left: 50px;
-}
-
-
-.imdbTable {
-    position: absolute;
-    top: 230px;
-    margin-left: 875px;
-}*/
 
 /* 1st Column of both tables which can be the same width since they both have an ID in column 1 */
 table tr td:first-child  {
@@ -109,11 +94,6 @@ table tr td:first-child  {
     white-space: wrap;
 }
 
-/*.app-loading span {
-    position:relative;
-    top:-140px;
-    left: 70px;
-}*/
 .app-loading {
     /*position: absolute;
     left: 125px;
