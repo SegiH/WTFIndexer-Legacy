@@ -77,7 +77,7 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone'; // Need for MatSort module
+import 'zone.js'; // Need for MatSort module
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
