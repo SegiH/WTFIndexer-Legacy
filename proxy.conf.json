@@ -1,8 +1,8 @@
 {
     "/" : {
-      "target": "https://yourdomain.com/",
+      "target": "https://yoursite.com",
       "secure": false,
-      "logLevel": "debug",
-      "changeOrigin": true
+      "changeOrigin": true,
+      "logLevel": "debug"
     }
   }
