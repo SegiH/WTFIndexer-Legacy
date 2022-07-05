@@ -11,28 +11,28 @@ export class DataService {
     constructor(private http: HttpClient) { }
 
     checkEpisodeInOut(epNumber,isCheckedOut) {
-      return this.http.get<any>('WTF.php?CheckInOut&EpisodeNumber=' + epNumber + '&IsCheckedOut=' + isCheckedOut)
+      return this.http.get<any>('/CheckInOut?EpisodeNumber=' + epNumber + '&IsCheckedOut=' + isCheckedOut)
       .pipe(
         catchError(this.handleError)
       );
     }
 
     getEpisodes() : any {
-        return this.http.get<IWTFEpisode[]>('WTF.php?FetchData')
+        return this.http.get<IWTFEpisode[]>('/GetEpisodes')
         .pipe(
           catchError(this.handleError)
         );
     }
 
     getIMDBNames() : any {
-      return this.http.get<IMDBNames[]>('WTF.php?FetchIMDBNames')
+      return this.http.get<IMDBNames[]>('/GetIMDBNames')
       .pipe(
         catchError(this.handleError)
       );
     }
 
     scrapeData() : any {
-        return this.http.get<any>('WTF.php?ScrapeData')
+        return this.http.get<any>('/ScrapeData')
         .pipe(
           catchError(this.handleError)
         );
@@ -40,21 +40,21 @@ export class DataService {
 
     // Save the favorite value for the specific episode to the database
     updateEpisodeFavorite(epNumber,favoriteValue) {
-        return this.http.get<any>('WTF.php?UpdateFavorite&EpisodeNumber=' + epNumber + "&FavoriteValue=" + favoriteValue)
+        return this.http.get<any>('/UpdateFavorite?EpisodeNumber=' + epNumber + "&FavoriteValue=" + favoriteValue)
         .pipe(
           catchError(this.handleError)
         );
     }
 
     updateEpisodes(episodePayload) {
-      return this.http.get<any>('WTF.php?UpdateEpisodes&EpisodePayload=' + JSON.stringify(episodePayload))
+      return this.http.get<any>('/UpdateEpisodes?EpisodePayload=' + JSON.stringify(episodePayload))
       .pipe(
         catchError(this.handleError)
       );
     }
 
     updateIMDB(imdbPayload) {
-      return this.http.get<any>('WTF.php?UpdateIMDB&IMDBPayload=' + JSON.stringify(imdbPayload))
+      return this.http.get<any>('/UpdateIMDB?IMDBPayload=' + JSON.stringify(imdbPayload))
       .pipe(
         catchError(this.handleError)
       );
