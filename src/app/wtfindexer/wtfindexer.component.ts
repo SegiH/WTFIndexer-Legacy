@@ -239,16 +239,18 @@ export class WTFIndexerComponent {
             return;
 
        // Get object based on matching episode number
-       let obj = this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber);
+       let obj = this.WTFPayload.find(episode => episode.EpisodeNumber === parseInt(epNumber));
 
-       if (obj.Favorite == null || obj.Favorite == 0)
-            obj.Favorite=1;
-       else if (obj.Favorite == 1)
-            obj.Favorite=0;
+       const favoriteValue=!obj.Favorite
        
        // Subscribe to data service to update the favorite
-       this.dataService.updateEpisodeFavorite(epNumber,obj.Favorite)
+       this.dataService.updateEpisodeFavorite(epNumber,favoriteValue)
        .subscribe(() => {
+            if (obj.Favorite == null || obj.Favorite == 0)
+                 obj.Favorite=1;
+            else if (obj.Favorite == 1)
+                 obj.Favorite=0;
+
             // After updating the favorite, filter the data if favorites is checked because if Favorites is checked and the user unselects a favorite, it will be removed from the filter
             if (this.isFavoritesChecked == true) {
                this.updateFavoriteCheckboxStatus();
