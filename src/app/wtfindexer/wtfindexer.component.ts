@@ -26,7 +26,8 @@ export class WTFIndexerComponent {
   imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL']; //,'isModified'
   IMDBPayload: IMDBNames[];
   isBeingEdited = false;
-  isLoading=true;
+  isLoaded = false;
+  isLoading = true;
   isFavoritesChecked = false;
   readonly title: string = "WTF Indexer"
   WTFPayload : IWTFEpisode[];
@@ -39,8 +40,6 @@ export class WTFIndexerComponent {
 
   ngOnInit() {
        this.getEpisodes();
-
-       this.getIMDBNames();
 
        if (this.checkoutAllowed)
             this.episodeDisplayedColumns.push("Check In/Out");
@@ -265,10 +264,14 @@ export class WTFIndexerComponent {
   }
 
   getEpisodes() {
+       this.isLoaded = false;
+
        // get episodes from the data service
        this.dataService.getEpisodes()
             .subscribe((episodes: any[]) => {
                  this.isLoading = false;
+
+                 this.isLoaded = true;
 
                  this.WTFPayload = episodes;
 
@@ -288,12 +291,14 @@ export class WTFIndexerComponent {
                       this.chkFavoritesClick();   
                  }
 
-                 
+                 this.getIMDBNames();
        },
        error => {
             alert("An error occurred getting the episodes");
 
-            console.log(`An error occurred getting the episodes from the data service with error ${error}`)
+            console.log(`An error occurred getting the episodes from the data service with error ${error}`);
+
+            this.isLoading=false;
        });
   }
 
@@ -347,7 +352,9 @@ export class WTFIndexerComponent {
   }
 
   updateButtonClicked() {
-     this.dataService.scrapeData()
+     
+     
+     this.dataService.scrapeData(this.WTFPayload.length)
      .subscribe(() => {
           this.getEpisodes();
 

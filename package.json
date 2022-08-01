@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --proxy-config proxy.conf.json",
+    "start": "ng serve --host 0.0.0.0",
     "build": "ng build --base-href / --configuration production",
     "test": "ng test",
     "lint": "ng lint",
@@ -22,7 +22,9 @@
     "@angular/platform-browser-dynamic": "^14.0.4",
     "@angular/router": "^14.0.4",
     "@material-ui/icons": "^4.9.1",
+    "config": "^3.3.7",
     "core-js": "^2.6.11",
+    "node-config": "^0.0.2",
     "rxjs": "^6.6.7",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
@@ -35,7 +37,7 @@
     "@material-ui/core": "^4.11.0",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "^2.0.8",
-    "@types/node": "^12.11.1",
+    "@types/node": "^12.20.55",
     "codelyzer": "^0.0.28",
     "jasmine-core": "~3.8.0",
     "jasmine-spec-reporter": "~5.0.0",

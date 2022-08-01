@@ -3,9 +3,9 @@
           <h1>{{ title }}</h1>
      </mat-grid-tile>
 
-     <mat-grid-tile *ngIf="!isLoading" [colspan]="1" [rowspan]="1">
+     <!--<mat-grid-tile *ngIf="!isLoading" [colspan]="1" [rowspan]="1">
           <button id="updateButton" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
-     </mat-grid-tile>
+     </mat-grid-tile>-->
 </mat-grid-list>
 
 <mat-grid-list *ngIf="isLoading" cols="4" rowHeight="150px">
@@ -21,7 +21,7 @@
      </mat-grid-tile>
 </mat-grid-list>
 
-<mat-grid-list *ngIf="!isLoading" id="options" cols="4" rowHeight="20px">
+<mat-grid-list *ngIf="!isLoading && isLoaded" id="options" cols="4" rowHeight="20px">
      <mat-grid-tile [colspan]="2" [rowspan]="2">
           <mat-checkbox [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
      </mat-grid-tile>
@@ -50,7 +50,7 @@
 </mat-grid-list>
 
 
-<table *ngIf="!isLoading" mat-table matSort [dataSource]="episodesDataSource" class="episodeTable mat-elevation-z8">
+<table *ngIf="!isLoading && isLoaded" mat-table matSort [dataSource]="episodesDataSource" class="episodeTable mat-elevation-z8">
      <!-- Episode Number Column -->
      <ng-container matColumnDef="Episode">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Ep # </th>
