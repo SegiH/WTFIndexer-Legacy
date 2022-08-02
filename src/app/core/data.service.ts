@@ -9,7 +9,7 @@ import { IMDBNames,IWTFEpisode } from './interfaces';
 @Injectable()
 export class DataService {
      // TODO: Make my dynamic later!!!!!
-     readonly backendURL="";
+     backendURL="";
 
      constructor(private http: HttpClient) { }
 
@@ -18,6 +18,10 @@ export class DataService {
           .pipe(
                catchError(this.handleError)
           );
+     }
+
+     getBackEndURL() {
+          return this.backendURL;
      }
 
      getEpisodes(isFavoritesChecked: boolean) : any {

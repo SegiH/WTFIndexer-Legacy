@@ -36,9 +36,12 @@ export class WTFIndexerComponent {
   @ViewChild('imdbPaginator') imdbPaginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  constructor(private dataService: DataService) { }
+  constructor(protected dataService: DataService) { }
 
   ngOnInit() {
+       if (localStorage.getItem('BackEndURL') != null)
+            this.dataService.backendURL=localStorage.getItem('BackEndURL');
+
        this.getEpisodes();
 
        if (this.checkoutAllowed)
@@ -47,9 +50,9 @@ export class WTFIndexerComponent {
        if (this.descriptionVisible)
             this.episodeDisplayedColumns.splice(2,0,'Description');
 
-       if (window.outerWidth <= window.outerHeight) {
+       /*if (window.outerWidth <= window.outerHeight) {
             alert("Please rotate your phone to landscape mode");
-       }
+       }*/
   }
 
   applyFilter(filterValue: string) {
@@ -80,13 +83,6 @@ export class WTFIndexerComponent {
   }
   
   chkFavoritesClick() {
-       // Push the status of the Favorites checkbox to the payload so it can be used in the filter since you cannot access this.isFavoritesChecked inside of the filter function
-       // TODO: fix
-       // this.updateFavoriteCheckboxStatus();
-       
-
-       // Trigger filter
-      // this.applyFilter((this.filterValue != null ? this.filterValue : " "));
       this.dataService.getEpisodes(this.isFavoritesChecked)
                .subscribe((episodes: any[]) => {
                     this.WTFPayload = episodes;
@@ -135,9 +131,6 @@ export class WTFIndexerComponent {
 
        if (this.isLoading)
             return;
-
-       // TODO: fix
-       //this.updateFavoriteCheckboxStatus();
 
        let filterFunction = function (data: any, filter: string): boolean {
             /*if (typeof this.isFavoritesChecked === 'undefined') {
@@ -296,8 +289,6 @@ export class WTFIndexerComponent {
 
             // After updating the favorite, filter the data if favorites is checked because if Favorites is checked and the user unselects a favorite, it will be removed from the filter
             if (this.isFavoritesChecked == true) {
-               // TODO: Fix later
-               //this.updateFavoriteCheckboxStatus();
                this.applyFilter(" ");
             }
        },
@@ -309,11 +300,20 @@ export class WTFIndexerComponent {
   }
 
   getEpisodes() {
+       if (this.dataService.getBackEndURL() === "") {
+            alert("The backend URL is not set");
+            this.isLoading=false;
+            return;
+       } else {
+          localStorage.setItem('BackEndURL',this.dataService.getBackEndURL())
+       }
+
        this.isLoaded = false;
 
        // get episodes from the data service
        this.dataService.getEpisodes(this.isFavoritesChecked)
             .subscribe((episodes: any[]) => {
+               debugger;
                  this.isLoading = false;
 
                  this.isLoaded = true;

@@ -1,10 +1,22 @@
-<mat-grid-list id="header" cols="4" rowHeight="50px">
-     <mat-grid-tile [colspan]="3" [rowspan]="1">
+<mat-grid-list id="header" cols="12" rowHeight="50px">
+     <mat-grid-tile [colspan]="9" [rowspan]="1">
           <h1>{{ title }}</h1>
      </mat-grid-tile>
 
-     <mat-grid-tile *ngIf="!isLoading && isLoaded" [colspan]="1" [rowspan]="1">
-          <button id="updateButton" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
+     <mat-grid-tile [colspan]="2" [rowspan]="1">
+          <mat-form-field>               
+               Backend URL
+               <input matInput [(ngModel)]="dataService.backendURL" placeholder="Backend URL">               
+          </mat-form-field>
+     </mat-grid-tile>
+
+     <mat-grid-tile [colspan]="1" [rowspan]="1">
+          <button id="loadButton" mat-raised-button color="primary" (click)="getEpisodes()">Load</button>
+     </mat-grid-tile>
+
+     <mat-grid-tile [colspan]="11" [rowspan]="1"></mat-grid-tile>
+     <mat-grid-tile [colspan]="1" [rowspan]="1">
+          <button id="updateButton" *ngIf="!isLoading && isLoaded" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
      </mat-grid-tile>
 </mat-grid-list>
 
