@@ -1,8 +1,3 @@
-@media (min-width:350px)  { 
-  mat-paginator.episodePaginator {
-       display:none;
-  }
-}
 mat-grid-list#options {
      margin-top: 15px;
      max-width:500px;
