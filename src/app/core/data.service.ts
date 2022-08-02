@@ -8,20 +8,22 @@ import { IMDBNames,IWTFEpisode } from './interfaces';
 
 @Injectable()
 export class DataService {
-     // TODO: Remove me later!!!!!
+     // TODO: Make my dynamic later!!!!!
      readonly backendURL="";
 
      constructor(private http: HttpClient) { }
 
-     checkEpisodeInOut(epNumber,isCheckedOut) {
+     checkEpisodeInOut(epNumber: number,isCheckedOut: boolean) {
           return this.http.get<any>('${backendURL}/CheckInOut?EpisodeNumber=' + epNumber + '&IsCheckedOut=' + isCheckedOut)
           .pipe(
                catchError(this.handleError)
           );
      }
 
-     getEpisodes() : any {
-          return this.http.get<IWTFEpisode[]>(`${this.backendURL}/GetEpisodes`)
+     getEpisodes(isFavoritesChecked: boolean) : any {
+          const favoritesOnly=(isFavoritesChecked ? `?FavoritesOnly=1` : ``);
+
+          return this.http.get<IWTFEpisode[]>(`${this.backendURL}/GetEpisodes${favoritesOnly}`)
           .pipe(
                catchError(this.handleError)
           );
@@ -49,14 +51,14 @@ export class DataService {
           );
      }
 
-     updateEpisodes(episodePayload) {
+     updateEpisodes(episodePayload: IWTFEpisode[]) {
           return this.http.get<any>(`${this.backendURL}/UpdateEpisodes?EpisodePayload=${JSON.stringify(episodePayload)}`)
           .pipe(
                catchError(this.handleError)
           );
      }
 
-     updateIMDB(imdbPayload) {
+     updateIMDB(imdbPayload: IMDBNames[]) {
           return this.http.get<any>(`${this.backendURL}/UpdateIMDB?IMDBPayload=${JSON.stringify(imdbPayload)}`)
           .pipe(
                catchError(this.handleError)

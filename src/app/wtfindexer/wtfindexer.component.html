@@ -3,9 +3,9 @@
           <h1>{{ title }}</h1>
      </mat-grid-tile>
 
-     <!--<mat-grid-tile *ngIf="!isLoading" [colspan]="1" [rowspan]="1">
+     <mat-grid-tile *ngIf="!isLoading && isLoaded" [colspan]="1" [rowspan]="1">
           <button id="updateButton" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
-     </mat-grid-tile>-->
+     </mat-grid-tile>
 </mat-grid-list>
 
 <mat-grid-list *ngIf="isLoading" cols="4" rowHeight="150px">
@@ -39,8 +39,8 @@
      </mat-grid-tile>-->
 
      <mat-grid-tile id="filter" [colspan]="3" [rowspan]="3">
-          <mat-form-field *ngIf="!isBeingEdited">
-               <input matInput [(ngModel)]="filterValue" (keydown)="applyFilter($event.target.value)" placeholder="Filter">     
+          <mat-form-field *ngIf="!isBeingEdited && !isFavoritesChecked">
+               <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter($event.target.value)" placeholder="Filter">     
           </mat-form-field>
      </mat-grid-tile>
 
@@ -95,7 +95,7 @@
      <!-- Favorite Column -->
      <ng-container matColumnDef="Favorite">  
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Favorite </th>
-          <td mat-cell *matCellDef="let element"><img [src]="getFavoriteImage(element.Favorite)" id="{{element.EpisodeNumber}}" alt="Favorite icon" style="width:24px;height:24px" (click)="episodeFavoriteClick($event)" /></td>
+          <td mat-cell *matCellDef="let element"><img [src]="getFavoriteImage(element.Favorite)" id="{{element.EpisodeNumber}}" alt="Favorite icon" style="width:24px;height:24px" (change)="episodeFavoriteClick($event)" /></td>
      </ng-container>
 
      <!-- Check In/Out Column -->

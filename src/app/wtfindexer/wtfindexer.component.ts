@@ -81,10 +81,44 @@ export class WTFIndexerComponent {
   
   chkFavoritesClick() {
        // Push the status of the Favorites checkbox to the payload so it can be used in the filter since you cannot access this.isFavoritesChecked inside of the filter function
-       this.updateFavoriteCheckboxStatus();
+       // TODO: fix
+       // this.updateFavoriteCheckboxStatus();
+       
 
        // Trigger filter
-       this.applyFilter((this.filterValue != null ? this.filterValue : " "));
+      // this.applyFilter((this.filterValue != null ? this.filterValue : " "));
+      this.dataService.getEpisodes(this.isFavoritesChecked)
+               .subscribe((episodes: any[]) => {
+                    this.WTFPayload = episodes;
+
+                 // Assign the payload as the table data source
+                 this.episodesDataSource=new MatTableDataSource(this.WTFPayload);
+
+                 // Assign custom filter function
+                 this.episodesDataSource.filterPredicate = this.createEpisodeFilter();
+     
+                 // Assign paginator
+                 this.episodesDataSource.paginator = this.episodePaginator;
+
+                 // Assign sort
+                 this.episodesDataSource.sort = this.sort;
+
+                 if (this.isFavoritesChecked == true) {
+                      this.chkFavoritesClick();   
+                 }
+
+                 this.getIMDBNames();
+
+                 // Apply search filters
+                 this.createEpisodeFilter();
+               },
+       error => {
+            alert("An error occurred getting the episodes");
+
+            console.log(`An error occurred getting the episodes from the data service with error ${error}`);
+
+            this.isLoading=false;
+       });
   }
 
   chkShowhideDescription() {
@@ -99,9 +133,18 @@ export class WTFIndexerComponent {
   createEpisodeFilter() {
        const delimiter: string = ":";
 
-       this.updateFavoriteCheckboxStatus();
+       if (this.isLoading)
+            return;
+
+       // TODO: fix
+       //this.updateFavoriteCheckboxStatus();
 
        let filterFunction = function (data: any, filter: string): boolean {
+            /*if (typeof this.isFavoritesChecked === 'undefined') {
+                console.log("null");
+                return null;
+            }*/
+
             let customSearch = () => {
                  let found = false;
                  
@@ -135,13 +178,14 @@ export class WTFIndexerComponent {
                  }*/
 
                  // First match the episode number name and/or release date
-                 if (data.EpisodeNumber === filter || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter.toLowerCase()) === true) || data.ReleaseDate.includes(filter) === true) {
-                      // If favorites isn't checked then include this item in the filter
-                      if (data.isFavoritesChecked == false) {
-                           found=true;
-                      } else if (parseInt(data.Favorite) === 1) { // If favorites is checked, only include this item if this is a favorite item
-                           found=true;
-                      }
+                 if ((filter == data.EpisodeNumber.toString() || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter.toLowerCase()) === true) || data.ReleaseDate.toString().startsWith(filter))) {
+                      if (this.isFavoritesChecked) {
+                         if (this.data.Favorite === true)
+                              return true;
+                          else
+                              return false;
+                      } else
+                         return true;
                  }
                  
                  return found;
@@ -252,7 +296,8 @@ export class WTFIndexerComponent {
 
             // After updating the favorite, filter the data if favorites is checked because if Favorites is checked and the user unselects a favorite, it will be removed from the filter
             if (this.isFavoritesChecked == true) {
-               this.updateFavoriteCheckboxStatus();
+               // TODO: Fix later
+               //this.updateFavoriteCheckboxStatus();
                this.applyFilter(" ");
             }
        },
@@ -267,7 +312,7 @@ export class WTFIndexerComponent {
        this.isLoaded = false;
 
        // get episodes from the data service
-       this.dataService.getEpisodes()
+       this.dataService.getEpisodes(this.isFavoritesChecked)
             .subscribe((episodes: any[]) => {
                  this.isLoading = false;
 
@@ -368,11 +413,11 @@ export class WTFIndexerComponent {
   }
 
   // Push the status of the Favorites checkbox to the payload so it can be used in the filter
-  updateFavoriteCheckboxStatus() {
+  /*updateFavoriteCheckboxStatus() {
        for (let i=0;i<this.WTFPayload.length;i++) {
             this.WTFPayload[i]["isFavoritesChecked"]=this.isFavoritesChecked;
        }
-  }
+  }*/
 
   WTFItemUpdated(epNumber) {
      if (epNumber === null)
