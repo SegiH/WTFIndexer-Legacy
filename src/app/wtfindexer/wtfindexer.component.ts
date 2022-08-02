@@ -1,8 +1,3 @@
-// to do
-// when updating using web app, eps dont reload
-// fix imdb items per page not changing the # of viewed items
-// finish editing
-
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -21,14 +16,17 @@ export class WTFIndexerComponent {
      editingAllowed = false;
      episodesDataSource: MatTableDataSource<any> = null;
      episodeDisplayedColumns: string[] = ['Episode', 'Name','ReleaseDate','Favorite'];
+     editingID: number;
      filterValue: string;
      imdbDataSource: MatTableDataSource<any>;
-     imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL']; //,'isModified'
+     imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL'];
      IMDBPayload: IMDBNames[];
      isBeingEdited = false;
      isLoaded = false;
      isLoading = true;
      isFavoritesChecked = false;
+     isFavoritesLoading = false;
+     previousObj: IWTFEpisode;
      readonly title: string = "WTF Indexer"
      WTFPayload : IWTFEpisode[];
 
@@ -47,6 +45,8 @@ export class WTFIndexerComponent {
 
           this.getEpisodes();
 
+          if (this.editingAllowed)
+               this.episodeDisplayedColumns.splice(0,0,"Action");
           if (this.checkoutAllowed)
                this.episodeDisplayedColumns.push("Check In/Out");
 
@@ -83,6 +83,11 @@ export class WTFIndexerComponent {
      }
   
      chkFavoritesClick() {
+          if (this.isFavoritesLoading)
+               return;
+
+          this.isFavoritesLoading=true;
+          
           this.dataService.getEpisodes(this.isFavoritesChecked)
           .subscribe((episodes: any[]) => {
                this.WTFPayload = episodes;
@@ -100,10 +105,12 @@ export class WTFIndexerComponent {
                     this.chkFavoritesClick();   
                }
 
-               this.getIMDBNames();
+               //this.getIMDBNames();
 
                // Apply search filters
                this.createEpisodeFilter();
+
+               this.isFavoritesLoading=false;
           },
           error => {
                alert("An error occurred getting the episodes");
@@ -204,48 +211,38 @@ export class WTFIndexerComponent {
           return filterFunction;
      }
 
-     editEpisodesIMDBNamesClick(canceled) {
+     editEpisodesIMDBNamesClick(episodeID: number, canceled: boolean) {
           if (!this.editingAllowed)
                return;
-       
-          /*if (this.episodePaginator.pageSize > 100) {
-               alert("Editing can only be done on 100 or less episodes at a time. Change the items per page to 100 or less");
-               return;
-          }*/
 
-          if (!canceled) { // Saving
-               const modifiedWTF=this.WTFPayload.filter(episode => episode.IsModified === true) 
-               const modifiedIMDB=this.IMDBPayload.filter(IMDB => IMDB.IsModified === true)
-          
-               if (modifiedWTF.length > 0) {
-                    this.dataService.updateEpisodes(modifiedWTF)
-                    .subscribe(() => {
-                    },
-                    error => {
-                         alert("An error occurred saving the WTF data");
-          
-                         console.log(`An error occurred saving the WTF data from the data service with error ${error}`)
-                    });
+          if (!this.isBeingEdited) {
+               this.isBeingEdited=true;
+               this.editingID=episodeID;
+
+               const previousObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== episodeID)[0];
+          } else { // Save
+               if (!canceled) { // Saving
+                    const currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== episodeID);
+
+                    this.dataService.updateEpisodes(currentEditingObj)
+                         .subscribe(() => {
+                         },
+                         error => {
+                              alert("An error occurred saving the WTF data");
+               
+                              console.log(`An error occurred saving the WTF data from the data service with error ${error}`)
+                         });
+               } else {
+                    let currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== episodeID)[0];
+                    currentEditingObj=this.previousObj;
                }
 
-               if (modifiedIMDB.length > 0) {
-                    this.dataService.updateIMDB(modifiedIMDB)
-                    .subscribe(() => {
-                    },
-                    error => {
-                         alert("An error occurred saving the IMDB data");
-          
-                         console.log(`An error occurred saving the IMDB data from the data service with error ${error}`)
-                    });
-               }
-          } else { // Canceling
+               this.getEpisodes();
+
+               this.getIMDBNames();
+
+               this.isBeingEdited = !this.isBeingEdited;
           }
-
-          this.getEpisodes();
-
-          this.getIMDBNames();
-
-          this.isBeingEdited = !this.isBeingEdited;
      }
 
      episodeEditClick($event) {
@@ -392,13 +389,5 @@ export class WTFIndexerComponent {
 
                console.log(`An error occurred scraping the data from the data service with error ${error}`)
           });
-     }
-
-     WTFItemUpdated(epNumber) {
-          if (epNumber === null)
-               return;
-
-          // Get object based on matching episode number
-          this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsModified=true;
      }
 }

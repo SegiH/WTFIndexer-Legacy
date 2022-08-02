@@ -133,3 +133,7 @@ table tr td:first-child  {
       stroke-dashoffset: -124px;
     }
   }
+
+.mat-icon {
+     transform: scale(1);
+}

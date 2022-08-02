@@ -8,7 +8,6 @@ import { IMDBNames,IWTFEpisode } from './interfaces';
 
 @Injectable()
 export class DataService {
-     // TODO: Make my dynamic later!!!!!
      backendURL="";
 
      constructor(private http: HttpClient) { }
