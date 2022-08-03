@@ -1,3 +1,4 @@
+// TODO: add more pagination options
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
@@ -13,7 +14,7 @@ export class DataService {
      constructor(private http: HttpClient) { }
 
      checkEpisodeInOut(epNumber: number,isCheckedOut: boolean) {
-          return this.http.get<any>('${backendURL}/CheckInOut?EpisodeNumber=' + epNumber + '&IsCheckedOut=' + isCheckedOut)
+          return this.http.get<any>(`${this.backendURL}/CheckInOut?EpisodeNumber=${epNumber}&IsCheckedOut=${isCheckedOut}`)
           .pipe(
                catchError(this.handleError)
           );
