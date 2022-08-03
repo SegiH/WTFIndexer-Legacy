@@ -26,7 +26,6 @@ export class WTFIndexerComponent {
      imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL'];
      IMDBPayload: IMDBNames[];
      isBeingEdited = false;
-     isLoaded = false;
      isEpisodesLoaded = false;
      isIMDBLoaded = false;
      isLoading = true;
@@ -40,7 +39,10 @@ export class WTFIndexerComponent {
           if (pager) this.episodesDataSource.paginator = pager;
      }
 
-     @ViewChild('imdbPaginator') imdbPaginator: MatPaginator;
+     @ViewChild('imdbPaginator') set paginatorIMDB(pager: MatPaginator) {
+          if (pager) this.imdbDataSource.paginator = pager;
+     }
+
      @ViewChild(MatSort, { static: false }) sort: MatSort;
 
      constructor(protected dataService: DataService) { }
@@ -382,7 +384,7 @@ export class WTFIndexerComponent {
 
                this.isIMDBLoaded = true;
 
-               this.IMDBPayload=IMDBNames;
+               this.IMDBPayload = IMDBNames;
 
                // Assign the payload as the table data source
                this.imdbDataSource=new MatTableDataSource(this.IMDBPayload);

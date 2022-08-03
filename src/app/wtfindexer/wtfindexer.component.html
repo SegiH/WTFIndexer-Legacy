@@ -21,7 +21,7 @@
      </mat-grid-tile>
 
      <mat-grid-tile [colspan]="1" [rowspan]="1">
-          <button id="updateButton" *ngIf="!isLoading && isLoaded && !isBeingEdited" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
+          <button id="updateButton" *ngIf="!isLoading && !isBeingEdited" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
      </mat-grid-tile>
 </mat-grid-list>
 
@@ -38,29 +38,31 @@
      </mat-grid-tile>
 </mat-grid-list>
 
-<mat-grid-list *ngIf="!isLoading && isLoaded" id="options" cols="11" rowHeight="20px">
-      <mat-grid-tile id="filter" [colspan]="5" [rowspan]="3">
-          <mat-form-field *ngIf="!isBeingEdited && !isFavoritesChecked">
-               <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter($event.target.value)" placeholder="Filter">     
-          </mat-form-field>
-     </mat-grid-tile>
+<mat-grid-list *ngIf="!isLoading && isEpisodesLoaded" id="options" cols="11" rowHeight="20px">
+     <mat-grid-tile id="filter" [colspan]="5" [rowspan]="3">
+         <mat-form-field *ngIf="!isBeingEdited && !isFavoritesChecked">
+              <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter($event.target.value)" placeholder="Filter">     
+         </mat-form-field>
+    </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="3" [rowspan]="3">
-          <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
-     </mat-grid-tile>
+    <mat-grid-tile [colspan]="3" [rowspan]="3">
+         <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
+    </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="3" [rowspan]="3">
-          <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="descriptionVisible" id="chkShowDescription" (change)="chkShowhideDescription()">Description</mat-checkbox>
-     </mat-grid-tile>
+    <mat-grid-tile [colspan]="3" [rowspan]="3">
+         <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="descriptionVisible" id="chkShowDescription" (change)="chkShowhideDescription()">Description</mat-checkbox>
+    </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="11" [rowspan]="3">
-          <mat-paginator *ngIf="!isBeingEdited" #episodePaginator class="episodePaginator" [pageSize]="100" [pageSizeOptions]="[10000,25,50,100]" showFirstLastButtons></mat-paginator>          
-     </mat-grid-tile>
+    <mat-grid-tile [colspan]="11" [rowspan]="3">
+         <mat-paginator *ngIf="!isBeingEdited" #episodePaginator class="episodePaginator" [pageSize]="100" [pageSizeOptions]="[10000,25,50,100]" showFirstLastButtons></mat-paginator>          
+    </mat-grid-tile>
+
+    <!--<mat-grid-tile [colspan]="1" [rowspan]="1">
+         <mat-paginator *ngIf="!isBeingEdited" #imdbPaginator class="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[10000,25,50,100]" showFirstLastButtons></mat-paginator>
+    </mat-grid-tile>-->
 </mat-grid-list>
 
-
 <table *ngIf="!isLoading && isEpisodesLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'Episodes'))" mat-table matSort [dataSource]="episodesDataSource" class="episodeTable mat-elevation-z8">
-     <!-- Action Column -->
      <ng-container matColumnDef="Action">
           <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
 
@@ -71,13 +73,11 @@
           </td>
      </ng-container>
 
-     <!-- Episode Number Column -->
      <ng-container matColumnDef="Episode">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Ep # </th>
           <td mat-cell *matCellDef="let element"><div *ngIf="!isBeingEdited|| (isBeingEdited && editingItem === 'Episodes' && element.EpisodeID == editingID)"> {{element.EpisodeNumber}} </div></td>
      </ng-container>
-              
-     <!-- Name Column -->
+
      <ng-container ng-class="nameColumn"  matColumnDef="Name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
           
@@ -96,11 +96,10 @@
                          cdkAutosizeMinRows="1"
                          cdkAutosizeMaxRows="5" matInput name="name" type="text" value="{{element.Name}}" [(ngModel)]="element.Name">
                     </textarea>
-               </mat-form-field> <!-- keyup)="textFieldKeyPressed($event)"  -->
+               </mat-form-field>
           </td>
      </ng-container>
  
-     <!-- Description Column -->
      <ng-container class="descriptionColumn" *ngIf="descriptionVisible" matColumnDef="Description">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
           <td mat-cell *matCellDef="let element">
@@ -118,8 +117,7 @@
           </td>
      </ng-container>
               
-     <!-- Release Date Column -->
-     <ng-container matColumnDef="ReleaseDate">
+      <ng-container matColumnDef="ReleaseDate">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Release Date </th>
           <td mat-cell *matCellDef="let element">
                <div *ngIf="!isBeingEdited">    
@@ -135,20 +133,17 @@
                </mat-form-field>
           </td>
      </ng-container>
-     
-     <!-- Favorite Column -->
+
      <ng-container matColumnDef="Favorite">  
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Favorite </th>
           <td mat-cell *matCellDef="let element"><img *ngIf="!isBeingEdited" [src]="getFavoriteImage(element.Favorite)" id="{{element.EpisodeNumber}}" alt="Favorite icon" style="width:24px;height:24px" (change)="episodeFavoriteClick($event)" /></td>
      </ng-container>
 
-     <!-- Check In/Out Column -->
      <ng-container matColumnDef="Check In/Out">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Check In/Out </th>
           <td mat-cell *matCellDef="let element"><button id="checkoutButton" mat-raised-button color="primary" (click)="checkInOutFileClick(element.EpisodeNumber,element.IsCheckedOut)">{{(element.IsCheckedOut == false ? "Check Out" : "Check In")}}</button></td>
      </ng-container>
-          
-     <!-- IsModified Column -->
+
      <ng-container matColumnDef="isModified">
           <th mat-header-cell *matHeaderCellDef> IsModified </th>
           <td mat-cell *matCellDef="let element"><mat-checkbox disabled checked="{{element.IsModified}}"></mat-checkbox></td>
@@ -158,12 +153,7 @@
      <tr mat-row *matRowDef="let row; columns: episodeDisplayedColumns;"></tr>
 </table>
 
-<!--
-<mat-paginator *ngIf="!isLoading && editingAllowed" #imdbPaginator class="imdbPaginator" [pageSizeOptions]="[10000,25,50,100]" showFirstLastButtons></mat-paginator>
--->
-
 <table id="imdbtable" *ngIf="!isLoading && isIMDBLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'IMDB'))" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
-     <!-- Action Column -->
      <ng-container matColumnDef="Action">
           <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
 
@@ -190,7 +180,7 @@
                                    
                <mat-form-field *ngIf="isBeingEdited && editingItem === 'IMDB' && element.ID == editingID">
                     <input matInput name="name" placeholder="Name" type="text" value="{{element.Name}}" [(ngModel)]="element.Name" (change)="IMDBItemUpdated(element.ID)">
-               </mat-form-field> <!--(keyup)="textFieldKeyPressed($event)"-->
+               </mat-form-field>
           </td>
      </ng-container>
 
@@ -203,7 +193,7 @@
                                    
                <mat-form-field *ngIf="isBeingEdited && editingItem === 'IMDB' && element.ID == editingID">
                     <input matInput name="IMDBURL" placeholder="IMDB_URL" type="text" value="{{element.IMDBURL}}" [(ngModel)]="element.IMDBURL" (change)="IMDBItemUpdated(element.ID)">
-               </mat-form-field> <!--(keyup)="textFieldKeyPressed($event)"-->
+               </mat-form-field>
           </td>
      </ng-container>
                               
