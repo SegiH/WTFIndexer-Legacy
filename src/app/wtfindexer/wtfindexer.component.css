@@ -7,17 +7,11 @@ mat-grid-list#options {
   margin-top: 5px;
   max-width: 200px;
 }
-/*
-mat-paginator.episodePaginator {
-  left: 0px;
-  top: 175px;
-  position: absolute; 
-}*/
 
 mat-paginator.imdbPaginator {
-  left: 900px;
-  top: 120px;
   position: absolute; 
+  left: 1050px;
+  top: 175px;
 }
 
 /* Widen select dropdown in paginator because its too narrow with 4 digit values */
@@ -29,6 +23,7 @@ mat-paginator.imdbPaginator {
 .episodeTable {
   overflow: auto;
   max-width: 200px;
+  margin-top: 25px;
 }
 
 mat-grid-list.filter {

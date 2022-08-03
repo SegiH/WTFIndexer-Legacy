@@ -15,7 +15,7 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
      styleUrls: ['./wtfindexer.component.css']
 })
 export class WTFIndexerComponent {
-     checkoutAllowed = false;
+     checkoutAllowed = true;
      descriptionVisible = false;
      editingAllowed = true;
      episodesDataSource: MatTableDataSource<any> = null;
@@ -37,11 +37,11 @@ export class WTFIndexerComponent {
      WTFPayload : IWTFEpisode[];
 
      @ViewChild('episodePaginator') set paginator(pager: MatPaginator) {
-          if (pager) this.episodesDataSource.paginator = pager;
+          if (pager && typeof this.episodesDataSource !== 'undefined') this.episodesDataSource.paginator = pager;
      }
 
-     @ViewChild('imdbPaginator') set paginatorIMDB(pager: MatPaginator) {
-          if (pager) this.imdbDataSource.paginator = pager;
+     @ViewChild('imdbPaginator') set paginatorIMDB(pagerIMDB: MatPaginator) {
+          if (pagerIMDB && typeof this.imdbDataSource !== 'undefined') this.imdbDataSource.paginator = pagerIMDB;
      }
 
      @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -100,38 +100,8 @@ export class WTFIndexerComponent {
                return;
 
           this.isFavoritesLoading=true;
-          
-          this.dataService.getEpisodes(this.isFavoritesChecked)
-          .subscribe((episodes: any[]) => {
-               this.WTFPayload = episodes;
 
-               // Assign the payload as the table data source
-               this.episodesDataSource=new MatTableDataSource(this.WTFPayload);
-
-               // Assign custom filter function
-               this.episodesDataSource.filterPredicate = this.createEpisodeFilter();
-
-               // Assign sort
-               this.episodesDataSource.sort = this.sort;
-
-               if (this.isFavoritesChecked == true) {
-                    this.chkFavoritesClick();   
-               }
-
-               this.getIMDBNames();
-
-               // Apply search filters
-               this.createEpisodeFilter();
-
-               this.isFavoritesLoading=false;
-          },
-          error => {
-               alert("An error occurred getting the episodes");
-
-               console.log(`An error occurred getting the episodes from the data service with error ${error}`);
-
-               this.isLoading=false;
-          });
+          this.getEpisodes();
      }
 
      chkShowhideDescription() {
@@ -329,6 +299,7 @@ export class WTFIndexerComponent {
           if (this.dataService.getBackEndURL() === "") {
                alert("The backend URL is not set");
                this.isEpisodesLoaded=false;
+               this.isLoading=false;
                return;
           } else {
                localStorage.setItem('BackEndURL',this.dataService.getBackEndURL())
@@ -359,6 +330,8 @@ export class WTFIndexerComponent {
                }
 
                this.getIMDBNames();
+               
+               this.isFavoritesLoading=false;
           },
           error => {
                alert("An error occurred getting the episodes");
