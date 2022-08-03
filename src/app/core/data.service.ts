@@ -1,4 +1,3 @@
-// TODO: add more pagination options
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 

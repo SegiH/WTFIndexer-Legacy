@@ -54,11 +54,11 @@
     </mat-grid-tile>
 
     <mat-grid-tile [colspan]="11" [rowspan]="3">
-         <mat-paginator *ngIf="!isBeingEdited" #episodePaginator class="episodePaginator" [pageSize]="100" [pageSizeOptions]="[10000,25,50,100]" showFirstLastButtons></mat-paginator>          
+         <mat-paginator *ngIf="!isBeingEdited" #episodePaginator class="episodePaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>          
     </mat-grid-tile>
 
     <!--<mat-grid-tile [colspan]="1" [rowspan]="1">
-         <mat-paginator *ngIf="!isBeingEdited" #imdbPaginator class="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[10000,25,50,100]" showFirstLastButtons></mat-paginator>
+         <mat-paginator *ngIf="!isBeingEdited" #imdbPaginator class="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>
     </mat-grid-tile>-->
 </mat-grid-list>
 
