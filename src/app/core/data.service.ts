@@ -61,8 +61,8 @@ export class DataService {
           );
      }
 
-     updateIMDB(imdbPayload: IMDBNames[]) {
-          return this.http.get<any>(`${this.backendURL}/UpdateIMDB?IMDBPayload=${JSON.stringify(imdbPayload)}`)
+     updateIMDB(imdb: IMDBNames) {
+          return this.http.get<any>(`${this.backendURL}/UpdateIMDB?ID=${imdb.ID}&Name=${imdb.Name}&URL=${imdb.IMDBURL}`)
           .pipe(
                catchError(this.handleError)
           );

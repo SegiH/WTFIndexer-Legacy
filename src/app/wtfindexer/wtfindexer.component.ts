@@ -1,3 +1,7 @@
+// TODO:
+// fix imdb paginator
+// have separate isloaded for imdb/episodes
+// Work on Check In/Out functionality
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,6 +21,7 @@ export class WTFIndexerComponent {
      episodesDataSource: MatTableDataSource<any> = null;
      episodeDisplayedColumns: string[] = ['Episode', 'Name','ReleaseDate','Favorite'];
      editingID: number;
+     editingItem: string;
      filterValue: string;
      imdbDataSource: MatTableDataSource<any>;
      imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL'];
@@ -26,7 +31,7 @@ export class WTFIndexerComponent {
      isLoading = true;
      isFavoritesChecked = false;
      isFavoritesLoading = false;
-     previousObj: IWTFEpisode;
+     previousObj: any;
      readonly title: string = "WTF Indexer"
      WTFPayload : IWTFEpisode[];
 
@@ -45,8 +50,11 @@ export class WTFIndexerComponent {
 
           this.getEpisodes();
 
-          if (this.editingAllowed)
+          if (this.editingAllowed) {
                this.episodeDisplayedColumns.splice(0,0,"Action");
+               this.imdbDisplayedColumns.splice(0,0,"Action");
+          }
+
           if (this.checkoutAllowed)
                this.episodeDisplayedColumns.push("Check In/Out");
 
@@ -212,20 +220,25 @@ export class WTFIndexerComponent {
           return filterFunction;
      }
 
-     editEpisodesIMDBNamesClick(episodeID: number, canceled: boolean) {
+     editEpisodesIMDBNamesClick(editingItem: string, editingID: number, canceled: boolean) {
           if (!this.editingAllowed)
                return;
 
           if (!this.isBeingEdited) {
                this.isBeingEdited=true;
-               this.editingID=episodeID;
+               this.editingID=editingID;
+               this.editingItem=editingItem;
 
-               const previousObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== episodeID)[0];
+               if (editingItem === "Episodes")
+                    this.previousObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== editingID)[0];
+               else if (editingItem === "IMDB")
+                    this.previousObj=this.IMDBPayload.filter(imdb => imdb.ID=== editingID)[0];
           } else { // Save
                if (!canceled) { // Saving
-                    const currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== episodeID)[0];
+                    if (editingItem === "Episodes") {
+                         const currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== editingID)[0];
 
-                    this.dataService.updateEpisodes(currentEditingObj)
+                         this.dataService.updateEpisodes(currentEditingObj)
                          .subscribe(() => {
                               this.getEpisodes();
                          },
@@ -234,9 +247,27 @@ export class WTFIndexerComponent {
                
                               console.log(`An error occurred saving the WTF data from the data service with error ${error}`)
                          });
+                    } else if (editingItem === "IMDB") {
+                         const currentEditingObj=this.IMDBPayload.filter(imdb => imdb.ID=== editingID)[0];
+
+                         this.dataService.updateIMDB(currentEditingObj)
+                         .subscribe(() => {
+                              this.getEpisodes();
+                         },
+                         error => {
+                              alert("An error occurred saving the IMDB data");
+               
+                              console.log(`An error occurred saving the IMDB data from the data service with error ${error}`)
+                         });
+                    }
                } else {
-                    let currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== episodeID)[0];
-                    currentEditingObj=this.previousObj;
+                    if (editingItem === "Episodes") {
+                         let currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== editingID)[0];
+                         currentEditingObj=this.previousObj;
+                    } else if (editingItem === "IMDB") {
+                         let currentEditingObj=this.IMDBPayload.filter(imdb => imdb.ID=== editingID)[0];
+                         currentEditingObj=this.previousObj;
+                    }
                }
 
                this.getEpisodes();

@@ -68,6 +68,12 @@ table tr td:first-child  {
     white-space: wrap !important;
 }
 
+.imdbTable {
+     position: absolute;
+     top: 26.5%;
+     left: 52%;
+}
+
 /* 2nd Column of IMDB table */
 .imdbTable tr td:first-child + td {
     white-space: wrap;
