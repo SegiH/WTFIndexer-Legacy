@@ -1,6 +1,8 @@
 export interface IWTFEpisode {
+    EpisodeID: number;
     EpisodeNumber: number;
     Name: string;
+    Description: string;
     ReleaseDate: string;
     Favorite: number;
     IsBeingEdited: boolean;

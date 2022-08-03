@@ -1,3 +1,5 @@
 proxy.conf.json
 node_modules 
 dist/
+.angular
+.git_ignore

@@ -13,7 +13,7 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
 export class WTFIndexerComponent {
      checkoutAllowed = false;
      descriptionVisible = false;
-     editingAllowed = false;
+     editingAllowed = true;
      episodesDataSource: MatTableDataSource<any> = null;
      episodeDisplayedColumns: string[] = ['Episode', 'Name','ReleaseDate','Favorite'];
      editingID: number;
@@ -222,10 +222,11 @@ export class WTFIndexerComponent {
                const previousObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== episodeID)[0];
           } else { // Save
                if (!canceled) { // Saving
-                    const currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== episodeID);
+                    const currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== episodeID)[0];
 
                     this.dataService.updateEpisodes(currentEditingObj)
                          .subscribe(() => {
+                              this.getEpisodes();
                          },
                          error => {
                               alert("An error occurred saving the WTF data");

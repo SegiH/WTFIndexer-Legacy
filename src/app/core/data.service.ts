@@ -54,8 +54,8 @@ export class DataService {
           );
      }
 
-     updateEpisodes(episodePayload: IWTFEpisode[]) {
-          return this.http.get<any>(`${this.backendURL}/UpdateEpisodes?EpisodePayload=${JSON.stringify(episodePayload)}`)
+     updateEpisodes(episode: IWTFEpisode) {
+          return this.http.get<any>(`${this.backendURL}/UpdateEpisodes?EpisodeID=${episode.EpisodeID}&Name=${episode.Name}&Description=${episode.Description}&ReleaseDate=${episode.ReleaseDate}&Favorite=0`)
           .pipe(
                catchError(this.handleError)
           );

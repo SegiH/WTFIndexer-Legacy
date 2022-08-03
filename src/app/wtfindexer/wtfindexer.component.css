@@ -137,3 +137,7 @@ table tr td:first-child  {
 .mat-icon {
      transform: scale(1);
 }
+
+.mat-form-field {
+  width: 100%;
+}
