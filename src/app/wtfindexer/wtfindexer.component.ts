@@ -68,6 +68,7 @@ export class WTFIndexerComponent {
           .subscribe((response) => {
                this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsCheckedOut=!isCheckedOut;
                
+               // TODO: Fix me
                /*if (response === false) {
                     alert(`Unable to check ${(isCheckedOut == true ? "in" : "out")} the requested episode`)
                     return;
@@ -105,7 +106,7 @@ export class WTFIndexerComponent {
                     this.chkFavoritesClick();   
                }
 
-               //this.getIMDBNames();
+               this.getIMDBNames();
 
                // Apply search filters
                this.createEpisodeFilter();
@@ -344,9 +345,6 @@ export class WTFIndexerComponent {
 
                // Assign custom filter function
                this.imdbDataSource.filterPredicate = this.createIMDBFilter();
-
-               // Assign paginator
-               this.imdbDataSource.paginator = this.imdbPaginator;
           },
           error => {
                alert("An error occurred getting the IMDB names")
