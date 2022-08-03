@@ -1,6 +1,5 @@
 // TODO:
 // fix imdb paginator
-// have separate isloaded for imdb/episodes
 // Work on Check In/Out functionality
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -28,6 +27,8 @@ export class WTFIndexerComponent {
      IMDBPayload: IMDBNames[];
      isBeingEdited = false;
      isLoaded = false;
+     isEpisodesLoaded = false;
+     isIMDBLoaded = false;
      isLoading = true;
      isFavoritesChecked = false;
      isFavoritesLoading = false;
@@ -324,20 +325,20 @@ export class WTFIndexerComponent {
      getEpisodes() {
           if (this.dataService.getBackEndURL() === "") {
                alert("The backend URL is not set");
-               this.isLoading=false;
+               this.isEpisodesLoaded=false;
                return;
           } else {
                localStorage.setItem('BackEndURL',this.dataService.getBackEndURL())
           }
 
-          this.isLoaded = false;
+          this.isEpisodesLoaded = false;
 
           // get episodes from the data service
           this.dataService.getEpisodes(this.isFavoritesChecked)
           .subscribe((episodes: any[]) => {
                this.isLoading = false;
 
-               this.isLoaded = true;
+               this.isEpisodesLoaded = true;
 
                this.WTFPayload = episodes;
 
@@ -361,14 +362,26 @@ export class WTFIndexerComponent {
 
                console.log(`An error occurred getting the episodes from the data service with error ${error}`);
 
-               this.isLoading=false;
+               this.isEpisodesLoaded=false;
           });
      }
 
      getIMDBNames() {
+          if (this.dataService.getBackEndURL() === "") {
+               alert("The backend URL is not set");
+               this.isEpisodesLoaded=false;
+               return;
+          }
+
+          this.isIMDBLoaded = false;
+
           // Get IMDB names
           this.dataService.getIMDBNames()
           .subscribe((IMDBNames: any[]) => {
+               this.isLoading = false;
+
+               this.isIMDBLoaded = true;
+
                this.IMDBPayload=IMDBNames;
 
                // Assign the payload as the table data source
