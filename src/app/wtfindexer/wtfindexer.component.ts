@@ -1,5 +1,3 @@
-// TODO:
-// Check In/Out works but when page loads, it doesn't reflect any episodes already checked out. SQL needs to set IsCheckedOut property in order for check in/out to work
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
