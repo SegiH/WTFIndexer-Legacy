@@ -1,5 +1,5 @@
 // TODO:
-// SQL needs to set IsCheckedOut property in order for check in/out to work
+// Check In/Out works but when page loads, it doesn't reflect any episodes already checked out. SQL needs to set IsCheckedOut property in order for check in/out to work
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -75,16 +75,12 @@ export class WTFIndexerComponent {
           if (epNumber == null)
                return;
 
-          //if (typeof isCheckedOut === 'undefined')
-          //     isCheckedOut=0;
           const currEp=this.WTFPayload.filter(episode => episode.EpisodeNumber === epNumber)[0];
           const isCheckedOut=(typeof currEp.IsCheckedOut === 'undefined'|| (typeof currEp.IsCheckedOut !== 'undefined' && currEp.IsCheckedOut === false) ? false : true);
 
           // get episodes from the data service
           this.dataService.checkEpisodeInOut(epNumber,isCheckedOut)
           .subscribe((response) => {
-               //this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsCheckedOut=!isCheckedOut;
-
                if (response[0] === "ERROR") {
                     alert(`Unable to check ${(isCheckedOut == true ? "in" : "out")} the requested episode`)
                     return;
@@ -119,7 +115,6 @@ export class WTFIndexerComponent {
           }
      }
  
-     // Custom Material UI table filter function
      createEpisodeFilter() {
           const delimiter: string = ":";
 
@@ -179,7 +174,6 @@ export class WTFIndexerComponent {
           return filterFunction;
      }
 
-     // Custom Material UI table filter function
      createIMDBFilter() {
           const delimiter: string = ":";
 
