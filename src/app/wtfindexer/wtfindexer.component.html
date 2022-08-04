@@ -39,9 +39,9 @@
 </mat-grid-list>
 
 <mat-grid-list *ngIf="!isLoading && isEpisodesLoaded" id="options" cols="11" rowHeight="20px">
-     <mat-grid-tile id="filter" [colspan]="5" [rowspan]="3">
+     <mat-grid-tile id="episodefilter" [colspan]="5" [rowspan]="3">
          <mat-form-field *ngIf="!isBeingEdited && !isFavoritesChecked">
-              <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter($event.target.value)" placeholder="Filter">     
+              <input matInput (keyup)="applyEpisodeFilter($event.target.value)" placeholder="Filter">     
          </mat-form-field>
     </mat-grid-tile>
 
@@ -149,6 +149,10 @@
      <tr mat-row *matRowDef="let row; columns: episodeDisplayedColumns;"></tr>
 </table>
 
+<mat-form-field *ngIf="!isLoading && !isBeingEdited && !isFavoritesChecked && isIMDBLoaded" id="IMDBFilter">
+     <input matInput (keyup)="applyIMDBFilter($event.target.value)" placeholder="Filter">     
+</mat-form-field>
+
 <mat-paginator *ngIf="!isLoading && !isBeingEdited && isIMDBLoaded" #imdbPaginator class="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>
 
 <table id="imdbtable" *ngIf="!isLoading && isIMDBLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'IMDB'))" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
@@ -197,4 +201,4 @@
                               
      <tr mat-header-row *matHeaderRowDef="imdbDisplayedColumns"></tr>
      <tr mat-row *matRowDef="let row; columns: imdbDisplayedColumns;"></tr>
-</table>
+</table>*/

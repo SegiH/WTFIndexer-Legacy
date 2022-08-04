@@ -3,9 +3,15 @@ mat-grid-list#options {
      max-width:500px;
 }
 
-#filter {
+#episodefilter {
   margin-top: 5px;
   max-width: 200px;
+}
+
+#IMDBFilter {
+  position: absolute;
+     top: 18%;
+     left: 68%;
 }
 
 mat-paginator.imdbPaginator {
@@ -22,7 +28,8 @@ mat-paginator.imdbPaginator {
 
 .episodeTable {
   overflow: auto;
-  max-width: 200px;
+  /*max-width: 200px;*/
+  max-width: 40%;
   margin-top: 25px;
 }
 
@@ -65,8 +72,8 @@ table tr td:first-child  {
 
 .imdbTable {
      position: absolute;
-     top: 26.5%;
-     left: 55%;
+     top: 36%;
+     left: 68%;
 }
 
 /* 2nd Column of IMDB table */

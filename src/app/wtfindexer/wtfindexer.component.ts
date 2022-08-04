@@ -20,7 +20,6 @@ export class WTFIndexerComponent {
      episodeDisplayedColumns: string[] = ['Episode', 'Name','ReleaseDate','Favorite'];
      editingID: number;
      editingItem: string;
-     filterValue: string;
      imdbDataSource: MatTableDataSource<any>;
      imdbDisplayedColumns: string[] = ['ID', 'Name', 'IMDBURL'];
      IMDBPayload: IMDBNames[];
@@ -64,8 +63,11 @@ export class WTFIndexerComponent {
                this.episodeDisplayedColumns.splice(2,0,'Description');
      }
 
-     applyFilter(filterValue: string) {
+     applyEpisodeFilter(filterValue: string) {
           this.episodesDataSource.filter = filterValue;
+     }
+
+     applyIMDBFilter(filterValue: string) {
           this.imdbDataSource.filter = filterValue;
      }
 
@@ -77,17 +79,16 @@ export class WTFIndexerComponent {
           this.dataService.checkEpisodeInOut(epNumber,isCheckedOut)
           .subscribe((response) => {
                this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsCheckedOut=!isCheckedOut;
-               
-               // TODO: Fix me
-               /*if (response === false) {
+
+               if (response[0] === "ERROR") {
                     alert(`Unable to check ${(isCheckedOut == true ? "in" : "out")} the requested episode`)
                     return;
                } else {
                     this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsCheckedOut=!isCheckedOut;
-               }*/
+               }
           },
           error => {
-               alert(`An error occurred checking " + ${(isCheckedOut === false ? "in" : "out")} + "the episode`);
+               alert(`An error occurred checking ${(isCheckedOut === false ? "in" : "out")} the episode`);
 
                console.log(`An error occurred ${(isCheckedOut === false ? "in" : "out")} episode from the data service with error ${error}`)
           });
@@ -283,7 +284,7 @@ export class WTFIndexerComponent {
 
                // After updating the favorite, filter the data if favorites is checked because if Favorites is checked and the user unselects a favorite, it will be removed from the filter
                if (this.isFavoritesChecked == true) {
-                    this.applyFilter(" ");
+                    this.applyEpisodeFilter(" ");
                }
           },
           error => {
