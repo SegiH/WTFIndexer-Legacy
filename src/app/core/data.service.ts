@@ -13,7 +13,7 @@ export class DataService {
      constructor(private http: HttpClient) { }
 
      checkEpisodeInOut(epNumber: number,isCheckedOut: boolean) {
-          return this.http.get<any>(`${this.backendURL}/CheckInOut?EpisodeNumber=${epNumber}&IsCheckedOut=${isCheckedOut}`)
+          return this.http.get<any>(`${this.backendURL}/CheckInOut?EpisodeNumber=${epNumber}&IsCheckedOut=${(isCheckedOut == true ? 1 : 0)}`)
           .pipe(
                catchError(this.handleError)
           );

@@ -71,20 +71,28 @@ export class WTFIndexerComponent {
           this.imdbDataSource.filter = filterValue;
      }
 
-     checkInOutFileClick(epNumber: number,isCheckedOut: boolean) {
+     checkInOutFileClick(epNumber: number) {
           if (epNumber == null)
                return;
+
+          //if (typeof isCheckedOut === 'undefined')
+          //     isCheckedOut=0;
+          const currEp=this.WTFPayload.filter(episode => episode.EpisodeNumber === epNumber)[0];
+          const isCheckedOut=(typeof currEp.IsCheckedOut === 'undefined'|| (typeof currEp.IsCheckedOut !== 'undefined' && currEp.IsCheckedOut === false) ? false : true);
 
           // get episodes from the data service
           this.dataService.checkEpisodeInOut(epNumber,isCheckedOut)
           .subscribe((response) => {
-               this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsCheckedOut=!isCheckedOut;
+               //this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsCheckedOut=!isCheckedOut;
 
                if (response[0] === "ERROR") {
                     alert(`Unable to check ${(isCheckedOut == true ? "in" : "out")} the requested episode`)
                     return;
                } else {
-                    this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber).IsCheckedOut=!isCheckedOut;
+                    const currEp=this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber);
+                    const currValue=!response[1];
+
+                    currEp.IsCheckedOut=!currValue;
                }
           },
           error => {
@@ -292,6 +300,10 @@ export class WTFIndexerComponent {
 
                console.log(`An error occurred updating the favorite from the data service with error ${error}`)
           });
+     }
+
+     getButtonText(episode: IWTFEpisode) {
+          return (typeof episode.IsCheckedOut === 'undefined' || (typeof episode.IsCheckedOut !== 'undefined' && episode.IsCheckedOut == false) ? "Check Out" : "Check In");
      }
 
      getEpisodes() {

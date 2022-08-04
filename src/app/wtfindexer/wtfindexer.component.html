@@ -137,7 +137,10 @@
 
      <ng-container matColumnDef="Check In/Out">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Check In/Out </th>
-          <td mat-cell *matCellDef="let element"><button id="checkoutButton" *ngIf="!isBeingEdited" mat-raised-button color="primary" (click)="checkInOutFileClick(element.EpisodeNumber,element.IsCheckedOut)">{{(element.IsCheckedOut == false ? "Check Out" : "Check In")}}</button></td>
+          <td mat-cell *matCellDef="let element">
+               <button id="checkoutButton" *ngIf="!isBeingEdited" mat-raised-button color="primary" (click)="checkInOutFileClick(element.EpisodeNumber)">
+                    {{ getButtonText(element) }}</button>
+          </td>
      </ng-container>
 
      <ng-container matColumnDef="isModified">
