@@ -1,13 +1,13 @@
 export interface IWTFEpisode {
-    EpisodeID: number;
-    EpisodeNum: number;
-    Name: string;
-    Description: string;
-    ReleaseDate: string;
-    Favorite: number;
-    IsBeingEdited: boolean;
-    IsModified: boolean;
-    IsCheckedOut: boolean;
+     EpisodeID: number;
+     EpisodeNum: number;
+     Name: string;
+     Description: string;
+     ReleaseDate: string;
+     Favorite: number;
+     IsBeingEdited: boolean;
+     IsModified: boolean;
+     IsCheckedOut: boolean;
 }
 
 export interface IMDBNames {

@@ -344,6 +344,8 @@ export class WTFIndexerComponent {
                console.log(`An error occurred getting the episodes from the data service with error ${error}`);
 
                this.isEpisodesLoaded=false;
+
+               this.isLoading=false;
           });
      }
 

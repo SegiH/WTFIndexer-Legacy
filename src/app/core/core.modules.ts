@@ -5,7 +5,7 @@ import { AppConfigService } from './appconfig.service';
 import { DataService } from './data.service';
 
 @NgModule({
-    imports: [ HttpClientModule ],
-    providers: [ AppConfigService, DataService ]
+     imports: [ HttpClientModule ],
+     providers: [ AppConfigService, DataService ]
 })
 export class CoreModule { }

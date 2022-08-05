@@ -21,7 +21,7 @@
      </mat-grid-tile>
 
      <mat-grid-tile [colspan]="1" [rowspan]="1">
-          <button id="updateButton" *ngIf="!isLoading && !isBeingEdited" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
+          <button id="updateButton" *ngIf="!isLoading && !isBeingEdited && isEpisodesLoaded" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
      </mat-grid-tile>
 </mat-grid-list>
 

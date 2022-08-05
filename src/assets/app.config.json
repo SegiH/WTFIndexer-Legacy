@@ -1,5 +1,5 @@
 {
-    "BackendURL": "https:/wtf-backend.yoursite.com",
+    "BackendURL": "",
     "CheckoutAllowed": "true",
     "EditingAllowed": "true"
 }
