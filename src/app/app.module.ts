@@ -13,6 +13,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { WTFIndexerComponent } from './wtfindexer/wtfindexer.component';
 import { CoreModule } from './core/core.modules';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { CoreModule } from './core/core.modules';
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
+    CommonModule,
     CoreModule,
     FormsModule,
     MatButtonModule,

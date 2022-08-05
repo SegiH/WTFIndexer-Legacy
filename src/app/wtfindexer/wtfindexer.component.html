@@ -60,7 +60,7 @@
 
 <table *ngIf="!isLoading && isEpisodesLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'Episodes'))" mat-table [dataSource]="episodesDataSource" class="episodeTable mat-elevation-z8">
      <ng-container matColumnDef="Action">
-          <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+          <th mat-header-cell *matHeaderCellDef> Action </th>
 
           <td mat-cell *matCellDef="let element">
                <mat-icon *ngIf="editingAllowed && !isBeingEdited" (click)="editEpisodesIMDBNamesClick('Episodes',element.EpisodeNumber)">edit</mat-icon>
@@ -69,9 +69,18 @@
           </td>
      </ng-container>
 
-     <ng-container matColumnDef="Episode">
-          <th mat-header-cell *matHeaderCellDef> Ep # </th>
-          <td mat-cell *matCellDef="let element"><div *ngIf="!isBeingEdited|| (isBeingEdited && editingItem === 'Episodes' && element.EpisodeID == editingID)"> {{element.EpisodeNumber}} </div></td>
+     <ng-container matColumnDef="Episode" class="episode">
+          <th mat-header-cell *matHeaderCellDef> Ep </th>
+
+          <td mat-cell *matCellDef="let element">
+               <div *ngIf="(!isBeingEdited || (isBeingEdited && editingItem === 'Episodes' && element.EpisodeID == editingID)) && element['DownloadLink'] === null">
+                    {{ element.EpisodeNumber }}
+               </div>
+
+               <div *ngIf="(!isBeingEdited || (isBeingEdited && editingItem === 'Episodes' && element.EpisodeID == editingID)) && element['DownloadLink'] !== null">
+                    <a [href]="element.DownloadLink" target='_blank'>{{ element.EpisodeNumber }} </a>
+               </div>
+          </td>
      </ng-container>
 
      <ng-container ng-class="nameColumn"  matColumnDef="Name">
@@ -114,7 +123,7 @@
      </ng-container>
               
       <ng-container matColumnDef="ReleaseDate">
-          <th mat-header-cell *matHeaderCellDef> Release Date </th>
+          <th mat-header-cell *matHeaderCellDef class="releaseDate"> Release Date </th>
           <td mat-cell *matCellDef="let element">
                <div *ngIf="!isBeingEdited">    
                     {{element.ReleaseDate}}

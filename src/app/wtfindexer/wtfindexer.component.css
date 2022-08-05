@@ -4,6 +4,7 @@ mat-grid-list#options {
 }
 
 #episodefilter {
+  margin-left: 25px;
   margin-top: 5px;
   max-width: 200px;
 }
@@ -37,10 +38,18 @@ mat-grid-list.filter {
   max-width: 250px;
 }
 
-/* 1st Column of both tables which can be the same width since they both have an ID in column 1 */
-table tr td:first-child  {
-    min-width: 80px;
+.episodeTable th.mat-header-cell:nth-child(1), .episodeTable th.mat-header-cell:nth-child(2),.episodeTable th.mat-header-cell:nth-child(5)  {
+    min-width: 70px;
     white-space: wrap;
+    padding-left: 0px;
+}
+
+.episodeTable th.mat-header-cell:nth-child(1) {
+    padding-left: 15px !important;
+}
+
+.cdk-column-ReleaseDate {
+   min-width: 130px !important;
 }
 
 /* Name Column of episode table */
