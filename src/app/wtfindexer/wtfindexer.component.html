@@ -52,11 +52,9 @@
     <mat-grid-tile [colspan]="3" [rowspan]="3">
          <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="descriptionVisible" id="chkShowDescription" (change)="chkShowhideDescription()">Description</mat-checkbox>
     </mat-grid-tile>
-
-    <mat-grid-tile [colspan]="11" [rowspan]="2">
-     <mat-paginator *ngIf="!isBeingEdited" #episodePaginator class="episodePaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>               
-    </mat-grid-tile>
 </mat-grid-list>
+
+<mat-paginator *ngIf="!isLoading && isEpisodesLoaded && !isBeingEdited" #episodePaginator class="episodePaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>               
 
 <table *ngIf="!isLoading && isEpisodesLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'Episodes'))" mat-table [dataSource]="episodesDataSource" class="episodeTable mat-elevation-z8">
      <ng-container matColumnDef="Action">
@@ -169,7 +167,7 @@
 
 <table id="imdbtable" *ngIf="!isLoading && isIMDBLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'IMDB'))" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
      <ng-container matColumnDef="Action">
-          <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+          <th mat-header-cell *matHeaderCellDef> Action </th>
 
           <td mat-cell *matCellDef="let element">
                <mat-icon *ngIf="editingAllowed && !isBeingEdited" (click)="editEpisodesIMDBNamesClick('IMDB',element.IMDBID)">edit</mat-icon>
