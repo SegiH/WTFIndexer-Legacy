@@ -5,15 +5,18 @@ import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { IMDBNames,IWTFEpisode } from './interfaces';
+import { AppConfigService } from './appconfig.service';
 
 @Injectable()
 export class DataService {
      backendURL="";
 
-     constructor(private http: HttpClient) { }
+     constructor(private appConfigService: AppConfigService, private http: HttpClient) {
+          this.backendURL = this.appConfigService.getConfig().BackendURL;
+      }
 
      checkEpisodeInOut(epNumber: number,isCheckedOut: boolean) {
-          return this.http.get<any>(`${this.backendURL}/CheckInOut?EpisodeNumber=${epNumber}&IsCheckedOut=${(isCheckedOut == true ? 1 : 0)}`)
+          return this.http.get<any>(`${this.backendURL}/CheckInOut?EpisodeNum=${epNumber}&IsCheckedOut=${(isCheckedOut == true ? 1 : 0)}`)
           .pipe(
                catchError(this.handleError)
           );
@@ -48,7 +51,7 @@ export class DataService {
 
      // Save the favorite value for the specific episode to the database
      updateEpisodeFavorite(epNumber : number, favoriteValue: boolean) {
-          return this.http.get<any>(`${this.backendURL}/UpdateFavorite?EpisodeNumber=${epNumber}&FavoriteValue=${favoriteValue}`)
+          return this.http.get<any>(`${this.backendURL}/UpdateFavorite?EpisodeNum=${epNumber}&FavoriteValue=${favoriteValue}`)
           .pipe(
                catchError(this.handleError)
           );
@@ -62,7 +65,7 @@ export class DataService {
      }
 
      updateIMDB(imdb: IMDBNames) {
-          return this.http.get<any>(`${this.backendURL}/UpdateIMDB?ID=${imdb.ID}&Name=${imdb.Name}&URL=${imdb.IMDBURL}`)
+          return this.http.get<any>(`${this.backendURL}/UpdateIMDB?ID=${imdb.IMDBID}&Name=${imdb.Name}&URL=${imdb.IMDBURL}`)
           .pipe(
                catchError(this.handleError)
           );

@@ -12,12 +12,12 @@ mat-grid-list#options {
 #IMDBFilter {
   position: absolute;
      top: 18%;
-     left: 68%;
+     left: 56%;
 }
 
 mat-paginator.imdbPaginator {
   position: absolute; 
-  left: 1050px;
+  left: 55%;
   top: 175px;
 }
 
@@ -82,7 +82,7 @@ mat-grid-list.filter {
 .imdbTable {
      position: absolute;
      top: 36%;
-     left: 68%;
+     left: 55%;
 }
 
 /* 2nd Column of IMDB table */
@@ -123,6 +123,7 @@ mat-grid-list.filter {
     right: 0;*/
     margin: auto;
   }
+
   .app-loading .spinner .path {
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
@@ -156,5 +157,5 @@ mat-grid-list.filter {
 }
 
 .mat-form-field {
-  width: 100%;
+     width: 100%;
 }

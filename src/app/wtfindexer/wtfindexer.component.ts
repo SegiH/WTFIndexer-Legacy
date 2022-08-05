@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from '../core/data.service';
 import { IMDBNames, IWTFEpisode } from '../core/interfaces';
+import { AppConfigService } from '../core/appconfig.service';
 
 @Component({
      selector: 'app-wtfindexer',
@@ -11,9 +12,9 @@ import { IMDBNames, IWTFEpisode } from '../core/interfaces';
      styleUrls: ['./wtfindexer.component.css']
 })
 export class WTFIndexerComponent {
-     checkoutAllowed = true;
+     checkoutAllowed = false;
      descriptionVisible = false;
-     editingAllowed = true;
+     editingAllowed = false;
      episodesDataSource: MatTableDataSource<any> = null;
      episodeDisplayedColumns: string[] = ['Episode', 'Name','ReleaseDate','Favorite'];
      editingID: number;
@@ -41,12 +42,13 @@ export class WTFIndexerComponent {
 
      @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-     constructor(protected dataService: DataService) { }
+     constructor(private appConfigService: AppConfigService, protected dataService: DataService) {
+          this.checkoutAllowed = this.appConfigService.getConfig().CheckoutAllowed;
+
+          this.editingAllowed = this.appConfigService.getConfig().EditingAllowed;
+      }
 
      ngOnInit() {
-          if (localStorage.getItem('BackEndURL') != null)
-               this.dataService.backendURL=localStorage.getItem('BackEndURL');
-
           this.getEpisodes();
 
           if (this.editingAllowed) {
@@ -73,7 +75,7 @@ export class WTFIndexerComponent {
           if (epNumber == null)
                return;
 
-          const currEp=this.WTFPayload.filter(episode => episode.EpisodeNumber === epNumber)[0];
+          const currEp=this.WTFPayload.filter(episode => episode.EpisodeNum === epNumber)[0];
           const isCheckedOut=(typeof currEp.IsCheckedOut === 'undefined'|| (typeof currEp.IsCheckedOut !== 'undefined' && currEp.IsCheckedOut === false) ? false : true);
 
           // get episodes from the data service
@@ -83,7 +85,7 @@ export class WTFIndexerComponent {
                     alert(`Unable to check ${(isCheckedOut == true ? "in" : "out")} the requested episode`)
                     return;
                } else {
-                    const currEp=this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber);
+                    const currEp=this.WTFPayload.find(episode => episode.EpisodeNum === epNumber);
                     const currValue=!response[1];
 
                     currEp.IsCheckedOut=!currValue;
@@ -130,13 +132,13 @@ export class WTFIndexerComponent {
 
                          switch(filterParams[0].toLowerCase()) {
                               case "epnum":
-                                   return data.EpisodeNumber === filterParams[1] && (data.isFavoritesChecked === false || (data.isFavoritesChecked === true && parseInt(data.Favorite) === 1));
+                                   return data.EpisodeNum === filterParams[1] && (data.isFavoritesChecked === false || (data.isFavoritesChecked === true && parseInt(data.Favorite) === 1));
                               case "name":
                                    return data.name ==="" || (data.Name.includes(filterParams[1]) === true && (data.isFavoritesChecked === false || (data.isFavoritesChecked === true && parseInt(data.Favorite) === 1)));
                               case "year":
                                    return data.ReleaseDate.includes(", " + filterParams[1]) === true && (data.isFavoritesChecked === false || (data.isFavoritesChecked === true && parseInt(data.Favorite) === 1));
                          }
-                    } else if (data.EpisodeNumber === filter || data.Name.includes(filter) === true || data.ReleaseDate.indexOf(filter) !== -1) {
+                    } else if (data.EpisodeNum === filter || data.Name.includes(filter) === true || data.ReleaseDate.indexOf(filter) !== -1) {
                          if (data.isFavoritesChecked === false) {
                               console.log("true 1");
                               found=true;
@@ -153,7 +155,7 @@ export class WTFIndexerComponent {
                     }*/
 
                     // First match the episode number name and/or release date
-                    if ((filter == data.EpisodeNumber.toString() || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter.toLowerCase()) === true) || data.ReleaseDate.toString().startsWith(filter))) {
+                    if ((filter == data.EpisodeNum.toString() || (data.Name.trim() !== "" && data.Name.toLowerCase().includes(filter.toLowerCase()) === true) || data.ReleaseDate.toString().startsWith(filter))) {
                          if (this.isFavoritesChecked) {
                               if (this.data.Favorite === true)
                                    return true;
@@ -203,13 +205,13 @@ export class WTFIndexerComponent {
                this.editingItem=editingItem;
 
                if (editingItem === "Episodes")
-                    this.previousObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== editingID)[0];
+                    this.previousObj=this.WTFPayload.filter(episode => episode.EpisodeNum=== editingID)[0];
                else if (editingItem === "IMDB")
-                    this.previousObj=this.IMDBPayload.filter(imdb => imdb.ID=== editingID)[0];
+                    this.previousObj=this.IMDBPayload.filter(imdb => imdb.IMDBID=== editingID)[0];
           } else { // Save
                if (!canceled) { // Saving
                     if (editingItem === "Episodes") {
-                         const currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== editingID)[0];
+                         const currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNum === editingID)[0];
 
                          this.dataService.updateEpisodes(currentEditingObj)
                          .subscribe(() => {
@@ -221,7 +223,7 @@ export class WTFIndexerComponent {
                               console.log(`An error occurred saving the WTF data from the data service with error ${error}`)
                          });
                     } else if (editingItem === "IMDB") {
-                         const currentEditingObj=this.IMDBPayload.filter(imdb => imdb.ID=== editingID)[0];
+                         const currentEditingObj=this.IMDBPayload.filter(imdb => imdb.IMDBID=== editingID)[0];
 
                          this.dataService.updateIMDB(currentEditingObj)
                          .subscribe(() => {
@@ -235,10 +237,10 @@ export class WTFIndexerComponent {
                     }
                } else {
                     if (editingItem === "Episodes") {
-                         let currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNumber=== editingID)[0];
+                         let currentEditingObj=this.WTFPayload.filter(episode => episode.EpisodeNum=== editingID)[0];
                          currentEditingObj=this.previousObj;
                     } else if (editingItem === "IMDB") {
-                         let currentEditingObj=this.IMDBPayload.filter(imdb => imdb.ID=== editingID)[0];
+                         let currentEditingObj=this.IMDBPayload.filter(imdb => imdb.IMDBID=== editingID)[0];
                          currentEditingObj=this.previousObj;
                     }
                }
@@ -258,7 +260,7 @@ export class WTFIndexerComponent {
                return;
 
           // Get object based on matching episode number
-          let obj = this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber);
+          let obj = this.WTFPayload.find(episode => episode.EpisodeNum === epNumber);
 
           obj.IsBeingEdited=!obj.IsBeingEdited;
      }
@@ -270,7 +272,7 @@ export class WTFIndexerComponent {
                return;
 
           // Get object based on matching episode number
-          let obj = this.WTFPayload.find(episode => episode.EpisodeNumber === parseInt(epNumber));
+          let obj = this.WTFPayload.find(episode => episode.EpisodeNum === parseInt(epNumber));
 
           const favoriteValue=!obj.Favorite
        
@@ -381,7 +383,7 @@ export class WTFIndexerComponent {
                return;
 
           // Get object based on matching episode number
-          let obj = this.WTFPayload.find(episode => episode.EpisodeNumber === epNumber);
+          let obj = this.WTFPayload.find(episode => episode.EpisodeNum === epNumber);
 
           // Return the right image if we are in edit or save mode
           return (obj.IsBeingEdited == true ? "assets/save.png" : "assets/edit.png");
@@ -396,7 +398,7 @@ export class WTFIndexerComponent {
                return;
 
           // Get object based on matching episode number
-          this.IMDBPayload.find(IMDB => IMDB.ID === IMDBId).IsModified=true;
+          this.IMDBPayload.find(IMDB => IMDB.IMDBID === IMDBId).IsModified=true;
      }
 
      updateButtonClicked() {     

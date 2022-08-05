@@ -1,6 +1,6 @@
 export interface IWTFEpisode {
     EpisodeID: number;
-    EpisodeNumber: number;
+    EpisodeNum: number;
     Name: string;
     Description: string;
     ReleaseDate: string;
@@ -11,7 +11,7 @@ export interface IWTFEpisode {
 }
 
 export interface IMDBNames {
-     ID: number;
+     IMDBID: number;
      Name: string;
      IMDBURL: string;
      Description: string;
