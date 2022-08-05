@@ -1,5 +1,5 @@
 {
-    "BackendURL": "https:/wtf-backend.hovav.org",
+    "BackendURL": "https:/wtf-backend.yoursite.com",
     "CheckoutAllowed": "true",
     "EditingAllowed": "true"
 }

@@ -13,7 +13,7 @@ export class DataService {
 
      constructor(private appConfigService: AppConfigService, private http: HttpClient) {
           this.backendURL = this.appConfigService.getConfig().BackendURL;
-      }
+     }
 
      checkEpisodeInOut(epNumber: number,isCheckedOut: boolean) {
           return this.http.get<any>(`${this.backendURL}/CheckInOut?EpisodeNum=${epNumber}&IsCheckedOut=${(isCheckedOut == true ? 1 : 0)}`)
