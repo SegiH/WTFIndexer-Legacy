@@ -54,9 +54,9 @@
     </mat-grid-tile>
 </mat-grid-list>
 
-<mat-paginator *ngIf="!isLoading && isEpisodesLoaded && !isBeingEdited" #episodePaginator class="episodePaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>               
+<mat-paginator *ngIf="!isLoading && isEpisodesLoaded && !isBeingEdited" #episodePaginator id="episodePaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>               
 
-<table *ngIf="!isLoading && isEpisodesLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'Episodes'))" mat-table [dataSource]="episodesDataSource" class="episodeTable mat-elevation-z8">
+<table id="episodeTable" *ngIf="!isLoading && isEpisodesLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'Episodes'))" mat-table [dataSource]="episodesDataSource" class="mat-elevation-z8">
      <ng-container matColumnDef="Action">
           <th mat-header-cell *matHeaderCellDef> Action </th>
 
@@ -163,9 +163,9 @@
      <input matInput (keyup)="applyIMDBFilter($event.target.value)" placeholder="Filter">     
 </mat-form-field>
 
-<mat-paginator *ngIf="!isLoading && !isBeingEdited && isIMDBLoaded" #imdbPaginator class="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>
+<mat-paginator *ngIf="!isLoading && !isBeingEdited && isIMDBLoaded" #imdbPaginator id="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>
 
-<table id="imdbtable" *ngIf="!isLoading && isIMDBLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'IMDB'))" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8 imdbTable">
+<table id="imdbTable" *ngIf="!isLoading && isIMDBLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'IMDB'))" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8">
      <ng-container matColumnDef="Action">
           <th mat-header-cell *matHeaderCellDef> Action </th>
 

@@ -4,12 +4,69 @@
   max-width: 200px;
 }
 
+#episodePaginator {     
+  position: absolute;
+  left: 25px;
+}
+
+#episodeTable {
+  overflow: auto;
+  max-width: 40%;
+  margin-top: 5%;
+}
+
+#episodeTable th.mat-header-cell:nth-child(1),
+#episodeTable th.mat-header-cell:nth-child(2),
+#episodeTable th.mat-header-cell:nth-child(5) {
+    min-width: 70px;
+    white-space: wrap;
+    padding-left: 0px !important;  
+}
+
+#episodeTable th.mat-header-cell:nth-child(1) {
+    padding-left: 15px !important;
+}
+
+#imdbTable th.mat-header-cell:nth-child(1),
+#imdbTable th.mat-header-cell:nth-child(2)  {
+  min-width: 70px;
+  white-space: wrap;
+}
+
 #IMDBFilter {
      position: absolute;
-     top: 6%;
+     top: 9%;
      left: 55.5%;
      max-width: 200px;
 }
+
+#imdbPaginator {
+  position: absolute; 
+  left: 55%;
+  top: 19%;
+}
+
+#imdbTable {
+  position: absolute;
+  top: 30%;
+  left: 52%;
+}
+
+/* 2nd Column of IMDB table */
+/*#imdbTable tr td:first-child + td {
+ white-space: wrap;
+}*/
+
+/* input field 2nd Column of IMDB table */
+/*#imdbTable tr td:first-child + td mat-form-field {
+ white-space: wrap !important;
+}*/
+
+/* input field in 3rd Column of IMDB table */
+/*#imdbTable tr td:first-child + td + td mat-form-field {
+ min-width: 300px;
+ white-space: wrap;
+}*/
 
 .app-loading {
   /*position: absolute;
@@ -72,55 +129,6 @@
     padding-left: 50px;
     min-width:370px;
     white-space: wrap !important;
-}
-
-.episodePaginator{     
-  position: absolute;
-  left: 25px;
-}
-
-.episodeTable {
-  overflow: auto;
-  max-width: 40%;
-  margin-top: 5%;
-}
-
-.episodeTable th.mat-header-cell:nth-child(1), .episodeTable th.mat-header-cell:nth-child(2),.episodeTable th.mat-header-cell:nth-child(5)  {
-    min-width: 70px;
-    white-space: wrap;
-    padding-left: 0px;
-}
-
-.episodeTable th.mat-header-cell:nth-child(1) {
-    padding-left: 15px !important;
-}
-
-.imdbPaginator {
-  position: absolute; 
-  left: 55%;
-  top: 12%;
-}
-
-.imdbTable {
-     position: absolute;
-     top: 21%;
-     left: 55%;
-}
-
-/* 2nd Column of IMDB table */
-.imdbTable tr td:first-child + td {
-    white-space: wrap;
-}
-
-/* input field 2nd Column of IMDB table */
-.imdbTable tr td:first-child + td mat-form-field {
-    white-space: wrap !important;
-}
-
-/* input field in 3rd Column of IMDB table */
-.imdbTable tr td:first-child + td + td mat-form-field {
-    min-width: 300px;
-    white-space: wrap;
 }
 
 @keyframes rotate {
