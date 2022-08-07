@@ -13,6 +13,7 @@ import { AppConfigService } from '../core/appconfig.service';
 })
 export class WTFIndexerComponent {
      checkoutAllowed = false;
+     checkoutStatusCheckComplete = false;
      descriptionVisible = false;
      editingAllowed = false;
      episodesDataSource: MatTableDataSource<any> = null;
@@ -297,7 +298,33 @@ export class WTFIndexerComponent {
      }
 
      getButtonText(episode: IWTFEpisode) {
-          return (typeof episode.IsCheckedOut === 'undefined' || (typeof episode.IsCheckedOut !== 'undefined' && episode.IsCheckedOut == false) ? "Check Out" : "Check In");
+          return (!this.checkoutStatusCheckComplete ? 'Checking...' : typeof episode.IsCheckedOut === 'undefined' || (typeof episode.IsCheckedOut !== 'undefined' && episode.IsCheckedOut == false) ? "Check Out" : "Check In");
+     }
+
+     getEpisodeCheckInOutStatus() {
+          // get episodes from the data service
+          this.dataService.getEpisodeCheckInOutStatus()
+          .subscribe((episodeCheckInOutStatus: any[]) => {
+               episodeCheckInOutStatus.forEach(episodeItemCheckInOutStatus => {
+                    const thisEpisode=this.WTFPayload.filter(episode => episode.EpisodeNum === episodeItemCheckInOutStatus.EpisodeNum)[0];
+                    
+                    if (typeof thisEpisode !== 'undefined') {
+                         if (episodeItemCheckInOutStatus.IsCheckedIn === 1)
+                              thisEpisode.IsCheckedOut = true;
+                         else
+                              thisEpisode.IsCheckedOut = false;
+                    }
+               })
+
+               this.episodesDataSource=new MatTableDataSource(this.WTFPayload);
+
+               this.checkoutStatusCheckComplete=true;
+          },
+          error => {
+               alert("An error occurred getting the episode check in/out status");
+
+               console.log(`An error occurred getting the episode check in/out status from the data service with error ${error}`);
+          });
      }
 
      getEpisodes() {
@@ -372,6 +399,8 @@ export class WTFIndexerComponent {
 
                // Assign custom filter function
                this.imdbDataSource.filterPredicate = this.createIMDBFilter();
+
+               this.getEpisodeCheckInOutStatus()
           },
           error => {
                alert("An error occurred getting the IMDB names")

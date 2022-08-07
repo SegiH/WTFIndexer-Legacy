@@ -26,6 +26,13 @@ export class DataService {
           return this.backendURL;
      }
 
+     getEpisodeCheckInOutStatus() : any {
+          return this.http.get<IWTFEpisode[]>(`${this.backendURL}/GetEpisodeCheckInOutStatus`)
+          .pipe(
+               catchError(this.handleError)
+          );
+     }
+
      getEpisodes(isFavoritesChecked: boolean) : any {
           const favoritesOnly=(isFavoritesChecked ? `?FavoritesOnly=1` : ``);
 
