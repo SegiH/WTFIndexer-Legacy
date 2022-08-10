@@ -1,10 +1,6 @@
-#episodeFilter {
-     margin-left: 5%;
+#episodeFilter,#IMDBFilter {
+     margin-left: 3%;
      max-width: 200px;
-}
-
-#episodeGrid {
-     max-width: 70%;
 }
 
 #episodeTable {
@@ -15,7 +11,8 @@
 
 #episodeTable th.mat-header-cell:nth-child(1),
 #episodeTable th.mat-header-cell:nth-child(2),
-#episodeTable th.mat-header-cell:nth-child(5) {
+#episodeTable th.mat-header-cell:nth-child(5),
+#episodeTable th.mat-header-cell:nth-child(6) {
     min-width: 70px;
     padding-left: 0px !important;  
     white-space: wrap;    
@@ -28,15 +25,15 @@
 #episodeTableGrid {
      height: 100%;
      overflow: auto;
-     width: 800px !important;
+     width: 855px !important;
 }
 
 #imdbTable {
      left: 0.1px;
+     margin-left: 135px;
      position: absolute;
      top: 5px;     
 }
-
 
 #imdbTable th.mat-header-cell:nth-child(1),
 #imdbTable th.mat-header-cell:nth-child(2)  {
@@ -45,20 +42,21 @@
 }
 
 #imdbTableGrid {     
-     height: 100% !important;     
-     left: 850px;
+     height: 100% !important;
      overflow: auto;
-     position: fixed;
-     top: -40px;
-     width: 711px !important;
+}
+
+#table-grid {
+     height: 100%;
+     z-index: 999;
 }
 
 .app-loading {
      align-items: center;
      display: flex;
-     flex-direction: column; 
-     height: 100%;    
-     justify-content: center;     
+     flex-direction: column;
+     height: 100%;
+     justify-content: center;
 }
 
 .app-loading .spinner {
@@ -109,6 +107,20 @@
      white-space: wrap !important;
 }
 
+.mat-form-field {
+     width: 100%;
+}
+
+mat-grid-list.filter {
+     max-width: 250px;
+}
+
+/* Widen select dropdown in paginator because its too narrow with 4 digit values */
+::ng-deep mat-paginator .mat-select-value {
+     max-width: 100px !important;   
+     min-width: 30px !important;     
+}
+
 @keyframes rotate {
      100% {
           transform: rotate(360deg);
@@ -128,22 +140,4 @@
           stroke-dasharray: 89, 200;
           stroke-dashoffset: -124px;
      }
-}
-
-.mat-icon {
-     transform: scale(1);
-}
-
-.mat-form-field {
-     width: 100%;
-}
-
-mat-grid-list.filter {
-     max-width: 250px;
-}
-
-/* Widen select dropdown in paginator because its too narrow with 4 digit values */
-::ng-deep mat-paginator .mat-select-value {
-     max-width: 100px !important;   
-     min-width: 30px !important;     
 }
