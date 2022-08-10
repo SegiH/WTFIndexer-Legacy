@@ -36,6 +36,7 @@
 }
 
 #imdbTable {
+     border: 1px dotted;
      left: 0.1px;
      position: absolute;
      top: 5px;     
@@ -47,8 +48,7 @@
      white-space: wrap;
 }
 
-#imdbTableGrid {
-     border: 1px dotted; 
+#imdbTableGrid {     
      height: 100% !important;
      margin-left: 50px;
      max-width: 711px;
