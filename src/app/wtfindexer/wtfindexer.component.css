@@ -1,155 +1,134 @@
-#episodefilter {
-  margin-left: 5%;
-  margin-top: 1%;
-  max-width: 200px;
+#episodeFilter {
+     margin-left: 5%;
+     max-width: 200px;
 }
 
-#episodePaginator {     
-  position: absolute;
-  left: 25px;
+#episodeGrid {
+     max-width: 70%;
 }
 
 #episodeTable {
-  overflow: auto;
-  max-width: 40%;
-  margin-top: 5%;
+     left: 0.1px;   
+     position: absolute;
+     top: 5px;     
 }
 
 #episodeTable th.mat-header-cell:nth-child(1),
 #episodeTable th.mat-header-cell:nth-child(2),
 #episodeTable th.mat-header-cell:nth-child(5) {
     min-width: 70px;
-    white-space: wrap;
     padding-left: 0px !important;  
+    white-space: wrap;    
 }
 
 #episodeTable th.mat-header-cell:nth-child(1) {
     padding-left: 15px !important;
 }
 
-#imdbTable th.mat-header-cell:nth-child(1),
-#imdbTable th.mat-header-cell:nth-child(2)  {
-  min-width: 70px;
-  white-space: wrap;
-}
-
-#IMDBFilter {
-     position: absolute;
-     top: 9%;
-     left: 55.5%;
-     max-width: 200px;
-}
-
-#imdbPaginator {
-  position: absolute; 
-  left: 55%;
-  top: 19%;
+#episodeTableGrid {
+     height: 100%;
+     overflow: auto;
+     width: 800px !important;
 }
 
 #imdbTable {
-  position: absolute;
-  top: 30%;
-  left: 52%;
+     left: 0.1px;
+     position: absolute;
+     top: 5px;     
 }
 
-/* 2nd Column of IMDB table */
-/*#imdbTable tr td:first-child + td {
- white-space: wrap;
-}*/
 
-/* input field 2nd Column of IMDB table */
-/*#imdbTable tr td:first-child + td mat-form-field {
- white-space: wrap !important;
-}*/
+#imdbTable th.mat-header-cell:nth-child(1),
+#imdbTable th.mat-header-cell:nth-child(2)  {
+     min-width: 70px;
+     white-space: wrap;
+}
 
-/* input field in 3rd Column of IMDB table */
-/*#imdbTable tr td:first-child + td + td mat-form-field {
- min-width: 300px;
- white-space: wrap;
-}*/
+#imdbTableGrid {     
+     height: 100% !important;     
+     left: 850px;
+     overflow: auto;
+     position: fixed;
+     top: -40px;
+     width: 711px !important;
+}
 
 .app-loading {
-  /*position: absolute;
-  left: 125px;
-  top:-120px;*/
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+     align-items: center;
+     display: flex;
+     flex-direction: column; 
+     height: 100%;    
+     justify-content: center;     
 }
 
 .app-loading .spinner {
-  height: 200px;
-  width: 200px;
-  animation: rotate 2s linear infinite;
-  transform-origin: center center;
-  position: absolute;
-  /*top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;*/
-  margin: auto;
+     animation: rotate 2s linear infinite;
+     height: 200px;
+     margin: auto;
+     position: absolute;
+     transform-origin: center center;
+     width: 200px;
 }
 
 .app-loading .spinner .path {
-  stroke-dasharray: 1, 200;
-  stroke-dashoffset: 0;
-  animation: dash 1.5s ease-in-out infinite;
-  stroke-linecap: round;
-  stroke: #ddd;
+     animation: dash 1.5s ease-in-out infinite;   
+     stroke: #ddd;
+     stroke-dasharray: 1, 200;
+     stroke-dashoffset: 0;     
+     stroke-linecap: round;
 }
 
 .cdk-column-ReleaseDate {
-   min-width: 130px !important;
+      min-width: 130px !important;
 }
 
 /* Name Column of episode table */
 .cdk-column-Name {
-    min-width:250px;
-    word-wrap:break-word !important;
+     min-width:250px;
+     word-wrap:break-word !important;
 }
 
 /* mat-form field in Name Column of episode table */
 .cdk-column-Name mat-form-field {
-    overflow: hidden;
-    text-overflow: ellipsis;
+     overflow: hidden;
+     text-overflow: ellipsis;
 }
 
 /* Description of episode table */
 .cdk-column-Description {
-  word-wrap:break-word !important;
-  max-width:500px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+     max-width:500px;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     word-wrap:break-word !important;
 }
 
 /* Release Date of episode table */
 .cdk-column-ReleaseDate {
-    padding-left: 50px;
-    min-width:370px;
-    white-space: wrap !important;
+     min-width:370px;
+     padding-left: 50px;     
+     white-space: wrap !important;
 }
 
 @keyframes rotate {
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  @keyframes dash {
-    0% {
-      stroke-dasharray: 1, 200;
-      stroke-dashoffset: 0;
-    }
-    50% {
-      stroke-dasharray: 89, 200;
-      stroke-dashoffset: -35px;
-    }
-    100% {
-      stroke-dasharray: 89, 200;
-      stroke-dashoffset: -124px;
-    }
-  }
+     100% {
+          transform: rotate(360deg);
+     }
+}
+
+@keyframes dash {
+     0% {
+          stroke-dasharray: 1, 200;
+          stroke-dashoffset: 0;
+     }
+     50% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -35px;
+     }
+     100% {
+          stroke-dasharray: 89, 200;
+          stroke-dashoffset: -124px;
+     }
+}
 
 .mat-icon {
      transform: scale(1);
@@ -160,16 +139,11 @@
 }
 
 mat-grid-list.filter {
-  max-width: 250px;
-}
-
-mat-grid-list#options {
-  margin-top: 15px;
-  max-width:500px;
+     max-width: 250px;
 }
 
 /* Widen select dropdown in paginator because its too narrow with 4 digit values */
 ::ng-deep mat-paginator .mat-select-value {
-  min-width: 30px !important;
-  max-width: 100px !important;
+     max-width: 100px !important;   
+     min-width: 30px !important;     
 }
