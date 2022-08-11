@@ -280,7 +280,7 @@ export class WTFIndexerComponent {
           const favoriteValue=!obj.Favorite
        
           // Subscribe to data service to update the favorite
-          this.dataService.updateEpisodeFavorite(epNumber,favoriteValue)
+          this.dataService.updateFavorite(epNumber,favoriteValue)
           .subscribe(() => {
                if (obj.Favorite == null || obj.Favorite == 0)
                     obj.Favorite=1;
@@ -331,10 +331,15 @@ export class WTFIndexerComponent {
 
      getEpisodes() {
           if (this.dataService.getBackEndURL() === "") {
-               alert("The backend URL is not set");
+               alert("BackendURL is not set in config file");
                this.isEpisodesLoaded=false;
                this.isLoading=false;
                return;
+          } else if (this.dataService.getAuthorization() === "") {
+                    alert("Authorization is not set in config file");
+                    this.isEpisodesLoaded=false;
+                    this.isLoading=false;
+                    return;
           } else {
                localStorage.setItem('BackEndURL',this.dataService.getBackEndURL())
           }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -10,16 +10,33 @@ import { AppConfigService } from './appconfig.service';
 @Injectable()
 export class DataService {
      backendURL="";
+     authorization="";
 
      constructor(private appConfigService: AppConfigService, private http: HttpClient) {
           this.backendURL = this.appConfigService.getConfig().BackendURL;
+          this.authorization = this.appConfigService.getConfig().Authorization;
      }
 
      checkEpisodeInOut(epNumber: number,isCheckedOut: boolean) {
-          return this.http.get<any>(`${this.backendURL}/CheckInOut?EpisodeNum=${epNumber}&IsCheckedOut=${(isCheckedOut == true ? 1 : 0)}`)
-          .pipe(
-               catchError(this.handleError)
-          );
+          return this.executeRequest("GET","CheckInOut",`?EpisodeNum=${epNumber}&IsCheckedOut=${(isCheckedOut == true ? 1 : 0)}`);
+     }
+
+     executeRequest(verb: string, endPoint: string, params: string) {
+          const headers= new HttpHeaders()
+          .set('Authorization', 'Bearer ' + this.authorization);
+
+          switch (verb) {
+               case "GET":
+                    return this.http.get<(any)>(`${this.backendURL}/${endPoint}${(params !== null ? params : '')}`,{ 'headers': headers })
+                    .pipe(
+                         catchError(this.handleError)
+                    );
+               case "PUT":
+          }
+     }
+
+     getAuthorization() {
+          return this.authorization;
      }
 
      getBackEndURL() {
@@ -27,26 +44,17 @@ export class DataService {
      }
 
      getEpisodeCheckInOutStatus() : any {
-          return this.http.get<IWTFEpisode[]>(`${this.backendURL}/GetEpisodeCheckInOutStatus`)
-          .pipe(
-               catchError(this.handleError)
-          );
+          return this.executeRequest("GET","GetEpisodeCheckInOutStatus",null);
      }
 
      getEpisodes(isFavoritesChecked: boolean) : any {
           const favoritesOnly=(isFavoritesChecked ? `?FavoritesOnly=1` : ``);
 
-          return this.http.get<IWTFEpisode[]>(`${this.backendURL}/GetEpisodes${favoritesOnly}`)
-          .pipe(
-               catchError(this.handleError)
-          );
+          return this.executeRequest("GET","GetEpisodes", favoritesOnly);
      }
 
      getIMDBNames() : any {
-          return this.http.get<IMDBNames[]>(`${this.backendURL}/GetIMDBNames`)
-          .pipe(
-               catchError(this.handleError)
-          );
+          return this.executeRequest("GET","GetIMDBNames",null);
      }
 
      scrapeData(startingEpisodeNum: number) : any {
@@ -56,26 +64,16 @@ export class DataService {
           );
      }
 
-     // Save the favorite value for the specific episode to the database
-     updateEpisodeFavorite(epNumber : number, favoriteValue: boolean) {
-          return this.http.get<any>(`${this.backendURL}/UpdateFavorite?EpisodeNum=${epNumber}&FavoriteValue=${favoriteValue}`)
-          .pipe(
-               catchError(this.handleError)
-          );
+     updateEpisodes(episode: IWTFEpisode) {
+          return this.executeRequest("GET","UpdateEpisodes",`?EpisodeID=${episode.EpisodeID}&Name=${episode.Name}&Description=${episode.Description}&ReleaseDate=${episode.ReleaseDate}&Favorite=0`);
      }
 
-     updateEpisodes(episode: IWTFEpisode) {
-          return this.http.get<any>(`${this.backendURL}/UpdateEpisodes?EpisodeID=${episode.EpisodeID}&Name=${episode.Name}&Description=${episode.Description}&ReleaseDate=${episode.ReleaseDate}&Favorite=0`)
-          .pipe(
-               catchError(this.handleError)
-          );
+     updateFavorite(epNumber : number, favoriteValue: boolean) {
+          return this.executeRequest("GET","UpdateFavorite",`?EpisodeNum=${epNumber}&FavoriteValue=${favoriteValue}`);
      }
 
      updateIMDB(imdb: IMDBNames) {
-          return this.http.get<any>(`${this.backendURL}/UpdateIMDB?ID=${imdb.IMDBID}&Name=${imdb.Name}&URL=${imdb.IMDBURL}`)
-          .pipe(
-               catchError(this.handleError)
-          );
+          return this.executeRequest("GET","UpdateEpisodes",`?ID=${imdb.IMDBID}&Name=${imdb.Name}&URL=${imdb.IMDBURL}`);
      }
 
      private handleError(error: any) {
