@@ -47,6 +47,8 @@ export class WTFIndexerComponent {
           this.checkoutAllowed = this.appConfigService.getConfig().CheckoutAllowed;
 
           this.editingAllowed = this.appConfigService.getConfig().EditingAllowed;
+
+          //alert( 'Your screen resolution is ' + screen.width + 'x' + screen.height );
       }
 
      ngOnInit() {

@@ -1,10 +1,12 @@
 <!-- Title grid-->
-<mat-grid-list cols="13" rowHeight="30px">
-     <mat-grid-tile [colspan]="12" [rowspan]="3">
+<mat-grid-list cols="12" rowHeight="30px">
+     <mat-grid-tile [colspan]="2" [rowspan]="3"></mat-grid-tile>
+
+     <mat-grid-tile [colspan]="7" [rowspan]="3">
           <h1>{{ title }}</h1>
      </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="1" [rowspan]="3">
+     <mat-grid-tile [colspan]="3" [rowspan]="3">
           <button id="updateButton" *ngIf="!isLoading && !isBeingEdited && isEpisodesLoaded" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
      </mat-grid-tile>
 </mat-grid-list>
@@ -23,22 +25,30 @@
      </mat-grid-tile>
 </mat-grid-list>
 
-<!-- Episode & IMDB options grid -->
 <mat-grid-list *ngIf="!isLoading && isEpisodesLoaded" cols="12" rowHeight="50px">
+     <mat-grid-tile [colspan]="4">
+          <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
+     </mat-grid-tile>
+
+     <mat-grid-tile [colspan]="4">
+          <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="descriptionVisible" id="chkShowDescription" (change)="chkShowhideDescription()">Description</mat-checkbox>
+     </mat-grid-tile>
+
+     <mat-grid-tile [colspan]="4"></mat-grid-tile>
+</mat-grid-list>
+
+
+<!-- Episode & IMDB options grid -->
+<mat-grid-list *ngIf="!isLoading && isEpisodesLoaded"cols="12" rowHeight="75px">
      <!-- Row 1 -->
+     
      <mat-grid-tile id="episodeFilter" [colspan]="2">
           <mat-form-field *ngIf="!isBeingEdited && !isFavoritesChecked">
                <input matInput (keyup)="applyEpisodeFilter($event.target.value)" placeholder="Filter">     
           </mat-form-field>
      </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="2">
-          <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="isFavoritesChecked" id="chkFavorites" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
-     </mat-grid-tile>
-
-     <mat-grid-tile [colspan]="2">
-          <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="descriptionVisible" id="chkShowDescription" (change)="chkShowhideDescription()">Description</mat-checkbox>
-     </mat-grid-tile>
+     <mat-grid-tile [colspan]="4"></mat-grid-tile>
 
      <mat-grid-tile [colspan]="3">
           <mat-form-field *ngIf="!isLoading && !isBeingEdited && !isFavoritesChecked && isIMDBLoaded" id="IMDBFilter">
