@@ -32,6 +32,10 @@ export class DataService {
                          catchError(this.handleError)
                     );
                case "PUT":
+                    return this.http.put<(any)>(`${this.backendURL}/${endPoint}${(params !== null ? params : '')}`,{ 'headers': headers })
+                    .pipe(
+                         catchError(this.handleError)
+                    );
           }
      }
 
@@ -58,22 +62,19 @@ export class DataService {
      }
 
      scrapeData(startingEpisodeNum: number) : any {
-          return this.http.get<any>(`${this.backendURL}/ScrapeData?StartingEpisodeNum=${startingEpisodeNum}`)
-          .pipe(
-               catchError(this.handleError)
-          );
+          return this.executeRequest("PUT","ScrapeData",`?StartingEpisodeNum=${startingEpisodeNum}`);
      }
 
      updateEpisodes(episode: IWTFEpisode) {
-          return this.executeRequest("GET","UpdateEpisodes",`?EpisodeID=${episode.EpisodeID}&Name=${episode.Name}&Description=${episode.Description}&ReleaseDate=${episode.ReleaseDate}&Favorite=0`);
+          return this.executeRequest("PUT","UpdateEpisodes",`?EpisodeID=${episode.EpisodeID}&Name=${episode.Name}&Description=${episode.Description}&ReleaseDate=${episode.ReleaseDate}&Favorite=0`);
      }
 
      updateFavorite(epNumber : number, favoriteValue: boolean) {
-          return this.executeRequest("GET","UpdateFavorite",`?EpisodeNum=${epNumber}&FavoriteValue=${favoriteValue}`);
+          return this.executeRequest("PUT","UpdateFavorite",`?EpisodeNum=${epNumber}&FavoriteValue=${favoriteValue}`);
      }
 
      updateIMDB(imdb: IMDBNames) {
-          return this.executeRequest("GET","UpdateEpisodes",`?ID=${imdb.IMDBID}&Name=${imdb.Name}&URL=${imdb.IMDBURL}`);
+          return this.executeRequest("PUT","UpdateEpisodes",`?ID=${imdb.IMDBID}&Name=${imdb.Name}&URL=${imdb.IMDBURL}`);
      }
 
      private handleError(error: any) {
