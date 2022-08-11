@@ -1,5 +1,6 @@
 {
     "BackendURL": "",
     "CheckoutAllowed": "true",
-    "EditingAllowed": "true"
+    "EditingAllowed": "true",
+    "Authorization": ""
 }

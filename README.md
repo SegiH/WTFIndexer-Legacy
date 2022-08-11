@@ -8,7 +8,7 @@ Almost every name in each episode should have a hyperlink to that persons' page 
 # Check In/Out Episodes
 This app also has the ability to check episodes in and out on your media server. I added this feature because media players like Emby and Jellyfin cannot play a WTF podcast if you have 500 or more files in a directory. When you try to play a podcast episode, it does not play so I added a way to check in episodes like a library.
 
-Check In/Out is not enabled by default. To enable it, edit assets/app.config.json and change ```"CheckoutAllowed": "false",``` to ```"CheckoutAllowed": "true",```
+Check In/Out is not enabled by default. To enable it, edit assets/default.json and change ```"CheckoutAllowed": "false",``` to ```"CheckoutAllowed": "true",```
 
 ## Requirements:
 
@@ -22,7 +22,7 @@ Check In/Out is not enabled by default. To enable it, edit assets/app.config.jso
 1. Compile this app:
    a. npm run build
    b. Move contents of dist\WTFIndexer to your web server
-1. Edit assets\app.config.json and set the value of BackendURL
+1. Edit assets\default.json and set the value of BackendURL
 
 The update button will update the local database with the latest podcast information.
 
