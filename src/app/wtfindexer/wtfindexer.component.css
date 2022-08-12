@@ -8,10 +8,21 @@
           min-height: 500px !important;
      }
 
+     #IMDBFilter {
+          margin-left: 100% !important;
+          min-width: 200px;
+     }
+
+     #imdbPaginator {
+          margin-left: 70%;
+          min-width: 225px;;
+     }
+
      #imdbTableGrid {     
-          margin-left: 150px !important;
+          margin-left: 58% !important;
           max-width: 711px;
-          overflow: auto;     
+          overflow: auto;
+          top: -10px !important;   
      }
 
      .mat-grid-tile {
@@ -19,10 +30,14 @@
      }
 
      .mat-grid-tile-content {
-display: flex;
-align-items: flex-start;
-justify-content: start;
+          align-items: flex-start;
+          display: flex;
+          justify-content: start;
      }
+}
+
+#chkFavorites {
+     margin-left: 5%;
 }
 
 #episodeFilter,#IMDBFilter {
@@ -30,12 +45,13 @@ justify-content: start;
 }
 
 #episodeFilter {
-     margin-left: 4.5%;
+     margin-left: 5%;
 }
 
-#IMDBFilter {
-     margin-left: 12%;
-}
+/*#episodePaginator, #IMDBPaginator {
+     width: 320px;
+     margin-right: 60px;
+}*/
 
 #episodeTable {
      left: 0.1px;   
@@ -60,6 +76,10 @@ justify-content: start;
      border: 1px dotted;
      height: 100%;
      overflow: auto;     
+}
+
+#IMDBFilter {
+     margin-left: 0%;
 }
 
 #imdbTable {
@@ -141,6 +161,10 @@ justify-content: start;
      min-width:370px;
      padding-left: 50px;     
      white-space: wrap !important;
+}
+
+.left-align-forced {
+     width: 100%;
 }
 
 .mat-form-field {
