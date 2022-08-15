@@ -32,7 +32,7 @@ export class DataService {
                          catchError(this.handleError)
                     );
                case "PUT":
-                    return this.http.put<(any)>(`${this.backendURL}/${endPoint}${(params !== null ? params : '')}`,{ 'headers': headers })
+                    return this.http.put<(any)>(`${this.backendURL}/${endPoint}${(params !== null ? params : '')}`,null,{ 'headers': headers })
                     .pipe(
                          catchError(this.handleError)
                     );
