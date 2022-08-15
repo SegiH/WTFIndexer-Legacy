@@ -95,9 +95,9 @@ export class WTFIndexerComponent {
                }
           },
           error => {
-               alert(`An error occurred checking ${(isCheckedOut === false ? "in" : "out")} the episode`);
+               alert(`An error occurred checking ${(isCheckedOut === false ? "in" : "out")} the episode from the data service with error ${error.error}`);
 
-               console.log(`An error occurred ${(isCheckedOut === false ? "in" : "out")} episode from the data service with error ${error}`)
+               console.log(`An error occurred ${(isCheckedOut === false ? "in" : "out")} episode from the data service with error ${error.error}`)
           });
      }
   
@@ -293,9 +293,9 @@ export class WTFIndexerComponent {
                }
           },
           error => {
-               alert("An error occurred updating the favorite");
+               alert(`An error occurred updating the favorite from the data service with the error ${error.error}`);
 
-               console.log(`An error occurred updating the favorite from the data service with error ${error}`)
+               console.log(`An error occurred updating the favorite from the data service with th error ${error}`)
           });
      }
 
@@ -323,9 +323,9 @@ export class WTFIndexerComponent {
                this.checkoutStatusCheckComplete=true;
           },
           error => {
-               alert("An error occurred getting the episode check in/out status");
+               alert(`An error occurred getting the episode check in/out status from the data service with the error ${error}`);
 
-               console.log(`An error occurred getting the episode check in/out status from the data service with error ${error}`);
+               console.log(`An error occurred getting the episode check in/out status from the data service with the error ${error}`);
           });
      }
 
@@ -373,9 +373,9 @@ export class WTFIndexerComponent {
                this.isFavoritesLoading=false;
           },
           error => {
-               alert("An error occurred getting the episodes");
+               alert(`An error occurred getting the episodes from the data service with the error: ${error.error}`);
 
-               console.log(`An error occurred getting the episodes from the data service with error ${error}`);
+               console.log(`An error occurred getting the episodes from the data service with the error ${error.error}`);
 
                this.isEpisodesLoaded=false;
 
@@ -410,9 +410,9 @@ export class WTFIndexerComponent {
                this.getEpisodeCheckInOutStatus()
           },
           error => {
-               alert("An error occurred getting the IMDB names")
+               alert(`An error occurred getting the IMDB names from the data service with the error ${error.error}`)
 
-               console.log(`An error occurred getting the IMDB names from the data service with error ${error}`)
+               console.log(`An error occurred getting the IMDB names from the data service with the error ${error.error}`)
           });
      }
  
@@ -447,9 +447,9 @@ export class WTFIndexerComponent {
                alert ("Update is complete");
           },
           error => {
-               alert("An error occurred scraping the data");
+               alert(`An error occurred scraping the data with the error ${error.error}`);
 
-               console.log(`An error occurred scraping the data from the data service with error ${error}`)
+               console.log(`An error occurred scraping the data from the data service with error ${error.error}`)
           });
      }
 }
