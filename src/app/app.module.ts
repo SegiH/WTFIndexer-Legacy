@@ -16,10 +16,6 @@ import { CoreModule } from './core/core.modules';
 import { CommonModule } from '@angular/common';
 import { AppConfigService } from './core/appconfig.service';
 
-export function initConfig(appConfig: AppConfigService) {
-  return () => appConfig.loadConfig();
-}
-
 @NgModule({
   declarations: [
     WTFIndexerComponent,
@@ -41,12 +37,12 @@ export function initConfig(appConfig: AppConfigService) {
     MatTableModule,
   ],
   providers: [
-    {
+    /*{
       provide: APP_INITIALIZER,
       useFactory: initConfig,
       deps: [AppConfigService],
       multi: true,
-    },
+    },*/
   ],
   bootstrap: [WTFIndexerComponent]
 })

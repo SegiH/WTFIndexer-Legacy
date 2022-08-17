@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import config from 'src/assets/default.json';
 
 export interface AppConfig {
      Authorization: string;
@@ -8,20 +8,14 @@ export interface AppConfig {
      EditingAllowed: boolean;
 }
 
-//AppConfigService.ts
+//AppConfigService.ts - Note: I rewrote this to not use HttpClient which works well but show the request in the browser dev 
+// tools which means you can see the contents of the json. Since it contains the backend URL and the authorization I do not 
+// want the contents to show up in dev console since this is sensitive 
 @Injectable()
 export class AppConfigService {
-     private config: AppConfig;
-     loaded = false;
-     constructor(private http: HttpClient) {}
-
-     async loadConfig(): Promise<void> {
-          const data = await this.http.get<AppConfig>('/assets/default.json').toPromise();
-          this.config = data;
-          this.loaded = true;
-     }
+     constructor() {}
     
-     getConfig(): AppConfig {
-          return this.config;
+     getConfig(): any {
+          return config;
      }
 }
