@@ -30,7 +30,7 @@ export class WTFIndexerComponent {
      isFavoritesChecked = false;
      isFavoritesLoading = false;
      previousObj: any;
-     showIMDB = false;
+     showIMDB = true;
      readonly title: string = "WTF Indexer"
      WTFPayload : IWTFEpisode[];
 
@@ -53,7 +53,10 @@ export class WTFIndexerComponent {
       }
 
      ngOnInit() {
-          this.getEpisodes();
+          if (!this.showIMDB)
+               this.getEpisodes();
+          else
+               this.getIMDBNames();
 
           if (this.editingAllowed) {
                this.episodeDisplayedColumns.splice(0,0,"Action");
@@ -65,6 +68,15 @@ export class WTFIndexerComponent {
 
           if (this.descriptionVisible)
                this.episodeDisplayedColumns.splice(2,0,'Description');
+     }
+
+     showIMDBClick() {
+          this.isLoading = true;
+
+          if (!this.showIMDB)
+               this.getEpisodes();
+          else
+               this.getIMDBNames();
      }
 
      applyEpisodeFilter(filterValue: string) {
@@ -345,6 +357,11 @@ export class WTFIndexerComponent {
                localStorage.setItem('BackEndURL',this.dataService.getBackEndURL())
           }
 
+          if (this.isEpisodesLoaded) {
+               this.isLoading = false;
+               return;
+          }
+
           this.isEpisodesLoaded = false;
 
           // get episodes from the data service
@@ -369,7 +386,8 @@ export class WTFIndexerComponent {
                     this.chkFavoritesClick();   
                }
 
-               this.getIMDBNames();
+               //this.getIMDBNames();
+               this.getEpisodeCheckInOutStatus();
                
                this.isFavoritesLoading=false;
           },
@@ -391,6 +409,11 @@ export class WTFIndexerComponent {
                return;
           }
 
+          if (this.isIMDBLoaded) {
+               this.isLoading = false;
+               return;
+          }
+
           this.isIMDBLoaded = false;
 
           // Get IMDB names
@@ -408,7 +431,7 @@ export class WTFIndexerComponent {
                // Assign custom filter function
                this.imdbDataSource.filterPredicate = this.createIMDBFilter();
 
-               this.getEpisodeCheckInOutStatus()
+               //this.getEpisodeCheckInOutStatus()
           },
           error => {
                alert(`An error occurred getting the IMDB names from the data service with the error ${error.error}`)

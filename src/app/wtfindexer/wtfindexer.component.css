@@ -25,30 +25,25 @@
           top: -10px !important;   
      }
 
-     .mat-grid-tile {
-          width: calc(100% - 0.5px) !important;
-     }
-
      .mat-grid-tile-content {
           align-items: flex-start;
           display: flex;
           justify-content: start;
      }
 }
-
-
+/* End of @media query */
 
 #chkFavorites {
      margin-left: 5%;
 }
 
-/*#episodeFilter,#IMDBFilter {
+#episodeFilter,#IMDBFilter {
      max-width: 200px;
 }
 
 #episodeFilter {
-     margin-left: 5%;
-}*/
+     margin-left: 1.6%;
+}
 
 #episodeTable {
      left: 0.1px;   
@@ -77,14 +72,14 @@
 }
 
 #IMDBFilter {
-     margin-left: 0%;
+     margin-left: 2%;
 }
 
-#imdbTable {
-     border: 1px dotted;
+#imdbTable {    
      left: 0.1px;
      position: absolute;
-     top: 5px;     
+     top: 5px;
+     width: 100%;  
 }
 
 #imdbTable th.mat-header-cell:nth-child(1),
@@ -93,11 +88,11 @@
      white-space: wrap;
 }
 
-#imdbTableGrid {     
+#imdbTableGrid {
+     border: 1px dotted;
      height: 100% !important;
-     margin-left: 50px;
-     max-width: 711px;
-     overflow: auto;     
+     overflow: auto;
+     width: 100% !important;
 }
 
 #table-grid {
