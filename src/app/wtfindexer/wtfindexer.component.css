@@ -1,10 +1,10 @@
 @media (min-width: 350px) and (max-width: 950px) {
      body {
-          min-width: 2000px;
+          width: 100%;
      }
 
      #episodeTableGrid,#imdbTableGrid {
-          min-width: 300px !important;
+          min-width: 700px !important;
           min-height: 500px !important;
      }
 
@@ -36,27 +36,25 @@
      }
 }
 
+
+
 #chkFavorites {
      margin-left: 5%;
 }
 
-#episodeFilter,#IMDBFilter {
+/*#episodeFilter,#IMDBFilter {
      max-width: 200px;
 }
 
 #episodeFilter {
      margin-left: 5%;
-}
-
-/*#episodePaginator, #IMDBPaginator {
-     width: 320px;
-     margin-right: 60px;
 }*/
 
 #episodeTable {
      left: 0.1px;   
      position: absolute;
-     top: 5px;     
+     top: 5px;
+     width: 100%;
 }
 
 #episodeTable th.mat-header-cell:nth-child(1),

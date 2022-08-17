@@ -30,6 +30,7 @@ export class WTFIndexerComponent {
      isFavoritesChecked = false;
      isFavoritesLoading = false;
      previousObj: any;
+     showIMDB = false;
      readonly title: string = "WTF Indexer"
      WTFPayload : IWTFEpisode[];
 

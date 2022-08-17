@@ -1,12 +1,10 @@
 <!-- Title grid-->
 <mat-grid-list cols="12" rowHeight="30px">
-     <mat-grid-tile [colspan]="2" [rowspan]="3"></mat-grid-tile>
-
-     <mat-grid-tile [colspan]="7" [rowspan]="3">
+     <mat-grid-tile [colspan]="10" [rowspan]="2">
           <h1>{{ title }}</h1>
      </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="3" [rowspan]="3">
+     <mat-grid-tile [colspan]="2" [rowspan]="2">
           <button id="updateButton" *ngIf="!isLoading && !isBeingEdited && isEpisodesLoaded" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
      </mat-grid-tile>
 </mat-grid-list>
@@ -25,43 +23,51 @@
      </mat-grid-tile>
 </mat-grid-list>
 
-<mat-grid-list *ngIf="!isLoading && isEpisodesLoaded" cols="8" rowHeight="50px">
-     <mat-grid-tile [colspan]="3">
+<mat-grid-list *ngIf="!isLoading && isEpisodesLoaded" cols="12" rowHeight="50px">
+     <mat-grid-tile [colspan]="4">
           <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="isFavoritesChecked" id="chkFavorites" class="left-align-forced" (change)="chkFavoritesClick()">Favorites</mat-checkbox>
      </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="3">
+     <mat-grid-tile [colspan]="4">
           <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="descriptionVisible" id="chkShowDescription" class="left-align-forced" (change)="chkShowhideDescription()">Description</mat-checkbox>
      </mat-grid-tile>
 </mat-grid-list>
 
 <mat-grid-list *ngIf="!isLoading && isEpisodesLoaded"cols="12" rowHeight="75px">     
-     <mat-grid-tile id="episodeFilter" [colspan]="6">
+     <mat-grid-tile id="episodeFilter" [colspan]="4" *ngIf="!showIMDB">
           <mat-form-field *ngIf="!isBeingEdited && !isFavoritesChecked" class="left-align-forced">
                <input matInput (keyup)="applyEpisodeFilter($event.target.value)" placeholder="Filter">     
           </mat-form-field>
      </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="6">
+     <mat-grid-tile [colspan]="8" *ngIf="!showIMDB">
+          <mat-paginator *ngIf="!isLoading && isEpisodesLoaded && !isBeingEdited" #episodePaginator id="episodePaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>               
+     </mat-grid-tile>
+
+     <mat-grid-tile [colspan]="12" *ngIf="showIMDB">
           <mat-form-field *ngIf="!isLoading && !isBeingEdited && !isFavoritesChecked && isIMDBLoaded" id="IMDBFilter" class="left-align-forced">
                <input matInput (keyup)="applyIMDBFilter($event.target.value)" placeholder="Filter">     
           </mat-form-field>
      </mat-grid-tile>
+
+     <mat-grid-tile [colspan]="6" *ngIf="showIMDB">
+          <mat-paginator *ngIf="showIMDB && !isLoading && !isBeingEdited && isIMDBLoaded" #imdbPaginator id="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>
+     </mat-grid-tile>
 </mat-grid-list>
 
-<mat-grid-list *ngIf="!isLoading && isEpisodesLoaded"cols="12" rowHeight="125px">
+<!--<mat-grid-list *ngIf="!isLoading && isEpisodesLoaded"cols="12" rowHeight="125px">
      <mat-grid-tile [colspan]="6">
           <mat-paginator *ngIf="!isLoading && isEpisodesLoaded && !isBeingEdited" #episodePaginator id="episodePaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>               
      </mat-grid-tile>
 
      <mat-grid-tile [colspan]="6">
-          <mat-paginator *ngIf="!isLoading && !isBeingEdited && isIMDBLoaded" #imdbPaginator id="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>
+          <mat-paginator *ngIf="showIMDB && !isLoading && !isBeingEdited && isIMDBLoaded" #imdbPaginator id="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>
      </mat-grid-tile>
-</mat-grid-list>
+</mat-grid-list>-->
 
 <!-- Episode & IMDB table grid -->
 <mat-grid-list *ngIf="!isLoading && isEpisodesLoaded" id="table-grid" cols="12" rowHeight="1:2.25">
-     <mat-grid-tile [colspan]="6" id="episodeTableGrid">
+     <mat-grid-tile [colspan]="12" id="episodeTableGrid">
           <table id="episodeTable" *ngIf="!isLoading && isEpisodesLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'Episodes'))" mat-table [dataSource]="episodesDataSource" class="mat-elevation-z8">
                <ng-container matColumnDef="Action">
                     <th mat-header-cell *matHeaderCellDef> Action </th>
@@ -162,8 +168,8 @@
           </table>
      </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="6" id="imdbTableGrid">
-          <table id="imdbTable" *ngIf="!isLoading && isIMDBLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'IMDB'))" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8">
+     <!--<mat-grid-tile [colspan]="6" id="imdbTableGrid">
+          <table id="imdbTable" *ngIf="showIMDB && !isLoading && isIMDBLoaded && (!isBeingEdited || (isBeingEdited && editingItem === 'IMDB'))" mat-table [dataSource]="imdbDataSource" class="mat-elevation-z8">
                <ng-container matColumnDef="Action">
                     <th mat-header-cell *matHeaderCellDef> Action </th>
                     <td mat-cell *matCellDef="let element">
@@ -209,5 +215,5 @@
                <tr mat-header-row *matHeaderRowDef="imdbDisplayedColumns"></tr>
                <tr mat-row *matRowDef="let row; columns: imdbDisplayedColumns;"></tr>
           </table>
-     </mat-grid-tile>
+     </mat-grid-tile>-->
 </mat-grid-list>
