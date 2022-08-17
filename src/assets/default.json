@@ -2,5 +2,6 @@
     "BackendURL": "",
     "CheckoutAllowed": "true",
     "EditingAllowed": "true",
-    "Authorization": ""
+    "Authorization": "",
+    "ShowIMDB" : "true"
 }

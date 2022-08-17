@@ -6,6 +6,7 @@ export interface AppConfig {
      BackendURL: string;
      CheckoutAllowed: boolean;
      EditingAllowed: boolean;
+     ShowIMDB: boolean;
 }
 
 //AppConfigService.ts - Note: I rewrote this to not use HttpClient which works well but show the request in the browser dev 

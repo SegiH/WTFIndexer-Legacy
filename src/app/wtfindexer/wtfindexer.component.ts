@@ -30,7 +30,7 @@ export class WTFIndexerComponent {
      isFavoritesChecked = false;
      isFavoritesLoading = false;
      previousObj: any;
-     showIMDB = true;
+     showIMDB = false;
      readonly title: string = "WTF Indexer"
      WTFPayload : IWTFEpisode[];
 
@@ -49,7 +49,8 @@ export class WTFIndexerComponent {
 
           this.editingAllowed = this.appConfigService.getConfig().EditingAllowed;
 
-          //alert( 'Your screen resolution is ' + screen.width + 'x' + screen.height );
+          // For some reason, getting the value of ShowIMDB directly always sets this.ShowIMDB to true. This is my workaround
+          this.showIMDB = this.appConfigService.getConfig().ShowIMDB === "true";
       }
 
      ngOnInit() {
