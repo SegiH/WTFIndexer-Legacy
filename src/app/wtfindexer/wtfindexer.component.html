@@ -57,7 +57,7 @@
      </mat-grid-tile>
 
      <mat-grid-tile [colspan]="2" *ngIf="!isLoading">
-          <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="showIMDB" class="left-align-forced" (change)="showIMDBClick()">Show IMDB</mat-checkbox>
+          <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="showIMDB" class="left-align-forced" (change)="showIMDBClick()">{{!showIMDB ? "Show IMDB" : "Show Episodes"}}</mat-checkbox>
      </mat-grid-tile>
 </mat-grid-list>
 
