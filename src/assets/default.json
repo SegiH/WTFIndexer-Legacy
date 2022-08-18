@@ -3,5 +3,5 @@
     "CheckoutAllowed": "true",
     "EditingAllowed": "true",
     "Authorization": "",
-    "ShowIMDB" : "true"
+    "ShowIMDB" : "false"
 }

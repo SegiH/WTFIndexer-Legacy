@@ -3,6 +3,10 @@
           width: 100%;
      }
 
+     #episodePaginator {
+          min-width: 225px !important;
+     }
+
      #episodeTableGrid,#imdbTableGrid {
           min-width: 700px !important;
           min-height: 500px !important;
@@ -15,7 +19,7 @@
 
      #imdbPaginator {
           margin-left: 70%;
-          min-width: 225px;;
+          min-width: 225px;
      }
 
      #imdbTableGrid {     
@@ -169,8 +173,7 @@ mat-grid-list.filter {
 }
 
 /* Widen select dropdown in paginator because its too narrow with 4 digit values */
-::ng-deep mat-paginator .mat-select-value {
-     max-width: 100px !important;   
+::ng-deep mat-paginator .mat-select-value {   
      min-width: 30px !important;     
 }
 

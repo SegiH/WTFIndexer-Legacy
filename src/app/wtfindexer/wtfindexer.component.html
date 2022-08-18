@@ -4,9 +4,9 @@
           <h1>{{ title }}</h1>
      </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="10"></mat-grid-tile>
+     <mat-grid-tile [colspan]="8"></mat-grid-tile>
 
-     <mat-grid-tile [colspan]="1" [rowspan]="2">
+     <mat-grid-tile [colspan]="4">
           <button id="updateButton" *ngIf="!isLoading && !isBeingEdited && isEpisodesLoaded" mat-raised-button color="primary" (click)="updateButtonClicked()">Update</button>
      </mat-grid-tile>
 </mat-grid-list>
@@ -36,17 +36,17 @@
 </mat-grid-list>
 
 <mat-grid-list *ngIf="!isLoading"cols="12" rowHeight="75px">     
-     <mat-grid-tile id="episodeFilter" [colspan]="1" *ngIf="!showIMDB">
+     <mat-grid-tile id="episodeFilter" class="left-align-forced" [colspan]="12" *ngIf="!showIMDB">
           <mat-form-field *ngIf="!isBeingEdited && !isFavoritesChecked && isEpisodesLoaded" class="left-align-forced">
                <input matInput (keyup)="applyEpisodeFilter($event.target.value)" placeholder="Filter">     
           </mat-form-field>
      </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="5" *ngIf="!showIMDB">
+     <mat-grid-tile [colspan]="12" [rowspan]=2 *ngIf="!showIMDB">
           <mat-paginator *ngIf="!isLoading && isEpisodesLoaded && !isBeingEdited" #episodePaginator id="episodePaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>               
      </mat-grid-tile>
 
-     <mat-grid-tile id="IMDBFilter" [colspan]="1" *ngIf="showIMDB">
+     <mat-grid-tile id="IMDBFilter" [colspan]="3" *ngIf="showIMDB">
           <mat-form-field *ngIf="!isLoading && !isBeingEdited && !isFavoritesChecked && isIMDBLoaded" class="left-align-forced">
                <input matInput (keyup)="applyIMDBFilter($event.target.value)" placeholder="Filter">     
           </mat-form-field>
@@ -56,9 +56,9 @@
           <mat-paginator *ngIf="showIMDB && !isLoading && !isBeingEdited && isIMDBLoaded" #imdbPaginator id="imdbPaginator" [pageSize]="100" [pageSizeOptions]="[25,50,100,200,500,1000,5000,10000]" showFirstLastButtons></mat-paginator>
      </mat-grid-tile>
 
-     <mat-grid-tile [colspan]="2" *ngIf="!isLoading">
+     <!--<mat-grid-tile [colspan]="2" *ngIf="!isLoading">
           <mat-checkbox *ngIf="!isBeingEdited" [(ngModel)]="showIMDB" class="left-align-forced" (change)="showIMDBClick()">{{!showIMDB ? "Show IMDB" : "Show Episodes"}}</mat-checkbox>
-     </mat-grid-tile>
+     </mat-grid-tile>-->
 </mat-grid-list>
 
 <!-- Episode & IMDB table grid -->
