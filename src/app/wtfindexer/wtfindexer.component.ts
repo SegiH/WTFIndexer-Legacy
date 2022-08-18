@@ -244,7 +244,7 @@ export class WTFIndexerComponent {
 
                          this.dataService.updateIMDB(currentEditingObj)
                          .subscribe(() => {
-                              this.getEpisodes();
+                              this.getIMDBNames();
                          },
                          error => {
                               alert("An error occurred saving the IMDB data");
