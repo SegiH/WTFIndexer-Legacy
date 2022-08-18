@@ -74,7 +74,7 @@ export class DataService {
      }
 
      updateIMDB(imdb: IMDBNames) {
-          return this.executeRequest("PUT","UpdateEpisodes",`?ID=${imdb.IMDBID}&Name=${imdb.Name}&URL=${imdb.IMDBURL}`);
+          return this.executeRequest("PUT","UpdateIMDB",`?ID=${imdb.IMDBID}&Name=${imdb.Name}&URL=${imdb.IMDBURL}`);
      }
 
      private handleError(error: any) {
