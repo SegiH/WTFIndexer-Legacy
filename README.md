@@ -1,3 +1,8 @@
+NOTE!!!!!
+This application is being replaced with a completely new rewritten app. I am renaming this project to WTFIndexer-Legacy. 
+
+Please do not use this app. See my other current WatchList project
+
 # WTFIndexer
 Overview:
 
